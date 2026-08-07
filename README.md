@@ -78,15 +78,20 @@ All copy lives in `src/content/messages/{locale}.json`. Add a new language by:
 - OG/Twitter images currently point at `/icon.png` — replace with a designed
   `1200x630` social card in `public/` and update `src/app/layout.tsx`.
 
-## Deployment (Docker + GitHub Actions → GHCR → Hetzner VPS)
+## Deployment (Docker + GitHub Actions → GHCR → shared Hetzner server)
 
-Mirrors the TeincFoodBackend pipeline.
+Deploys to the **same server** as `TeincFoodBackend`, but as an isolated
+compose stack (project `teincfoodweb`, container `teincfood_web`). It joins the
+backend's existing `teinc-internal-net` so the reverse proxy can reach it.
 
 - **CI** (`.github/workflows/ci.yml`): lint → typecheck → build → push image
   (`linux/arm64`) to GHCR.
-- **Deploy**: on a published GitHub release with target `main`, a self-hosted
-  runner on Hetzner pulls the tagged image and runs `docker compose up -d`.
-- Store links + site URL + SMTP are injected from repo/secrets/vars.
+- **Deploy**: on a published GitHub release with target `main` or `test`, the
+  self-hosted runner pulls the tagged image and runs `docker compose up -d`
+  (isolated project name, no clash with the backend stack).
+- Store links + site URL are **build args** (`NEXT_PUBLIC_*` are inlined by
+  Next.js at build time — they must be GitHub vars/secrets, not just runtime
+  env). SMTP/contact are runtime env on the container.
 
 ### Required repository secrets/vars
 
@@ -99,9 +104,10 @@ Vars:
 `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_GOOGLE_ANALYTICS`,
 `NEXT_PUBLIC_CONTACT_EMAIL`, `SMTP_PORT`, `SMTP_SECURE`, `FROM_EMAIL`.
 
-Local same-server run:
+Local run (requires the backend's `teinc-internal-net` network on the host):
 
 ```bash
+docker network create teinc-internal-net 2>/dev/null || true
 docker compose up --build -d
 ```
 

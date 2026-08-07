@@ -91,9 +91,17 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
+            NEXT_PUBLIC_BUYER_APP_STORE=${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
+            NEXT_PUBLIC_BUYER_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
+            NEXT_PUBLIC_BUSINESS_APP_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
+            NEXT_PUBLIC_BUSINESS_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
+            NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
+            NEXT_PUBLIC_CONTACT_EMAIL=${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
 
   deploy:
-    name: Deploy
+    name: Deploy to backend server
     runs-on: self-hosted
     needs: build-image
     permissions:
@@ -116,7 +124,7 @@ jobs:
       - name: Pull application image
         run: docker pull ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}
 
-      - name: Deploy with docker-compose
+      - name: Deploy with docker-compose (same server as backend)
         run: docker compose up -d --pull always
         env:
           APP_IMAGE: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}
@@ -128,10 +136,10 @@ jobs:
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ vars.SMTP_PORT }}
+          SMTP_PORT: ${{ vars.SMTP_PORT || '587' }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          SMTP_SECURE: ${{ vars.SMTP_SECURE }}
+          SMTP_SECURE: ${{ vars.SMTP_SECURE || 'false' }}
           FROM_EMAIL: ${{ vars.FROM_EMAIL }}
 
       - name: Health check
@@ -154,3 +162,5 @@ jobs:
           echo "- Environment: ${{ env.DEPLOY_TARGET }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tag: ${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Server: shared with TeincFoodBackend" >> $GITHUB_STEP_SUMMARY
+          echo "- Compose project: teincfoodweb (isolated from backend stack)" >> $GITHUB_STEP_SUMMARY

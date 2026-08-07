@@ -43,5 +43,11 @@ fails otherwise.
 - Docker multi-stage build (`.next/standalone`, non-root, `linux/arm64`).
 - GitHub Actions (`.github/workflows/ci.yml`) builds/pushes to GHCR; a
   self-hosted runner deploys via `docker compose` on release tags.
+- Deploys to the **same server as TeincFoodBackend** as an isolated compose
+  project (`name: teincfoodweb`, container `teincfood_web`), joining the
+  external `teinc-internal-net` so the shared reverse proxy can route to it.
+- `NEXT_PUBLIC_*` are **build args** (Next.js inlines them at build time) —
+  keep them in sync between `Dockerfile` args, `docker-compose.yml` build
+  args, and the CI `build-args`. SMTP/contact are runtime container env.
 - Secrets/vars are injected from GitHub; see `docker-compose.yml` for the env
   contract and `.env.example` for the local contract.
