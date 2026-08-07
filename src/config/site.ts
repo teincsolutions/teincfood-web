@@ -35,6 +35,13 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@teincfood.com",
   analyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",
+  deleteAccountPath: "/delete-account",
+  logoVersion: process.env.NEXT_PUBLIC_LOGO_VERSION ?? "1",
+};
+
+export const authConfig = {
+  googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+  appleClientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "",
 };
 
 export type { Locale };

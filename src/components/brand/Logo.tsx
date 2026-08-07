@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 export function Logo({
   variant = "navy",
@@ -15,14 +16,15 @@ export function Logo({
 }) {
   // Desktop shows the full-color landscape logo (icon + wordmark).
   // Mobile shows the compact icon-only mark.
+  const assetVersion = `?v=${siteConfig.logoVersion}`;
   const horizontalSrc =
     variant === "white"
-      ? "/logo/logo-horizontal-white.svg"
-      : "/logo/logo-horizontal.svg";
+      ? `/logo/logo-horizontal-white.svg${assetVersion}`
+      : `/logo/logo-horizontal.svg${assetVersion}`;
   const markSrc =
     variant === "white"
-      ? "/logo/logo-white.svg"
-      : "/logo/logo-orange.svg";
+      ? `/logo/logo-white.svg${assetVersion}`
+      : `/logo/logo-orange.svg${assetVersion}`;
 
   return (
     <Link href={href} className={cn("inline-flex items-center", className)}>

@@ -22,13 +22,14 @@ export function Footer() {
   const legalLinks = [
     { href: "/legal/privacy", label: t("privacy") },
     { href: "/legal/terms", label: t("terms") },
+    { href: siteConfig.deleteAccountPath, label: t("deleteAccount") },
   ];
 
   return (
     <footer className="bg-navy text-white">
       <Container className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4 lg:col-span-1">
-          <Logo variant="white" />
+          <Logo />
           <p className="text-sm leading-relaxed text-white/60">
             {t("tagline")}
           </p>
