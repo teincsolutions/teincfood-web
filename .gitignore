@@ -3,7 +3,8 @@
 /.pnp
 .pnp.*
 
-# next.js
+# package manager
+package-lock.json
 /.next/
 /out/
 

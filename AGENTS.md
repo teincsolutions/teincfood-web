@@ -4,14 +4,16 @@ Guidelines for AI agents and developers working in this repository.
 
 ## Commands
 
-- `npm run dev` — start dev server (http://localhost:3000)
-- `npm run build` — production build (standalone output)
-- `npm run lint` — ESLint (flat config, `eslint .`). **Run before finishing.**
-- `npm run typecheck` — `tsc --noEmit`. **Run before finishing.**
-- `npm run start` — serve a production build
+- `yarn dev` — start dev server (http://localhost:3000)
+- `yarn build` — production build (standalone output)
+- `yarn lint` — ESLint (flat config, `eslint .`). **Run before finishing.**
+- `yarn typecheck` — `tsc --noEmit`. **Run before finishing.**
+- `yarn start` — serve a production build
 
-Always run `npm run lint` and `npm run typecheck` after changes; the CI pipeline
-fails otherwise.
+Uses **yarn (1.x)** with a committed `yarn.lock`. In CI/Docker install via
+`yarn install --frozen-lockfile`. Regenerate the lock after dependency changes
+with `yarn install`. Always run `yarn lint` and `yarn typecheck` after changes;
+the CI pipeline fails otherwise.
 
 ## Architecture rules
 

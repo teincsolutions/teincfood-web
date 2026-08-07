@@ -13,20 +13,20 @@ next-intl, framer-motion, and lucide-react.
 ## Getting started
 
 ```bash
-npm install
+yarn            # install (uses yarn.lock)
 cp .env.example .env   # then fill in store links
-npm run dev            # http://localhost:3000
+yarn dev        # http://localhost:3000
 ```
 
 ## Scripts
 
 | Command                | Description                        |
 |------------------------|------------------------------------|
-| `npm run dev`          | Start dev server                   |
-| `npm run build`        | Production build (standalone)      |
-| `npm run start`        | Serve production build             |
-| `npm run lint`         | ESLint (flat config)               |
-| `npm run typecheck`    | TypeScript check (`tsc --noEmit`)  |
+| `yarn dev`             | Start dev server                   |
+| `yarn build`           | Production build (standalone)      |
+| `yarn start`           | Serve production build             |
+| `yarn lint`            | ESLint (flat config)               |
+| `yarn typecheck`       | TypeScript check (`tsc --noEmit`)  |
 
 ## Configuration
 
