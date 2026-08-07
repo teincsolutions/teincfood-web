@@ -2,11 +2,12 @@ name: CI/CD
 
 on:
   push:
-    branches: ["test"]
+    branches: ["main", "test"]
   pull_request:
     branches: ["main", "test"]
   release:
     types: [published]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
