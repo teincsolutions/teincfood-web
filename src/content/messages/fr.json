@@ -1,0 +1,295 @@
+{
+  "meta": {
+    "default": {
+      "title": "TeincFood — Commandez, développez votre commerce ou devenez livreur",
+      "description": "TeincFood est la plateforme de livraison de plats pour les clients, les restaurants et les livreurs. Téléchargez l'application sur iOS et Android.",
+      "keywords": "livraison de repas, commander, partenaire restaurant, livreur, TeincFood"
+    },
+    "order": {
+      "title": "Commandez des plats livrés — Application TeincFood",
+      "description": "Découvrez les restaurants locaux, commandez vos favoris et suivez votre livraison en direct avec l'application TeincFood."
+    },
+    "business": {
+      "title": "TeincFoodBusiness — développez votre restaurant avec la livraison",
+      "description": "Atteignez plus de clients, gérez les commandes et augmentez vos revenus avec l'application partenaire TeincFoodBusiness."
+    },
+    "rider": {
+      "title": "Devenez livreur TeincFood — livrez et gagnez",
+      "description": "Livrez avec l'application TeincFoodBusiness. Gagnez de l'argent selon votre propre emploi du temps en tant que livreur TeincFood."
+    },
+    "about": {
+      "title": "À propos de TeincFood",
+      "description": "TeincFood connecte les clients, les restaurants et les livreurs sur une seule plateforme de livraison."
+    },
+    "faq": {
+      "title": "Questions fréquentes — TeincFood",
+      "description": "Des réponses sur la commande, le partenariat, la livraison et les paiements avec TeincFood."
+    },
+    "contact": {
+      "title": "Contactez-nous — TeincFood",
+      "description": "Contactez l'équipe TeincFood pour l'assistance, les partenariats et la presse."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité — TeincFood",
+      "description": "Comment TeincFood collecte, utilise et protège vos informations personnelles."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation — TeincFood",
+      "description": "Les conditions régissant l'utilisation des services TeincFood."
+    }
+  },
+  "nav": {
+    "order": "Commander",
+    "business": "Pour les entreprises",
+    "rider": "Devenir livreur",
+    "about": "À propos",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "download": "Télécharger l'app",
+    "menu": "Menu"
+  },
+  "footer": {
+    "tagline": "Commandez. Participez. Livrez. TeincFood connecte la nourriture de votre ville.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "legal": "Légal",
+    "downloadApp": "Télécharger l'application",
+    "rights": "Tous droits réservés.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+  "install": {
+    "ios": "Télécharger sur l'App Store",
+    "android": "Obtenir sur Google Play",
+    "open": "Ouvrir TeincFood",
+    "dismiss": "Pas maintenant",
+    "scan": "Scannez pour télécharger TeincFood"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Maintenant en livraison",
+      "title": "La nourriture de votre ville, livrée rapidement.",
+      "subtitle": "Commandez chez les restaurants locaux, faites tourner votre cuisine à plein régime ou gagnez en livrant à votre rythme. Une seule plateforme — TeincFood.",
+      "cta": "Télécharger l'application",
+      "secondary": "Pour les restaurants et les livreurs"
+    },
+    "roles": {
+      "title": "Une plateforme, trois façons de participer",
+      "buyer": {
+        "title": "Commander",
+        "description": "Découvrez les restaurants locaux, payez en toute sécurité et suivez chaque commande en direct."
+      },
+      "business": {
+        "title": "Développer votre commerce",
+        "description": "Atteignez plus de clients, gérez les commandes et boostez vos revenus avec TeincFoodBusiness."
+      },
+      "rider": {
+        "title": "Livrer et gagner",
+        "description": "Travaillez à votre propre et gagnez par livraison avec les outils livreur de TeincFoodBusiness."
+      }
+    },
+    "how": {
+      "title": "Comment ça marche",
+      "step1": {
+        "title": "Téléchargez l'application",
+        "description": "Obtenez TeincFood sur iOS ou Android en moins d'une minute."
+      },
+      "step2": {
+        "title": "Choisissez ce que vous aimez",
+        "description": "Parcourez les restaurants, menus et offres près de chez vous."
+      },
+      "step3": {
+        "title": "Suivez en direct",
+        "description": "Suivez votre livreur en temps réel jusqu'à la livraison."
+      }
+    },
+    "features": {
+      "title": "Conçu pour votre ville",
+      "item1": {
+        "title": "Suivi en direct",
+        "description": "Regardez votre commande aller de la cuisine à votre porte."
+      },
+      "item2": {
+        "title": "Paiements sécurisés",
+        "description": "Payez par carte, mobile money ou espèces — comme vous voulez."
+      },
+      "item3": {
+        "title": "Support à tout moment",
+        "description": "Une vraie aide, par de vraies personnes, dans l'application."
+      },
+      "item4": {
+        "title": "De bonnes offres",
+        "description": "Promotions de vos restaurants favoris."
+      }
+    },
+    "cities": {
+      "title": "Nous desservons plus de villes chaque semaine",
+      "coming": "Bientôt dans une ville près de chez vous"
+    },
+    "cta": {
+      "title": "Prêt à sentir la différence ?",
+      "subtitle": "Téléchargez TeincFood et faites livrer votre première commande rapidement.",
+      "button": "Télécharger maintenant"
+    }
+  },
+  "order": {
+    "hero": {
+      "eyebrow": "Pour les gourmands",
+      "title": "Une bonne cuisine, en moins de clics.",
+      "subtitle": "Trouvez des restaurants près de chez vous, commandez en quelques secondes et regardez votre repas arriver — chaud et à l'heure.",
+      "cta": "Télécharger TeincFood"
+    },
+    "steps": {
+      "title": "Commandez en trois étapes simples",
+      "step1": "Ouvrez l'application et entrez votre adresse",
+      "step2": "Choisissez un restaurant et composez votre commande",
+      "step3": "Payez en toute sécurité et suivez en direct"
+    },
+    "features": {
+      "title": "Tout ce que vous attendez de la livraison de repas",
+      "item1": {
+        "title": "Restaurants sélectionnés",
+        "description": "Favoris locaux et pépites cachées, réunis au même endroit."
+      },
+      "item2": {
+        "title": "Suivi en temps réel",
+        "description": "Sachez exactement quand votre repas arrivera."
+      },
+      "item3": {
+        "title": "Paiement flexible",
+        "description": "Carte, mobile money ou espèces à la livraison."
+      }
+    }
+  },
+  "business": {
+    "hero": {
+      "eyebrow": "Pour les restaurants et les entreprises",
+      "title": "Votre cuisine, ouverte à plus de clients.",
+      "subtitle": "Rejoignez TeincFoodBusiness pour atteindre les clients affamés de votre ville, gérer les commandes sans effort et développer votre chiffre d'affaires.",
+      "cta": "Télécharger TeincFoodBusiness",
+      "secondary": "Découvrir comment ça marche"
+    },
+    "steps": {
+      "title": "C'est parti en quelques jours, pas en semaines",
+      "step1": {
+        "title": "Demander à devenir partenaire",
+        "description": "Parlez-nous de votre restaurant et de votre menu."
+      },
+      "step2": {
+        "title": "Configurez votre menu",
+        "description": "Importez votre menu, vos photos et vos prix dans l'application."
+      },
+      "step3": {
+        "title": "Commencez à recevoir des commandes",
+        "description": "Soyez notifié dès qu'une commande arrive et gérez-la en direct."
+      }
+    },
+    "features": {
+      "title": "Des outils qui développent votre activité",
+      "item1": {
+        "title": "Gestionnaire de commandes",
+        "description": "Acceptez, préparez et expédiez les commandes sans chaos."
+      },
+      "item2": {
+        "title": "Revenus et rapports",
+        "description": "Comprenez les ventes, les meilleurs plats et les tendances."
+      },
+      "item3": {
+        "title": "Prêt pour la flotte",
+        "description": "Attribuez les livraisons et gérez les livreurs depuis une seule application."
+      }
+    }
+  },
+  "rider": {
+    "hero": {
+      "eyebrow": "Pour les livreurs",
+      "title": "Gagnez selon votre emploi du temps.",
+      "subtitle": "Livrez avec l'application TeincFoodBusiness. Des horaires flexibles, des revenus clairs et tout ce qu'il faut pour offrir une excellente expérience.",
+      "cta": "Télécharger TeincFoodBusiness"
+    },
+    "steps": {
+      "title": "Commencez à livrer en trois étapes",
+      "step1": {
+        "title": "Inscrivez-vous",
+        "description": "Créez votre profil de livreur dans l'application."
+      },
+      "step2": {
+        "title": "Mettez-vous en ligne",
+        "description": "Acceptez les livraisons quand cela vous convient."
+      },
+      "step3": {
+        "title": "Gagnez",
+        "description": "Suivez vos revenus et gardez un emploi du temps flexible."
+      }
+    },
+    "features": {
+      "title": "Conçu pour la route",
+      "item1": {
+        "title": "Emploi du temps flexible",
+        "description": "Livrez quand vous voulez, aussi souvent que vous voulez."
+      },
+      "item2": {
+        "title": "Revenus clairs",
+        "description": "Voyez ce que vous gagnez à chaque course."
+      },
+      "item3": {
+        "title": "Livraison guidée",
+        "description": "Navigation claire et processus de remise pour chaque commande."
+      }
+    }
+  },
+  "about": {
+    "title": "À propos de TeincFood",
+    "p1": "TeincFood est une plateforme de livraison de repas qui connecte les clients, les restaurants et les livreurs dans des villes du monde entier.",
+    "p2": "Nous croyons qu'une bonne cuisine doit être facile à trouver, facile à commander et facile à livrer — pour tout le monde."
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "intro": "Des réponses rapides aux questions que nous entendons le plus.",
+    "q1": "Où TeincFood est-il disponible ?",
+    "a1": "TeincFood se déploie progressivement dans les villes. Consultez l'application pour la disponibilité dans votre région.",
+    "q2": "Comment devenir livreur ?",
+    "a2": "Téléchargez l'application TeincFoodBusiness, inscrivez-vous en tant que livreur et suivez les étapes d'onboarding.",
+    "q3": "Comment fonctionne le paiement ?",
+    "a3": "Vous pouvez payer par carte, mobile money ou espèces à la livraison — votre choix au moment du paiement.",
+    "q4": "Comment associer mon restaurant ?",
+    "a4": "Contactez-nous via la page contact et notre équipe vous aidera à vous configurer rapidement."
+  },
+  "legal": {
+    "updated": "Dernière mise à jour",
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "section1": "Informations que nous collectons",
+      "p1": "Nous collectons les informations que vous fournissez directement, comme votre nom, vos coordonnées, votre adresse de livraison et votre historique de commandes.",
+      "section2": "Comment nous utilisons les informations",
+      "p2": "Nous utilisons vos informations pour fournir, améliorer et sécuriser nos services — y compris la livraison des commandes et le support.",
+      "section3": "Partage des informations",
+      "p3": "Nous ne partageons les données qu'avec les partenaires (restaurants, livreurs, prestataires de paiement) nécessaires à la réalisation de vos commandes."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "section1": "Utilisation du service",
+      "p1": "En utilisant TeincFood, vous acceptez de commander des repas, de fournir des livraisons ou d'exploiter un commerce conformément à la loi applicable.",
+      "section2": "Paiements et remboursements",
+      "p2": "Les paiements sont traités de manière sécurisée. Les remboursements suivent la politique affichée dans l'application au moment de votre commande.",
+      "section3": "Responsabilité",
+      "p3": "TeincFood connecte les clients, les restaurants et les livreurs. Chaque partie est responsable de ses propres obligations."
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "intro": "Des questions sur la commande, le partenariat ou la livraison ? Nous serions ravis de vous entendre.",
+    "name": "Votre nom",
+    "email": "Votre e-mail",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer le message",
+    "success": "Merci de nous avoir contactés — nous vous répondrons bientôt.",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "invalid": "Veuillez remplir tous les champs avec un e-mail valide."
+  },
+  "cta": {
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus"
+  }
+}

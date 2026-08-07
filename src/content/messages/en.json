@@ -1,0 +1,295 @@
+{
+  "meta": {
+    "default": {
+      "title": "TeincFood — Order food, grow your business, or deliver",
+      "description": "TeincFood is the food delivery platform for buyers, restaurants, and riders. Download the app on iOS and Android.",
+      "keywords": "food delivery, order food, restaurant partner, delivery rider, TeincFood"
+    },
+    "order": {
+      "title": "Order food delivery — TeincFood app",
+      "description": "Discover local restaurants, order your favorites, and track your delivery live with the TeincFood app."
+    },
+    "business": {
+      "title": "TeincFoodBusiness — grow your restaurant with delivery",
+      "description": "Reach more customers, manage orders, and grow revenue with the TeincFoodBusiness partner app."
+    },
+    "rider": {
+      "title": "Become a TeincFood rider — deliver and earn",
+      "description": "Deliver with the TeincFoodBusiness app. Earn flexibly on your own schedule as a TeincFood rider."
+    },
+    "about": {
+      "title": "About TeincFood",
+      "description": "TeincFood connects buyers, restaurants, and riders on one food delivery platform."
+    },
+    "faq": {
+      "title": "Frequently asked questions — TeincFood",
+      "description": "Answers about ordering, partnering, delivering, and payments with TeincFood."
+    },
+    "contact": {
+      "title": "Contact us — TeincFood",
+      "description": "Get in touch with the TeincFood team for support, partnerships, and press."
+    },
+    "privacy": {
+      "title": "Privacy Policy — TeincFood",
+      "description": "How TeincFood collects, uses, and protects your personal information."
+    },
+    "terms": {
+      "title": "Terms of Service — TeincFood",
+      "description": "The terms and conditions governing the use of TeincFood services."
+    }
+  },
+  "nav": {
+    "order": "Order food",
+    "business": "For business",
+    "rider": "Become a rider",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "download": "Get the app",
+    "menu": "Menu"
+  },
+  "footer": {
+    "tagline": "Order it. Partner it. Deliver it. TeincFood connects your city's food.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "downloadApp": "Download the app",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "install": {
+    "ios": "Download on the App Store",
+    "android": "Get it on Google Play",
+    "open": "Open TeincFood",
+    "dismiss": "Not now",
+    "scan": "Scan to download TeincFood"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Now delivering",
+      "title": "Your city's food, delivered fast.",
+      "subtitle": "Order from local restaurants, run your kitchen at full speed, or earn delivering on your own time. One platform — TeincFood.",
+      "cta": "Download the app",
+      "secondary": "For restaurants & riders"
+    },
+    "roles": {
+      "title": "One platform, three ways to take part",
+      "buyer": {
+        "title": "Order food",
+        "description": "Discover local restaurants, pay securely, and track every order live."
+      },
+      "business": {
+        "title": "Grow your business",
+        "description": "Reach more customers, manage orders, and boost revenue with TeincFoodBusiness."
+      },
+      "rider": {
+        "title": "Deliver & earn",
+        "description": "Work on your own schedule and earn per delivery with the rider tools in TeincFoodBusiness."
+      }
+    },
+    "how": {
+      "title": "How it works",
+      "step1": {
+        "title": "Download the app",
+        "description": "Get TeincFood on iOS or Android in under a minute."
+      },
+      "step2": {
+        "title": "Choose what you love",
+        "description": "Browse restaurants, menus, and deals near you."
+      },
+      "step3": {
+        "title": "Track it live",
+        "description": "Follow your rider in real time until it arrives."
+      }
+    },
+    "features": {
+      "title": "Built for your city",
+      "item1": {
+        "title": "Live tracking",
+        "description": "Watch your order from the kitchen to your door."
+      },
+      "item2": {
+        "title": "Secure payments",
+        "description": "Pay with card, mobile money, or cash — however you like."
+      },
+      "item3": {
+        "title": "Support anytime",
+        "description": "Real help from real people, in the app."
+      },
+      "item4": {
+        "title": "Great deals",
+        "description": "Offers and promotions from your favorite restaurants."
+      }
+    },
+    "cities": {
+      "title": "Serving more places every week",
+      "coming": "Coming soon to a city near you"
+    },
+    "cta": {
+      "title": "Ready to taste the difference?",
+      "subtitle": "Download TeincFood and get your first order delivered fast.",
+      "button": "Download now"
+    }
+  },
+  "order": {
+    "hero": {
+      "eyebrow": "For hungry people",
+      "title": "Great food, fewer clicks.",
+      "subtitle": "Find restaurants near you, order in seconds, and watch your meal arrive — hot and on time.",
+      "cta": "Download TeincFood"
+    },
+    "steps": {
+      "title": "Order in three easy steps",
+      "step1": "Open the app and enter your address",
+      "step2": "Pick a restaurant and build your order",
+      "step3": "Check out securely and track it live"
+    },
+    "features": {
+      "title": "Everything you want from food delivery",
+      "item1": {
+        "title": "Curated restaurants",
+        "description": "Local favorites and hidden gems, all in one place."
+      },
+      "item2": {
+        "title": "Real-time tracking",
+        "description": "Know exactly when your food will arrive."
+      },
+      "item3": {
+        "title": "Flexible payment",
+        "description": "Card, mobile money, or cash at the door."
+      }
+    }
+  },
+  "business": {
+    "hero": {
+      "eyebrow": "For restaurants & businesses",
+      "title": "Your kitchen, open to more customers.",
+      "subtitle": "Join TeincFoodBusiness to reach hungry customers across your city, manage orders effortlessly, and grow your revenue.",
+      "cta": "Download TeincFoodBusiness",
+      "secondary": "Learn how it works"
+    },
+    "steps": {
+      "title": "Get started in days, not weeks",
+      "step1": {
+        "title": "Apply to partner",
+        "description": "Tell us about your restaurant and menu."
+      },
+      "step2": {
+        "title": "Set up your menu",
+        "description": "Upload your menu, photos, and pricing in the app."
+      },
+      "step3": {
+        "title": "Start receiving orders",
+        "description": "Get notified the moment orders come in and manage them live."
+      }
+    },
+    "features": {
+      "title": "Tools that grow your business",
+      "item1": {
+        "title": "Order manager",
+        "description": "Accept, prep, and dispatch orders without chaos."
+      },
+      "item2": {
+        "title": "Earnings & reports",
+        "description": "Understand sales, top dishes, and trends."
+      },
+      "item3": {
+        "title": "Fleet ready",
+        "description": "Assign deliveries and manage riders from one app."
+      }
+    }
+  },
+  "rider": {
+    "hero": {
+      "eyebrow": "For riders & drivers",
+      "title": "Earn on your own time.",
+      "subtitle": "Deliver with the TeincFoodBusiness app. Flexible hours, clear earnings, and everything you need to deliver great experiences.",
+      "cta": "Download TeincFoodBusiness"
+    },
+    "steps": {
+      "title": "Start delivering in three steps",
+      "step1": {
+        "title": "Sign up",
+        "description": "Create your rider profile in the app."
+      },
+      "step2": {
+        "title": "Go online",
+        "description": "Accept deliveries when it suits you."
+      },
+      "step3": {
+        "title": "Earn",
+        "description": "Track earnings and keep your schedule flexible."
+      }
+    },
+    "features": {
+      "title": "Built for the road",
+      "item1": {
+        "title": "Flexible schedule",
+        "description": "Deliver when you want, as often as you want."
+      },
+      "item2": {
+        "title": "Clear earnings",
+        "description": "See what you make on every trip, every time."
+      },
+      "item3": {
+        "title": "Guided delivery",
+        "description": "Clear navigation and handoff flows on every order."
+      }
+    }
+  },
+  "about": {
+    "title": "About TeincFood",
+    "p1": "TeincFood is a food delivery platform that connects buyers, restaurants, and riders in cities around the world.",
+    "p2": "We believe great food should be easy to find, easy to order, and easy to deliver — for everyone involved."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "intro": "Quick answers to the questions we hear most.",
+    "q1": "Where is TeincFood available?",
+    "a1": "TeincFood is rolling out across cities now. Check the app for availability in your area.",
+    "q2": "How do I become a rider?",
+    "a2": "Download the TeincFoodBusiness app, sign up as a rider, and complete the simple onboarding steps.",
+    "q3": "How does payment work?",
+    "a3": "You can pay by card, mobile money, or cash on delivery — your choice at checkout.",
+    "q4": "How do I partner my restaurant?",
+    "a4": "Reach out through the contact page and our team will help you get set up quickly."
+  },
+  "legal": {
+    "updated": "Last updated",
+    "privacy": {
+      "title": "Privacy Policy",
+      "section1": "Information we collect",
+      "p1": "We collect information you provide directly, such as your name, contact details, delivery address, and order history.",
+      "section2": "How we use information",
+      "p2": "We use your information to provide, improve, and secure our services — including fulfilling orders and delivering support.",
+      "section3": "Sharing of information",
+      "p3": "We only share data with partners (restaurants, riders, payment providers) as needed to complete your orders."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "section1": "Use of the service",
+      "p1": "By using TeincFood you agree to order food, provide delivery, or operate a business in compliance with applicable law.",
+      "section2": "Payments & refunds",
+      "p2": "Payments are processed securely. Refunds follow the policy displayed in the app at the time of your order.",
+      "section3": "Liability",
+      "p3": "TeincFood connects buyers, restaurants, and riders. Each party is responsible for their own obligations."
+    }
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Questions about ordering, partnering, or delivering? We'd love to hear from you.",
+    "name": "Your name",
+    "email": "Your email",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send message",
+    "success": "Thanks for reaching out — we'll get back to you soon.",
+    "error": "Something went wrong. Please try again.",
+    "invalid": "Please fill in all fields with a valid email."
+  },
+  "cta": {
+    "getStarted": "Get started",
+    "learnMore": "Learn more"
+  }
+}
