@@ -6,14 +6,18 @@ const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
 
 const TOKEN_COOKIE = "teinc_delete_token";
 
-type ActionDef = { path: string; requiresAuth?: boolean };
+type ActionDef = { path: string; method?: string; requiresAuth?: boolean };
 
 const ACTIONS: Record<string, ActionDef> = {
-  send_otp: { path: "/auth/otp/send" },
-  verify_otp: { path: "/auth/otp/verify" },
-  login: { path: "/auth/login" },
-  oidc: { path: "/auth/oidc" },
-  delete_account: { path: "/users/me/delete", requiresAuth: true },
+  send_otp: { path: "/auth/otp/send", method: "POST" },
+  verify_otp: { path: "/auth/otp/verify", method: "POST" },
+  login: { path: "/auth/login", method: "POST" },
+  oidc: { path: "/auth/oidc", method: "POST" },
+  delete_account: {
+    path: "/users/me/delete",
+    method: "DELETE",
+    requiresAuth: true,
+  },
 };
 
 /**
@@ -63,12 +67,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const res = await fetch(`${API_BASE}${def.path}`, {
-      method: "POST",
+      method: def.method ?? "POST",
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify(body.payload ?? {}),
+      ...(def.method === "DELETE" ? {} : { body: JSON.stringify(body.payload ?? {}) }),
     });
 
     const is204 = res.status === 204;
@@ -84,6 +88,10 @@ export async function POST(req: NextRequest) {
         "Set-Cookie",
         `${TOKEN_COOKIE}=${accessToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${15 * 60}`,
       );
+    }
+
+    if (is204) {
+      return new Response(null, { status: 204, headers });
     }
 
     return NextResponse.json(data, { status: res.status, headers });

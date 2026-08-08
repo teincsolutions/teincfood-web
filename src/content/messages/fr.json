@@ -40,6 +40,10 @@
     "deleteAccount": {
       "title": "Supprimer le compte — Teinc Food",
       "description": "Supprimez définitivement votre compte Teinc Food et vos données personnelles."
+    },
+    "resetPassword": {
+      "title": "Réinitialiser votre mot de passe — Teinc Food",
+      "description": "Choisissez un nouveau mot de passe pour votre compte Teinc Food."
     }
   },
   "nav": {
@@ -348,5 +352,18 @@
       "oidcConfig": "La connexion sociale n'est pas encore configurée. Utilisez le téléphone ou l'e-mail.",
       "delete": "Impossible de supprimer votre compte pour le moment. Veuillez contacter le support."
     }
+  },
+  "resetPassword": {
+    "title": "Réinitialiser votre mot de passe",
+    "intro": "Choisissez un nouveau mot de passe pour votre compte Teinc Food.",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le nouveau mot de passe",
+    "passwordHint": "Au moins 8 caractères",
+    "submit": "Réinitialiser le mot de passe",
+    "success": "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    "invalidRequest": "Ce lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
+    "mismatch": "Les mots de passe ne correspondent pas.",
+    "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "error": "Impossible de réinitialiser votre mot de passe. Le lien peut être invalide ou expiré."
   }
 }

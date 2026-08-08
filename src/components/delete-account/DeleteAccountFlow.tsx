@@ -5,15 +5,13 @@ import type { FormEvent, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import {
   Smartphone,
-  Mail,
   KeyRound,
   CheckCircle2,
   AlertTriangle,
   ShieldCheck,
   Loader2,
   ArrowLeft,
-} from "lucide-react";
-import { Button } from "@/components/ui/Button";
+} from "lucide-react";import { Button } from "@/components/ui/Button";
 import { authConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -201,6 +199,19 @@ export function DeleteAccountFlow() {
                 />
               </Field>
 
+              {otpSent && (
+                <Field label={t("form.code")}>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+              )}
+
               {!otpSent ? (
                 <Button type="submit" variant="primary" size="lg" disabled={busy} className="w-full sm:w-auto">
                   {busy ? <Spinner /> : <Smartphone className="size-5" aria-hidden="true" />}
@@ -218,6 +229,18 @@ export function DeleteAccountFlow() {
                   {busy ? <Spinner /> : <ShieldCheck className="size-5" aria-hidden="true" />}
                   {`${t("form.verify")} →`}
                 </Button>
+              )}
+
+              {otpSent && (
+                <div className="flex items-center gap-2">
+                  {resendIn > 0 ? (
+                    <p className="text-sm text-navy/50">{t("form.resendIn", { seconds: resendIn })}</p>
+                  ) : (
+                    <button type="button" onClick={() => submitOtp()} className="text-sm font-semibold text-orange hover:underline">
+                      {t("form.resend")}
+                    </button>
+                  )}
+                </div>
               )}
             </form>
           )}
@@ -251,14 +274,24 @@ export function DeleteAccountFlow() {
 
           {method === "oidc" && (
             <div className="mt-6 space-y-3">
-              <Button variant="outline" size="lg" className="w-full" disabled={busy} onClick={() => handleOidc("google")}>
-                {busy ? <Spinner /> : <Mail className="size-5" aria-hidden="true" />}
-                {t("form.google")}
-              </Button>
-              <Button variant="outline" size="lg" className="w-full" disabled={busy} onClick={() => handleOidc("apple")}>
-                {busy ? <Spinner /> : <Mail className="size-5" aria-hidden="true" />}
-                {t("form.apple")}
-              </Button>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <SocialButton
+                  variant="google"
+                  onClick={() => handleOidc("google")}
+                  disabled={busy}
+                  spinner={busy}
+                >
+                  {t("form.google")}
+                </SocialButton>
+                <SocialButton
+                  variant="apple"
+                  onClick={() => handleOidc("apple")}
+                  disabled={busy}
+                  spinner={busy}
+                >
+                  {t("form.apple")}
+                </SocialButton>
+              </div>
               {!authConfig.googleClientId && !authConfig.appleClientId && (
                 <p className="text-sm text-navy/50">{t("errors.oidcConfig")}</p>
               )}
@@ -445,6 +478,79 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function Spinner() {
   return <Loader2 className="size-5 animate-spin" aria-hidden="true" />;
+}
+
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={cn("size-5", className)} aria-hidden="true">
+      <path
+        fill="#FFC107"
+        d="M43.61 20.14H42V20H24v8h11.3C33.7 32.66 29.22 36 24 36c-6.63 0-12-5.37-12-12s5.37-12 12-12c3.06 0 5.84 1.16 7.95 3.05l5.66-5.66C34.45 6.47 29.5 4 24 4 12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20c0-1.32-.13-2.6-.39-3.86z"
+      />
+      <path
+        fill="#FF3D00"
+        d="M6.31 14.68l6.6 4.84C14.68 16.15 18.98 13 24 13c3.06 0 5.84 1.16 7.95 3.05l5.66-5.66C34.45 6.47 29.5 4 24 4 16.32 4 9.65 8.32 6.31 14.68z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.16 0 9.93-1.78 13.64-4.73l-6.3-5.39C29.22 35.2 26.72 36 24 36c-5.22 0-9.7-3.34-11.42-8.04l-6.52 5.02C9.4 37.2 16.1 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.61 20.14H42V20H24v8h11.3c-.77 2.16-2.13 3.93-3.96 4.8.04-.02 5.72-4.6 6.84-4.6.04 0-4.9-8.06-5.9-8.06z"
+      />
+    </svg>
+  );
+}
+
+function AppleIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={cn("size-5", className)} aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83zM13.96 5.4c.64-.83 1.07-1.99.87-3.15-.84.03-1.9.56-2.51 1.28-.57.66-1.07 1.73-.93 2.75.86.08 1.07-.55 2.57-.88z"
+      />
+    </svg>
+  );
+}
+
+function SocialButton({
+  variant,
+  onClick,
+  disabled,
+  spinner,
+  children,
+}: {
+  variant: "google" | "apple";
+  onClick: () => void;
+  disabled?: boolean;
+  spinner?: boolean;
+  children: ReactNode;
+}) {
+  const styles =
+    variant === "google"
+      ? "border-navy/10 bg-white text-navy hover:border-navy/25"
+      : "border-black bg-black text-white hover:bg-navy";
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="md"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn("w-full", styles)}
+    >
+      {spinner ? (
+        <Spinner />
+      ) : variant === "google" ? (
+        <GoogleIcon />
+      ) : (
+        <AppleIcon />
+      )}
+      {children}
+    </Button>
+  );
 }
 
 function ErrorMsg({ children, className }: { children: ReactNode; className?: string }) {
