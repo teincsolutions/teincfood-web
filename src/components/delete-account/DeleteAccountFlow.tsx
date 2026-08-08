@@ -11,14 +11,17 @@ import {
   ShieldCheck,
   Loader2,
   ArrowLeft,
-} from "lucide-react";import { Button } from "@/components/ui/Button";
+} from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { authConfig } from "@/config/site";
+import { toast } from "@/components/ui/Toaster";
+import { appleAuthHelpers } from "react-apple-signin-auth";
 import { cn } from "@/lib/utils";
 
 type Method = "phone" | "email" | "oidc";
 type OidcProvider = "google" | "apple";
 type Step = "method" | "verify" | "confirm" | "done";
-type Status = "idle" | "loading" | "error" | "ok";
+type Status = "idle" | "loading";
 
 interface IdentifiedAccount {
   id: string;
@@ -44,7 +47,7 @@ export function DeleteAccountFlow() {
   const [account, setAccount] = useState<IdentifiedAccount | null>(null);
 
   const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [confirm, setConfirm] = useState("");
 
   
@@ -72,6 +75,9 @@ export function DeleteAccountFlow() {
     return e || fallback;
   };
 
+  const setFieldError = (field: string, message?: string) =>
+    setFieldErrors((prev) => ({ ...prev, [field]: message ?? "" }));
+
   const nextAfterAuth = (user: { id?: string; email?: string | null; phone?: string | null }) => {
     setAccount({
       id: user?.id ?? "",
@@ -83,16 +89,16 @@ export function DeleteAccountFlow() {
 
   const submitOtp = async () => {
     setStatus("loading");
-    setError("");
     const { ok, data } = await callApi("send_otp", {
       phone: phone.trim(),
       purpose: "login",
     });
     setStatus("idle");
     if (!ok) {
-      setError(errorMessage(data, t("errors.phoneSend")));
+      toast.error(errorMessage(data, t("errors.phoneSend")));
       return false;
     }
+    toast.success(t("toast.codeSent", { phone: phone.trim() }));
     setOtpSent(true);
     setResendIn(RESEND_SECONDS);
     return true;
@@ -101,52 +107,63 @@ export function DeleteAccountFlow() {
   const handleSendOtp = async (e?: FormEvent) => {
     e?.preventDefault();
     const normalized = phone.trim();
-    if (!normalized) {
-      setError(t("errors.invalidPhone"));
-      return;
-    }
+    const nextErr: Record<string, string> = {};
+    if (!normalized) nextErr.phone = t("errors.phoneRequired");
+    else if (!/^\+?\d[\d\s-]{6,}$/.test(normalized)) nextErr.phone = t("errors.invalidPhone");
+    setFieldErrors((prev) => ({ ...prev, ...nextErr }));
+    if (nextErr.phone) return;
+    setFieldError("phone");
     await submitOtp();
   };
 
   const handleVerifyOtp = async (e: FormEvent) => {
     e.preventDefault();
+    if (!code.trim()) {
+      setFieldError("code", t("errors.codeRequired"));
+      return;
+    }
+    setFieldErrors((prev) => ({ ...prev, code: "" }));
     setStatus("loading");
-    setError("");
     const { ok, data } = await callApi("verify_otp", {
       phone: phone.trim(),
       code: code.trim(),
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
-      setError(errorMessage(data, t("errors.otpVerify")));
+      toast.error(errorMessage(data, t("errors.otpVerify")));
       return;
     }
+    toast.success(t("toast.identityVerified"));
     nextAfterAuth(data.user ?? {});
   };
 
   const handleEmailLogin = async (e: FormEvent) => {
     e.preventDefault();
+    const nextErr: Record<string, string> = {};
+    if (!email.trim()) nextErr.email = t("errors.emailRequired");
+    if (!password) nextErr.password = t("errors.passwordRequired");
+    setFieldErrors((prev) => ({ ...prev, ...nextErr }));
+    if (Object.keys(nextErr).length > 0) return;
     setStatus("loading");
-    setError("");
     const { ok, data } = await callApi("login", {
       email: email.trim(),
       password,
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
-      setError(errorMessage(data, t("errors.login")));
+      toast.error(errorMessage(data, t("errors.login")));
       return;
     }
+    toast.success(t("toast.signedIn"));
     nextAfterAuth(data.user ?? {});
   };
 
   const handleOidc = async (provider: OidcProvider) => {
     setStatus("loading");
-    setError("");
     const idToken = await obtainIdToken(provider);
     if (!idToken) {
-      setStatus("error");
-      setError(t("errors.oidc"));
+      setStatus("idle");
+      toast.error(t("errors.oidc"));
       return;
     }
     const { ok, data } = await callApi("oidc", {
@@ -155,22 +172,28 @@ export function DeleteAccountFlow() {
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
-      setError(errorMessage(data, t("errors.oidc")));
+      toast.error(errorMessage(data, t("errors.oidc")));
       return;
     }
+    toast.success(t("toast.signedIn"));
     nextAfterAuth(data.user ?? {});
   };
 
   const handleDelete = async (e: FormEvent) => {
     e.preventDefault();
+    if (confirm.trim().toUpperCase() !== "DELETE") {
+      setFieldError("confirm", t("errors.confirmRequired"));
+      return;
+    }
+    setFieldErrors((prev) => ({ ...prev, confirm: "" }));
     setStatus("loading");
-    setError("");
     const { ok, data } = await callApi("delete_account", {});
     setStatus("idle");
     if (!ok) {
-      setError(errorMessage(data, t("errors.delete")));
+      toast.error(errorMessage(data, t("errors.delete")));
       return;
     }
+    toast.success(t("toast.accountDeleted"));
     setStep("done");
   };
 
@@ -186,28 +209,36 @@ export function DeleteAccountFlow() {
           <MethodTabs method={method} onChange={setMethod} />
 
           {method === "phone" && (
-            <form onSubmit={handleSendOtp} className="mt-6 space-y-4">
-              <Field label={t("form.phone")}>
+            <form onSubmit={handleSendOtp} className="mt-6 space-y-4" noValidate>
+              <Field label={t("form.phone")} error={fieldErrors.phone}>
                 <input
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setFieldError("phone");
+                  }}
                   placeholder="+233…"
-                  className={inputClass}
+                  aria-invalid={!!fieldErrors.phone}
+                  className={cn(inputClass, fieldErrors.phone && inputErrorClass)}
                 />
               </Field>
 
               {otpSent && (
-                <Field label={t("form.code")}>
+                <Field label={t("form.code")} error={fieldErrors.code}>
                   <input
                     type="text"
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    className={inputClass}
+                    onChange={(e) => {
+                      setCode(e.target.value);
+                      setFieldError("code");
+                    }}
+                    aria-invalid={!!fieldErrors.code}
+                    className={cn(inputClass, fieldErrors.code && inputErrorClass)}
                   />
                 </Field>
               )}
@@ -246,23 +277,31 @@ export function DeleteAccountFlow() {
           )}
 
           {method === "email" && (
-            <form onSubmit={handleEmailLogin} className="mt-6 space-y-4">
-              <Field label={t("form.email")}>
+            <form onSubmit={handleEmailLogin} className="mt-6 space-y-4" noValidate>
+              <Field label={t("form.email")} error={fieldErrors.email}>
                 <input
                   type="email"
                   autoComplete="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={inputClass}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setFieldError("email");
+                  }}
+                  aria-invalid={!!fieldErrors.email}
+                  className={cn(inputClass, fieldErrors.email && inputErrorClass)}
                 />
               </Field>
-              <Field label={t("form.password")}>
+              <Field label={t("form.password")} error={fieldErrors.password}>
                 <input
                   type="password"
                   autoComplete="current-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={inputClass}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setFieldError("password");
+                  }}
+                  aria-invalid={!!fieldErrors.password}
+                  className={cn(inputClass, fieldErrors.password && inputErrorClass)}
                 />
               </Field>
               <Button type="submit" variant="primary" size="lg" disabled={busy} className="w-full sm:w-auto">
@@ -278,42 +317,46 @@ export function DeleteAccountFlow() {
                 <SocialButton
                   variant="google"
                   onClick={() => handleOidc("google")}
-                  disabled={busy}
+                  disabled={busy || !authConfig.googleClientId}
                   spinner={busy}
+                  title={!authConfig.googleClientId ? t("errors.oidcGoogle") : undefined}
                 >
                   {t("form.google")}
                 </SocialButton>
                 <SocialButton
                   variant="apple"
                   onClick={() => handleOidc("apple")}
-                  disabled={busy}
+                  disabled={busy || !authConfig.appleClientId}
                   spinner={busy}
+                  title={!authConfig.appleClientId ? t("errors.oidcApple") : undefined}
                 >
                   {t("form.apple")}
                 </SocialButton>
               </div>
-              {!authConfig.googleClientId && !authConfig.appleClientId && (
+              {(!authConfig.googleClientId || !authConfig.appleClientId) && (
                 <p className="text-sm text-navy/50">{t("errors.oidcConfig")}</p>
               )}
             </div>
           )}
-
-          {error && <ErrorMsg className="mt-4">{error}</ErrorMsg>}
         </div>
       )}
 
       {step === "verify" && (
         <div className="mt-8">
           <p className="text-navy/70">{t("form.verifyIntro", { phone })}</p>
-          <form onSubmit={handleVerifyOtp} className="mt-4 space-y-4">
-            <Field label={t("form.code")}>
+          <form onSubmit={handleVerifyOtp} className="mt-4 space-y-4" noValidate>
+            <Field label={t("form.code")} error={fieldErrors.code}>
               <input
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className={inputClass}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  setFieldError("code");
+                }}
+                aria-invalid={!!fieldErrors.code}
+                className={cn(inputClass, fieldErrors.code && inputErrorClass)}
               />
             </Field>
             <div className="flex items-center gap-2 sm:gap-3">
@@ -330,7 +373,6 @@ export function DeleteAccountFlow() {
                 {t("form.resend")}
               </button>
             )}
-            {error && <ErrorMsg>{error}</ErrorMsg>}
           </form>
         </div>
       )}
@@ -353,19 +395,22 @@ export function DeleteAccountFlow() {
             <Row label={t("confirm.id")} value={account.id} />
           </div>
 
-          <form onSubmit={handleDelete} className="space-y-4">
-            <Field label={t("confirm.typeDelete")}>
+          <form onSubmit={handleDelete} className="space-y-4" noValidate>
+            <Field label={t("confirm.typeDelete")} error={fieldErrors.confirm}>
               <input
                 type="text"
                 value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
+                onChange={(e) => {
+                  setConfirm(e.target.value);
+                  setFieldError("confirm");
+                }}
                 autoCapitalize="characters"
                 autoCorrect="off"
                 spellCheck={false}
-                className={cn(inputClass, "uppercase tracking-widest")}
+                aria-invalid={!!fieldErrors.confirm}
+                className={cn(inputClass, "uppercase tracking-widest", fieldErrors.confirm && inputErrorClass)}
               />
             </Field>
-            {error && <ErrorMsg>{error}</ErrorMsg>}
             <div className="flex items-center gap-4 sm:gap-3">
               <BackButton onClick={() => setStep("method")} />
               <Button
@@ -396,6 +441,7 @@ export function DeleteAccountFlow() {
 
 const inputClass =
   "w-full rounded-xl border border-navy/15 bg-surface px-4 py-3 text-navy outline-none transition-colors focus:border-orange focus:outline focus:outline-2 focus:outline-orange/30";
+const inputErrorClass = "border-red-500 focus:border-red-500 focus:outline-red-500/30";
 
 // --- sub-components ---
 
@@ -458,11 +504,16 @@ function MethodTabs({ method, onChange }: { method: Method; onChange: (_m: Metho
   );
 }
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-bold text-navy">{label}</span>
       {children}
+      {error && (
+        <span className="mt-1.5 block text-sm font-semibold text-red-600" role="alert">
+          {error}
+        </span>
+      )}
     </label>
   );
 }
@@ -519,12 +570,14 @@ function SocialButton({
   onClick,
   disabled,
   spinner,
+  title,
   children,
 }: {
   variant: "google" | "apple";
   onClick: () => void;
   disabled?: boolean;
   spinner?: boolean;
+  title?: string;
   children: ReactNode;
 }) {
   const styles =
@@ -539,7 +592,8 @@ function SocialButton({
       size="md"
       onClick={onClick}
       disabled={disabled}
-      className={cn("w-full", styles)}
+      title={title}
+      className={cn("w-full", styles, disabled && !spinner && "opacity-60")}
     >
       {spinner ? (
         <Spinner />
@@ -551,10 +605,6 @@ function SocialButton({
       {children}
     </Button>
   );
-}
-
-function ErrorMsg({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn("text-sm font-semibold text-red-600", className)}>{children}</p>;
 }
 
 function BackButton({ onClick }: { onClick: () => void }) {
@@ -575,83 +625,67 @@ async function obtainIdToken(provider: OidcProvider): Promise<string | null> {
   if (provider === "google") {
     const clientId = authConfig.googleClientId;
     if (!clientId) return null;
-    const gsi = (window as unknown as {
-      google?: {
-        accounts?: {
-          id: {
-            initialize: (_opts: {
-              client_id: string;
-              callback: (_res: { credential: string }) => void;
-            }) => void;
-            prompt: () => void;
-          };
-        };
-      };
-    }).google?.accounts;
+
+    let gsi = window.google?.accounts?.id;
     if (!gsi) {
       const loaded = await loadScript("https://accounts.google.com/gsi/client", "teinc-gsi");
       if (!loaded) return null;
+      gsi = window.google?.accounts?.id;
     }
+    if (!gsi) return null;
+
     return new Promise((resolve) => {
       let settled = false;
-      const accounts = (window as unknown as {
-        google: { accounts: { id: { initialize: (_opts: { client_id: string; callback: (_res: { credential: string }) => void }) => void; prompt: () => void } } };
-      }).google.accounts;
-      accounts.id.initialize({
-        client_id: clientId,
-        callback: (res) => {
-          if (!settled) {
-            settled = true;
-            resolve(res.credential || null);
-          }
-        },
-      });
-      accounts.id.prompt();
-      setTimeout(() => {
+      const finish = (credential: string | null) => {
         if (!settled) {
           settled = true;
-          resolve(null);
+          resolve(credential);
         }
-      }, 60000);
+      };
+
+      gsi?.initialize({
+        client_id: clientId,
+        ux_mode: "popup",
+        callback: (res) => finish(res.credential || null),
+      });
+
+      gsi?.prompt((notification) => {
+        // Treat a skipped/dismissed prompt as a cancelled sign-in.
+        if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
+          finish(null);
+        }
+      });
+
+      setTimeout(() => finish(null), 60000);
     });
   }
 
   const clientId = authConfig.appleClientId;
   if (!clientId) return null;
-  const apple = (window as unknown as {
-    AppleID?: {
-      signIn: (_opts?: {
-        clientId?: string;
-        redirectURI?: string;
-        scope?: string;
-        usePopup?: boolean;
-      }) => Promise<{ authorization?: { id_token?: string } }>;
-    };
-  }).AppleID;
-  if (!apple) {
+
+  // Official Apple JS SDK must be present before the helper runs.
+  if (!window.AppleID?.auth) {
     const loaded = await loadScript(
       "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js",
       "teinc-apple",
     );
     if (!loaded) return null;
   }
+
   try {
-    const res = await (window as unknown as {
-      AppleID: {
-        signIn: (_opts?: {
-          clientId?: string;
-          redirectURI?: string;
-          scope?: string;
-          usePopup?: boolean;
-        }) => Promise<{ authorization?: { id_token?: string } }>;
-      };
-    }).AppleID.signIn({
-      clientId,
-      redirectURI: window.location.origin,
-      scope: "email",
-      usePopup: true,
+    const response = await appleAuthHelpers.signIn({
+      authOptions: {
+        clientId,
+        redirectURI: window.location.origin,
+        scope: "name email",
+        usePopup: true,
+      },
+      // Apple rejects the promise with an empty error object on failures such
+      // as an unregistered redirect URI or a non-HTTPS origin. We swallow that
+      // and let the caller surface its own i18n error via toast.
+      onError: () => {},
     });
-    return res?.authorization?.id_token || null;
+    return response?.authorization?.id_token ?? null;
   } catch {
     return null;
   }

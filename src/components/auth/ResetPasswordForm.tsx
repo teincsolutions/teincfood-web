@@ -6,18 +6,17 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { toast } from "@/components/ui/Toaster";
+import { cn } from "@/lib/utils";
 
-type Status =
-  | "idle"
-  | "loading"
-  | "success"
-  | "error"
-  | "invalid"
-  | "noToken";
-
+type Status = "idle" | "loading" | "success" | "noToken";
 type BackendError = {
   error?: { code?: unknown; message?: string };
 };
+
+const inputClass =
+  "w-full rounded-xl border border-navy/15 bg-surface px-4 py-3 text-navy outline-none transition-colors focus:border-orange focus:outline focus:outline-2 focus:outline-orange/30";
+const inputErrorClass = "border-red-500 focus:border-red-500 focus:outline-red-500/30";
 
 export function ResetPasswordForm() {
   const t = useTranslations("resetPassword");
@@ -27,18 +26,16 @@ export function ResetPasswordForm() {
   const [status, setStatus] = useState<Status>(token ? "idle" : "noToken");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [errors, setErrors] = useState<{ password?: string; confirm?: string }>({});
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (password.length < 8) {
-      setStatus("error");
-      return;
-    }
-    if (password !== confirm) {
-      setStatus("error");
-      return;
-    }
+    const next: { password?: string; confirm?: string } = {};
+    if (password.length < 8) next.password = t("tooShort");
+    if (confirm !== password) next.confirm = t("mismatch");
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
 
     setStatus("loading");
     try {
@@ -54,13 +51,16 @@ export function ResetPasswordForm() {
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as BackendError;
         const message = data.error?.message;
-        setStatus(message ? "invalid" : "error");
+        toast.error(message || t("invalidRequest"));
+        setStatus("idle");
         return;
       }
 
+      toast.success(t("success"));
       setStatus("success");
     } catch {
-      setStatus("error");
+      toast.error(t("error"));
+      setStatus("idle");
     }
   };
 
@@ -81,35 +81,33 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <Field label={t("newPassword")} hint={t("passwordHint")}>
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+      <Field label={t("newPassword")} hint={t("passwordHint")} error={errors.password}>
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={8}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setErrors((prev) => ({ ...prev, password: undefined }));
+          }}
           autoComplete="new-password"
-          className="w-full rounded-xl border border-navy/15 bg-surface px-4 py-3 text-navy outline-none transition-colors focus:border-orange focus:outline focus:outline-2 focus:outline-orange/30"
+          aria-invalid={!!errors.password}
+          className={cn(inputClass, errors.password && inputErrorClass)}
         />
       </Field>
-      <Field label={t("confirmPassword")}>
+      <Field label={t("confirmPassword")} error={errors.confirm}>
         <input
           type="password"
           value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          required
-          minLength={8}
+          onChange={(e) => {
+            setConfirm(e.target.value);
+            setErrors((prev) => ({ ...prev, confirm: undefined }));
+          }}
           autoComplete="new-password"
-          className="w-full rounded-xl border border-navy/15 bg-surface px-4 py-3 text-navy outline-none transition-colors focus:border-orange focus:outline focus:outline-2 focus:outline-orange/30"
+          aria-invalid={!!errors.confirm}
+          className={cn(inputClass, errors.confirm && inputErrorClass)}
         />
       </Field>
-
-      {(status === "error" || status === "invalid") && (
-        <p className="text-sm font-semibold text-red-600">
-          {status === "invalid" ? t("invalidRequest") : t("error")}
-        </p>
-      )}
 
       <Button
         type="submit"
@@ -127,17 +125,24 @@ export function ResetPasswordForm() {
 function Field({
   label,
   hint,
+  error,
   children,
 }: {
   label: string;
   hint?: string;
+  error?: string;
   children: ReactNode;
 }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-bold text-navy">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-sm text-navy/50">{hint}</span>}
+      {error && (
+        <span className="mt-1 block text-sm font-semibold text-red-600" role="alert">
+          {error}
+        </span>
+      )}
+      {!error && hint && <span className="mt-1 block text-sm text-navy/50">{hint}</span>}
     </label>
   );
 }

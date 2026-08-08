@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { AppInstallBanner } from "@/components/install/AppInstallBanner";
 import { ServiceWorker } from "@/components/install/ServiceWorker";
+import { Toaster } from "@/components/ui/Toaster";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -37,6 +38,7 @@ export default async function LocaleLayout({
         <Footer />
         <AppInstallBanner />
         <ServiceWorker />
+        <Toaster />
       </div>
     </NextIntlClientProvider>
   );

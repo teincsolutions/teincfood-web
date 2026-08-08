@@ -295,7 +295,13 @@
     "submit": "Send message",
     "success": "Thanks for reaching out — we'll get back to you soon.",
     "error": "Something went wrong. Please try again.",
-    "invalid": "Please fill in all fields with a valid email."
+    "invalid": "Please fill in all fields with a valid email.",
+    "errors": {
+      "name": "Please enter your name.",
+      "email": "Please enter your email address.",
+      "emailInvalid": "Please enter a valid email address.",
+      "message": "Please enter a message."
+    }
   },
   "cta": {
     "getStarted": "Get started",
@@ -345,12 +351,26 @@
     },
     "errors": {
       "invalidPhone": "Enter a valid phone number.",
+      "phoneRequired": "Enter your phone number.",
+      "codeRequired": "Enter the verification code.",
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email address.",
+      "passwordRequired": "Enter your password.",
+      "confirmRequired": "Type DELETE to confirm.",
       "phoneSend": "Could not send the code. Try again or contact support.",
       "otpVerify": "That code is invalid or expired. Try again.",
       "login": "Login failed. Check your email and password.",
       "oidc": "Could not verify with that provider. Try another method.",
       "oidcConfig": "Social sign-in is not configured yet. Use phone or email instead.",
+      "oidcGoogle": "Google sign-in is not configured yet.",
+      "oidcApple": "Apple sign-in is not configured yet.",
       "delete": "We could not delete your account right now. Please contact support."
+    },
+    "toast": {
+      "codeSent": "We sent a code to {phone}.",
+      "identityVerified": "Identity verified.",
+      "signedIn": "You're signed in.",
+      "accountDeleted": "Your account has been deleted."
     }
   },
   "resetPassword": {

@@ -295,7 +295,13 @@
     "submit": "Envoyer le message",
     "success": "Merci de nous avoir contactés — nous vous répondrons bientôt.",
     "error": "Une erreur s'est produite. Veuillez réessayer.",
-    "invalid": "Veuillez remplir tous les champs avec un e-mail valide."
+    "invalid": "Veuillez remplir tous les champs avec un e-mail valide.",
+    "errors": {
+      "name": "Veuillez saisir votre nom.",
+      "email": "Veuillez saisir votre adresse e-mail.",
+      "emailInvalid": "Veuillez saisir une adresse e-mail valide.",
+      "message": "Veuillez saisir un message."
+    }
   },
   "cta": {
     "getStarted": "Commencer",
@@ -345,12 +351,26 @@
     },
     "errors": {
       "invalidPhone": "Entrez un numéro de téléphone valide.",
+      "phoneRequired": "Entrez votre numéro de téléphone.",
+      "codeRequired": "Entrez le code de vérification.",
+      "emailRequired": "Entrez votre adresse e-mail.",
+      "emailInvalid": "Entrez une adresse e-mail valide.",
+      "passwordRequired": "Entrez votre mot de passe.",
+      "confirmRequired": "Tapez DELETE pour confirmer.",
       "phoneSend": "Impossible d'envoyer le code. Réessayez ou contactez le support.",
       "otpVerify": "Ce code est invalide ou expiré. Réessayez.",
       "login": "Connexion échouée. Vérifiez votre e-mail et votre mot de passe.",
       "oidc": "Impossible de vérifier avec ce fournisseur. Essayez une autre méthode.",
       "oidcConfig": "La connexion sociale n'est pas encore configurée. Utilisez le téléphone ou l'e-mail.",
+      "oidcGoogle": "La connexion Google n'est pas encore configurée.",
+      "oidcApple": "La connexion Apple n'est pas encore configurée.",
       "delete": "Impossible de supprimer votre compte pour le moment. Veuillez contacter le support."
+    },
+    "toast": {
+      "codeSent": "Nous avons envoyé un code au {phone}.",
+      "identityVerified": "Identité vérifiée.",
+      "signedIn": "Vous êtes connecté(e).",
+      "accountDeleted": "Votre compte a été supprimé."
     }
   },
   "resetPassword": {

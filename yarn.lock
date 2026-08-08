@@ -3102,6 +3102,11 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
+react-apple-signin-auth@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-apple-signin-auth/-/react-apple-signin-auth-1.2.1.tgz#82c78f18e0105c1ec03440f10f418e8a705c3230"
+  integrity sha512-xRX7F28H4y8SyBL0vRP3kXh/aifU0K2lomarWxW/Twxfbhp6Vd56I+cZmmAsEa2AI1CyML84xvedriARju1a/w==
+
 react-dom@19.2.0:
   version "19.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.0.tgz#00ed1e959c365e9a9d48f8918377465466ec3af8"
@@ -3366,6 +3371,11 @@ side-channel@^1.1.0:
     side-channel-list "^1.0.1"
     side-channel-map "^1.0.1"
     side-channel-weakmap "^1.0.2"
+
+sonner@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/sonner/-/sonner-2.0.7.tgz#810c1487a67ec3370126e0f400dfb9edddc3e4f6"
+  integrity sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==
 
 source-map-js@^1.2.1:
   version "1.2.1"
