@@ -1,11 +1,11 @@
-# TeincFoodWeb
+# Teinc FoodWeb
 
-SEO-rich, server-rendered marketing website for the **TeincFood** food-delivery
+SEO-rich, server-rendered marketing website for the **Teinc Food** food-delivery
 marketplace. It funnels three audiences to the correct app download:
 
-- **Buyer** → **TeincFood** app
-- **Restaurant / Business owner** → **TeincFoodBusiness** app
-- **Rider / Driver** → **TeincFoodBusiness** app
+- **Buyer** → **Teinc Food** app
+- **Restaurant / Business owner** → **Teinc Food Business** app
+- **Rider / Driver** → **Teinc Food Business** app
 
 Built with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4,
 next-intl, framer-motion, and lucide-react.
@@ -20,13 +20,13 @@ yarn dev        # http://localhost:3000
 
 ## Scripts
 
-| Command                | Description                        |
-|------------------------|------------------------------------|
-| `yarn dev`             | Start dev server                   |
-| `yarn build`           | Production build (standalone)      |
-| `yarn start`           | Serve production build             |
-| `yarn lint`            | ESLint (flat config)               |
-| `yarn typecheck`       | TypeScript check (`tsc --noEmit`)  |
+| Command          | Description                       |
+| ---------------- | --------------------------------- |
+| `yarn dev`       | Start dev server                  |
+| `yarn build`     | Production build (standalone)     |
+| `yarn start`     | Serve production build            |
+| `yarn lint`      | ESLint (flat config)              |
+| `yarn typecheck` | TypeScript check (`tsc --noEmit`) |
 
 ## Configuration
 
@@ -62,11 +62,12 @@ Product visuals render through `<DeviceFrame />`. Each slot is registered in
 1. Drop PNGs into `public/screens/`.
 2. Set the `image` field of the relevant `ScreenKey` to the path
    (e.g. `"/screens/buyer-home.png"`).
-No component changes needed — placeholders disappear automatically.
+   No component changes needed — placeholders disappear automatically.
 
 ## Content / i18n
 
 All copy lives in `src/content/messages/{locale}.json`. Add a new language by:
+
 1. Duplicating `en.json` as `{code}.json` and translating.
 2. Adding the code to `locales` in `src/config/i18n.ts`.
 
@@ -80,7 +81,7 @@ All copy lives in `src/content/messages/{locale}.json`. Add a new language by:
 
 ## Deployment (Docker + GitHub Actions → GHCR → shared Hetzner server)
 
-Deploys to the **same server** as `TeincFoodBackend`, but as an isolated
+Deploys to the **same server** as `Teinc FoodBackend`, but as an isolated
 compose stack (project `teincfoodweb`, container `teincfood_web`). It joins the
 backend's existing `teinc-internal-net` so the reverse proxy can reach it.
 

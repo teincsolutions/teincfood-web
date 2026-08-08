@@ -100,6 +100,8 @@ jobs:
             NEXT_PUBLIC_BUSINESS_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
             NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
             NEXT_PUBLIC_CONTACT_EMAIL=${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_APPLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}
 
   deploy:
     name: Deploy to backend server
@@ -136,12 +138,7 @@ jobs:
           NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ vars.SMTP_PORT || '587' }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          SMTP_SECURE: ${{ vars.SMTP_SECURE || 'false' }}
-          FROM_EMAIL: ${{ vars.FROM_EMAIL }}
+          TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
 
       - name: Health check
         run: |
@@ -163,5 +160,5 @@ jobs:
           echo "- Environment: ${{ env.DEPLOY_TARGET }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tag: ${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Server: shared with TeincFoodBackend" >> $GITHUB_STEP_SUMMARY
+          echo "- Server: shared with Teinc FoodBackend" >> $GITHUB_STEP_SUMMARY
           echo "- Compose project: teincfoodweb (isolated from backend stack)" >> $GITHUB_STEP_SUMMARY

@@ -22,7 +22,8 @@ export function AppInstallBanner() {
   const t = useTranslations("install");
   const [platform] = useState<Platform>(detectPlatform);
   const [visible, setVisible] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
@@ -67,7 +68,7 @@ export function AppInstallBanner() {
     <aside
       id="install"
       role="region"
-      aria-label="Download TeincFood"
+      aria-label="Download Teinc Food"
       className={cn(
         "fixed inset-x-0 z-50 mx-auto w-full max-w-md px-4",
         "bottom-4",
@@ -78,7 +79,7 @@ export function AppInstallBanner() {
           <Apple className="size-6" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-bold text-navy">TeincFood</p>
+          <p className="truncate font-bold text-navy">Teinc Food</p>
           <p className="text-xs text-navy/60">Food delivery, reimagined</p>
         </div>
         {deferredPrompt || platform === "android" ? (

@@ -1,4 +1,4 @@
-# AGENTS.md — TeincFoodWeb
+# AGENTS.md — Teinc FoodWeb
 
 Guidelines for AI agents and developers working in this repository.
 
@@ -18,7 +18,7 @@ the CI pipeline fails otherwise.
 ## Architecture rules
 
 - **Config-driven, never hardcoded.** Store links, site URL, analytics, and
-  contact SMTP all come from env via `src/config/site.ts`. Add new env-driven
+  contact email all come from env via `src/config/site.ts`. Add new env-driven
   values there, not in components.
 - **Imagery registry.** Product screen slots live in `src/config/screens.ts`.
   Real screenshots are swapped in by setting an `image` path under
@@ -45,11 +45,12 @@ the CI pipeline fails otherwise.
 - Docker multi-stage build (`.next/standalone`, non-root, `linux/arm64`).
 - GitHub Actions (`.github/workflows/ci.yml`) builds/pushes to GHCR; a
   self-hosted runner deploys via `docker compose` on release tags.
-- Deploys to the **same server as TeincFoodBackend** as an isolated compose
+- Deploys to the **same server as Teinc FoodBackend** as an isolated compose
   project (`name: teincfoodweb`, container `teincfood_web`), joining the
   external `teinc-internal-net` so the shared reverse proxy can route to it.
 - `NEXT_PUBLIC_*` are **build args** (Next.js inlines them at build time) —
   keep them in sync between `Dockerfile` args, `docker-compose.yml` build
-  args, and the CI `build-args`. SMTP/contact are runtime container env.
+  args, and the CI `build-args`. `TEINCFOOD_API_BASE_URL` is a runtime
+  container env used by the contact + delete-account proxies.
 - Secrets/vars are injected from GitHub; see `docker-compose.yml` for the env
   contract and `.env.example` for the local contract.

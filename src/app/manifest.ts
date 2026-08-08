@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: siteConfig.name,
-    short_name: "TeincFood",
+    short_name: "Teinc Food",
     description: siteConfig.description,
     start_url: "/en",
     display: "standalone",

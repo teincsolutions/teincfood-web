@@ -1,41 +1,45 @@
 {
   "meta": {
     "default": {
-      "title": "TeincFood — Commandez, développez votre commerce ou devenez livreur",
-      "description": "TeincFood est la plateforme de livraison de plats pour les clients, les restaurants et les livreurs. Téléchargez l'application sur iOS et Android.",
-      "keywords": "livraison de repas, commander, partenaire restaurant, livreur, TeincFood"
+      "title": "Teinc Food — Commandez, développez votre commerce ou devenez livreur",
+      "description": "Teinc Food est la plateforme de livraison de plats pour les clients, les restaurants et les livreurs. Téléchargez l'application sur iOS et Android.",
+      "keywords": "livraison de repas, commander, partenaire restaurant, livreur, Teinc Food"
     },
     "order": {
-      "title": "Commandez des plats livrés — Application TeincFood",
-      "description": "Découvrez les restaurants locaux, commandez vos favoris et suivez votre livraison en direct avec l'application TeincFood."
+      "title": "Commandez des plats livrés — Application Teinc Food",
+      "description": "Découvrez les restaurants locaux, commandez vos favoris et suivez votre livraison en direct avec l'application Teinc Food."
     },
     "business": {
-      "title": "TeincFoodBusiness — développez votre restaurant avec la livraison",
-      "description": "Atteignez plus de clients, gérez les commandes et augmentez vos revenus avec l'application partenaire TeincFoodBusiness."
+      "title": "Teinc Food Business — développez votre restaurant avec la livraison",
+      "description": "Atteignez plus de clients, gérez les commandes et augmentez vos revenus avec l'application partenaire Teinc Food Business."
     },
     "rider": {
-      "title": "Devenez livreur TeincFood — livrez et gagnez",
-      "description": "Livrez avec l'application TeincFoodBusiness. Gagnez de l'argent selon votre propre emploi du temps en tant que livreur TeincFood."
+      "title": "Devenez livreur Teinc Food — livrez et gagnez",
+      "description": "Livrez avec l'application Teinc Food Business. Gagnez de l'argent selon votre propre emploi du temps en tant que livreur Teinc Food."
     },
     "about": {
-      "title": "À propos de TeincFood",
-      "description": "TeincFood connecte les clients, les restaurants et les livreurs sur une seule plateforme de livraison."
+      "title": "À propos de Teinc Food",
+      "description": "Teinc Food connecte les clients, les restaurants et les livreurs sur une seule plateforme de livraison."
     },
     "faq": {
-      "title": "Questions fréquentes — TeincFood",
-      "description": "Des réponses sur la commande, le partenariat, la livraison et les paiements avec TeincFood."
+      "title": "Questions fréquentes — Teinc Food",
+      "description": "Des réponses sur la commande, le partenariat, la livraison et les paiements avec Teinc Food."
     },
     "contact": {
-      "title": "Contactez-nous — TeincFood",
-      "description": "Contactez l'équipe TeincFood pour l'assistance, les partenariats et la presse."
+      "title": "Contactez-nous — Teinc Food",
+      "description": "Contactez l'équipe Teinc Food pour l'assistance, les partenariats et la presse."
     },
     "privacy": {
-      "title": "Politique de confidentialité — TeincFood",
-      "description": "Comment TeincFood collecte, utilise et protège vos informations personnelles."
+      "title": "Politique de confidentialité — Teinc Food",
+      "description": "Comment Teinc Food collecte, utilise et protège vos informations personnelles."
     },
     "terms": {
-      "title": "Conditions d'utilisation — TeincFood",
-      "description": "Les conditions régissant l'utilisation des services TeincFood."
+      "title": "Conditions d'utilisation — Teinc Food",
+      "description": "Les conditions régissant l'utilisation des services Teinc Food."
+    },
+    "deleteAccount": {
+      "title": "Supprimer le compte — Teinc Food",
+      "description": "Supprimez définitivement votre compte Teinc Food et vos données personnelles."
     }
   },
   "nav": {
@@ -49,27 +53,28 @@
     "menu": "Menu"
   },
   "footer": {
-    "tagline": "Commandez. Participez. Livrez. TeincFood connecte la nourriture de votre ville.",
+    "tagline": "Commandez. Participez. Livrez. Teinc Food connecte la nourriture de votre ville.",
     "product": "Produit",
     "company": "Entreprise",
     "legal": "Légal",
     "downloadApp": "Télécharger l'application",
     "rights": "Tous droits réservés.",
     "privacy": "Politique de confidentialité",
-    "terms": "Conditions d'utilisation"
+    "terms": "Conditions d'utilisation",
+    "deleteAccount": "Supprimer le compte"
   },
   "install": {
     "ios": "Télécharger sur l'App Store",
     "android": "Obtenir sur Google Play",
-    "open": "Ouvrir TeincFood",
+    "open": "Ouvrir Teinc Food",
     "dismiss": "Pas maintenant",
-    "scan": "Scannez pour télécharger TeincFood"
+    "scan": "Scannez pour télécharger Teinc Food"
   },
   "home": {
     "hero": {
       "eyebrow": "Maintenant en livraison",
       "title": "La nourriture de votre ville, livrée rapidement.",
-      "subtitle": "Commandez chez les restaurants locaux, faites tourner votre cuisine à plein régime ou gagnez en livrant à votre rythme. Une seule plateforme — TeincFood.",
+      "subtitle": "Commandez chez les restaurants locaux, faites tourner votre cuisine à plein régime ou gagnez en livrant à votre rythme. Une seule plateforme — Teinc Food.",
       "cta": "Télécharger l'application",
       "secondary": "Pour les restaurants et les livreurs"
     },
@@ -81,18 +86,18 @@
       },
       "business": {
         "title": "Développer votre commerce",
-        "description": "Atteignez plus de clients, gérez les commandes et boostez vos revenus avec TeincFoodBusiness."
+        "description": "Atteignez plus de clients, gérez les commandes et boostez vos revenus avec Teinc Food Business."
       },
       "rider": {
         "title": "Livrer et gagner",
-        "description": "Travaillez à votre propre et gagnez par livraison avec les outils livreur de TeincFoodBusiness."
+        "description": "Travaillez à votre propre et gagnez par livraison avec les outils livreur de Teinc Food Business."
       }
     },
     "how": {
       "title": "Comment ça marche",
       "step1": {
         "title": "Téléchargez l'application",
-        "description": "Obtenez TeincFood sur iOS ou Android en moins d'une minute."
+        "description": "Obtenez Teinc Food sur iOS ou Android en moins d'une minute."
       },
       "step2": {
         "title": "Choisissez ce que vous aimez",
@@ -128,7 +133,7 @@
     },
     "cta": {
       "title": "Prêt à sentir la différence ?",
-      "subtitle": "Téléchargez TeincFood et faites livrer votre première commande rapidement.",
+      "subtitle": "Téléchargez Teinc Food et faites livrer votre première commande rapidement.",
       "button": "Télécharger maintenant"
     }
   },
@@ -137,7 +142,7 @@
       "eyebrow": "Pour les gourmands",
       "title": "Une bonne cuisine, en moins de clics.",
       "subtitle": "Trouvez des restaurants près de chez vous, commandez en quelques secondes et regardez votre repas arriver — chaud et à l'heure.",
-      "cta": "Télécharger TeincFood"
+      "cta": "Télécharger Teinc Food"
     },
     "steps": {
       "title": "Commandez en trois étapes simples",
@@ -165,8 +170,8 @@
     "hero": {
       "eyebrow": "Pour les restaurants et les entreprises",
       "title": "Votre cuisine, ouverte à plus de clients.",
-      "subtitle": "Rejoignez TeincFoodBusiness pour atteindre les clients affamés de votre ville, gérer les commandes sans effort et développer votre chiffre d'affaires.",
-      "cta": "Télécharger TeincFoodBusiness",
+      "subtitle": "Rejoignez Teinc Food Business pour atteindre les clients affamés de votre ville, gérer les commandes sans effort et développer votre chiffre d'affaires.",
+      "cta": "Télécharger Teinc Food Business",
       "secondary": "Découvrir comment ça marche"
     },
     "steps": {
@@ -204,8 +209,8 @@
     "hero": {
       "eyebrow": "Pour les livreurs",
       "title": "Gagnez selon votre emploi du temps.",
-      "subtitle": "Livrez avec l'application TeincFoodBusiness. Des horaires flexibles, des revenus clairs et tout ce qu'il faut pour offrir une excellente expérience.",
-      "cta": "Télécharger TeincFoodBusiness"
+      "subtitle": "Livrez avec l'application Teinc Food Business. Des horaires flexibles, des revenus clairs et tout ce qu'il faut pour offrir une excellente expérience.",
+      "cta": "Télécharger Teinc Food Business"
     },
     "steps": {
       "title": "Commencez à livrer en trois étapes",
@@ -239,17 +244,17 @@
     }
   },
   "about": {
-    "title": "À propos de TeincFood",
-    "p1": "TeincFood est une plateforme de livraison de repas qui connecte les clients, les restaurants et les livreurs dans des villes du monde entier.",
+    "title": "À propos de Teinc Food",
+    "p1": "Teinc Food est une plateforme de livraison de repas qui connecte les clients, les restaurants et les livreurs dans des villes du monde entier.",
     "p2": "Nous croyons qu'une bonne cuisine doit être facile à trouver, facile à commander et facile à livrer — pour tout le monde."
   },
   "faq": {
     "title": "Questions fréquentes",
     "intro": "Des réponses rapides aux questions que nous entendons le plus.",
-    "q1": "Où TeincFood est-il disponible ?",
-    "a1": "TeincFood se déploie progressivement dans les villes. Consultez l'application pour la disponibilité dans votre région.",
+    "q1": "Où Teinc Food est-il disponible ?",
+    "a1": "Teinc Food se déploie progressivement dans les villes. Consultez l'application pour la disponibilité dans votre région.",
     "q2": "Comment devenir livreur ?",
-    "a2": "Téléchargez l'application TeincFoodBusiness, inscrivez-vous en tant que livreur et suivez les étapes d'onboarding.",
+    "a2": "Téléchargez l'application Teinc Food Business, inscrivez-vous en tant que livreur et suivez les étapes d'onboarding.",
     "q3": "Comment fonctionne le paiement ?",
     "a3": "Vous pouvez payer par carte, mobile money ou espèces à la livraison — votre choix au moment du paiement.",
     "q4": "Comment associer mon restaurant ?",
@@ -269,11 +274,11 @@
     "terms": {
       "title": "Conditions d'utilisation",
       "section1": "Utilisation du service",
-      "p1": "En utilisant TeincFood, vous acceptez de commander des repas, de fournir des livraisons ou d'exploiter un commerce conformément à la loi applicable.",
+      "p1": "En utilisant Teinc Food, vous acceptez de commander des repas, de fournir des livraisons ou d'exploiter un commerce conformément à la loi applicable.",
       "section2": "Paiements et remboursements",
       "p2": "Les paiements sont traités de manière sécurisée. Les remboursements suivent la politique affichée dans l'application au moment de votre commande.",
       "section3": "Responsabilité",
-      "p3": "TeincFood connecte les clients, les restaurants et les livreurs. Chaque partie est responsable de ses propres obligations."
+      "p3": "Teinc Food connecte les clients, les restaurants et les livreurs. Chaque partie est responsable de ses propres obligations."
     }
   },
   "contact": {
@@ -291,5 +296,57 @@
   "cta": {
     "getStarted": "Commencer",
     "learnMore": "En savoir plus"
+  },
+  "deleteAccount": {
+    "title": "Supprimer votre compte Teinc Food",
+    "intro": "Nous sommes désolés de vous voir partir. Vérifiez votre identité pour supprimer définitivement votre compte et vos données personnelles. Cette action est irréversible.",
+    "step": {
+      "identify": "Identifier",
+      "verify": "Vérifier",
+      "confirm": "Confirmer",
+      "done": "Terminé"
+    },
+    "method": {
+      "phone": "Téléphone + OTP",
+      "email": "E-mail + mot de passe",
+      "oidc": "Google / Apple"
+    },
+    "form": {
+      "phone": "Numéro de téléphone",
+      "sendCode": "Envoyer le code de vérification",
+      "code": "Code de vérification",
+      "verify": "Vérifier le code",
+      "verifyIntro": "Saisissez le code envoyé au {phone}",
+      "resend": "Renvoyer le code",
+      "resendIn": "Nouvel essai dans {seconds}s",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "continue": "Continuer",
+      "google": "Continuer avec Google",
+      "apple": "Continuer avec Apple",
+      "back": "Retour",
+      "delete": "Supprimer définitivement le compte"
+    },
+    "confirm": {
+      "warning": "Ceci supprimera définitivement votre compte.",
+      "deleted": "Votre profil, vos identifiants et vos données personnelles seront effacés. Cette action ne peut pas être annulée.",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "id": "Identifiant du compte",
+      "typeDelete": "Tapez DELETE pour confirmer"
+    },
+    "done": {
+      "title": "Votre compte a été supprimé",
+      "body": "Nous avons supprimé votre compte Teinc Food et vos données personnelles. Merci d'avoir utilisé Teinc Food."
+    },
+    "errors": {
+      "invalidPhone": "Entrez un numéro de téléphone valide.",
+      "phoneSend": "Impossible d'envoyer le code. Réessayez ou contactez le support.",
+      "otpVerify": "Ce code est invalide ou expiré. Réessayez.",
+      "login": "Connexion échouée. Vérifiez votre e-mail et votre mot de passe.",
+      "oidc": "Impossible de vérifier avec ce fournisseur. Essayez une autre méthode.",
+      "oidcConfig": "La connexion sociale n'est pas encore configurée. Utilisez le téléphone ou l'e-mail.",
+      "delete": "Impossible de supprimer votre compte pour le moment. Veuillez contacter le support."
+    }
   }
 }

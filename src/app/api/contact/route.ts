@@ -1,25 +1,19 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { siteConfig } from "@/config/site";
 
 export const runtime = "nodejs";
 
-function makeTransporter() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER || process.env.GMAIL_EMAIL;
-  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_KEY;
+const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
+const emailRegex = /^\S+@\S+\.\S+$/;
 
-  if (!host || !user || !pass) return null;
-
-  return nodemailer.createTransport({
-    host,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: { user, pass },
-  });
-}
-
+/**
+ * Proxies the website contact form to the TeincFood backend, which relays the
+ * message to the support inbox using its configured email provider.
+ */
 export async function POST(req: Request) {
+  if (!API_BASE) {
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
   let body: { name?: string; email?: string; message?: string };
   try {
     body = await req.json();
@@ -31,26 +25,27 @@ export async function POST(req: Request) {
   const email = body.email?.trim() ?? "";
   const message = body.message?.trim() ?? "";
 
-  if (!name || !email || !/^\S+@\S+\.\S+$/.test(email) || !message) {
+  if (!name || !email || !emailRegex.test(email) || !message) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  const transporter = makeTransporter();
+  try {
+    const res = await fetch(`${API_BASE}/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, message }),
+    });
 
-  if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: `"${siteConfig.name} Website" <${process.env.FROM_EMAIL || siteConfig.contactEmail}>`,
-        to: siteConfig.contactEmail,
-        replyTo: email,
-        subject: `Contact form: ${name}`,
-        text: `From: ${name} <${email}>\n\n${message}`,
-      });
-    } catch (err) {
-      console.error("Contact email failed", err);
-      return NextResponse.json({ error: "Failed to send" }, { status: 500 });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return NextResponse.json(data, { status: res.status });
     }
-  }
 
-  return NextResponse.json({ ok: true }, { status: 200 });
+    return NextResponse.json({ ok: true }, { status: 200 });
+  } catch {
+    return NextResponse.json(
+      { error: "Service temporarily unavailable" },
+      { status: 502 },
+    );
+  }
 }

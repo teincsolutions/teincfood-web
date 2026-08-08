@@ -28,10 +28,10 @@ export const storeLinks: StoreLinks = {
 };
 
 export const siteConfig = {
-  name: "TeincFood",
+  name: "Teinc Food",
   tagline: "Food delivery, reimagined",
   description:
-    "Order from your favorite local restaurants or grow your own — TeincFood connects buyers, businesses, and riders on one fast, reliable food delivery platform.",
+    "Order from your favorite local restaurants or grow your own — Teinc Food connects buyers, businesses, and riders on one fast, reliable food delivery platform.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@teincfood.com",
   analyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",

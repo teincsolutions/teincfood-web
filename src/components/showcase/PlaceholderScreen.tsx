@@ -20,7 +20,7 @@ export function PlaceholderScreen({ screen }: { screen: ScreenDef }) {
 
       {/* App header */}
       <div className="flex items-baseline gap-2 px-4 pt-4">
-        <span className="text-sm font-extrabold text-navy">TeincFood</span>
+        <span className="text-sm font-extrabold text-navy">Teinc Food</span>
         <span className="h-1.5 w-1.5 rounded-full bg-orange" />
       </div>
 

@@ -14,6 +14,8 @@ services:
         NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${NEXT_PUBLIC_BUSINESS_PLAY_STORE:-}
         NEXT_PUBLIC_GOOGLE_ANALYTICS: ${NEXT_PUBLIC_GOOGLE_ANALYTICS:-}
         NEXT_PUBLIC_CONTACT_EMAIL: ${NEXT_PUBLIC_CONTACT_EMAIL:-}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-}
+        NEXT_PUBLIC_APPLE_CLIENT_ID: ${NEXT_PUBLIC_APPLE_CLIENT_ID:-}
     container_name: teincfood_web
     restart: unless-stopped
     ports:
@@ -21,12 +23,7 @@ services:
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_CONTACT_EMAIL: ${NEXT_PUBLIC_CONTACT_EMAIL:-}
-      SMTP_HOST: ${SMTP_HOST:-}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USER: ${SMTP_USER:-}
-      SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_SECURE: ${SMTP_SECURE:-false}
-      FROM_EMAIL: ${FROM_EMAIL:-}
+      TEINCFOOD_API_BASE_URL: ${TEINCFOOD_API_BASE_URL:-}
     networks:
       - teinc-internal-net
     healthcheck:

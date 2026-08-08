@@ -14,8 +14,8 @@ const manrope = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "TeincFood — Order food, grow your business, or deliver",
-    template: "%s | TeincFood",
+    default: "Teinc Food — Order food, grow your business, or deliver",
+    template: "%s | Teinc Food",
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     "order food",
     "restaurant partner",
     "delivery rider",
-    "TeincFood",
+    "Teinc Food",
   ],
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
     locale: "en_US",
-    title: "TeincFood — Order food, grow your business, or deliver",
+    title: "Teinc Food — Order food, grow your business, or deliver",
     description: siteConfig.description,
     url: siteConfig.url,
     images: [
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
         url: "/icon.png",
         width: 1200,
         height: 630,
-        alt: "TeincFood",
+        alt: "Teinc Food",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TeincFood",
+    title: "Teinc Food",
     description: siteConfig.description,
     images: ["/icon.png"],
   },

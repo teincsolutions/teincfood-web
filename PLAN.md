@@ -1,12 +1,12 @@
-# TeincFoodWeb — Marketing + App Landing Website
+# Teinc FoodWeb — Marketing + App Landing Website
 
-SEO-rich, server-rendered marketing website for the **TeincFood** delivery
+SEO-rich, server-rendered marketing website for the **Teinc Food** delivery
 marketplace. Three distinct audience funnels, each pushing the correct app
 download:
 
-- **Buyer** → installs the **TeincFood** app (iOS + Android)
-- **Restaurant / Business owner** → installs the **TeincFoodBusiness** app
-- **Rider / Driver** (also fleet manager) → installs the **TeincFoodBusiness** app
+- **Buyer** → installs the **Teinc Food** app (iOS + Android)
+- **Restaurant / Business owner** → installs the **Teinc Food Business** app
+- **Rider / Driver** (also fleet manager) → installs the **Teinc Food Business** app
 
 All pages are statically prerendered (`generateStaticParams`) for maximum SEO,
 crawlability and speed, with an automatic app-install prompt for visitors.
@@ -15,19 +15,20 @@ crawlability and speed, with an automatic app-install prompt for visitors.
 
 ## 1. Stack
 
-| Concern        | Choice                                              |
-|----------------|-----------------------------------------------------|
-| Framework      | Next.js 16 (App Router), React 19, TypeScript       |
-| Styling        | Tailwind CSS v4                                     |
-| Motion         | framer-motion, `next/image`                         |
-| Icons          | lucide-react                                        |
-| Font           | Manrope via `next/font` (self-hosted variable font) |
-| i18n           | next-intl (English default, locale-ready)           |
-| SEO            | Metadata API, `sitemap.ts`, `robots.ts`, `next/og`, JSON-LD |
-| Install/PWA    | Custom banner + PWA manifest + service worker       |
-| Deploy         | Docker + GitHub Actions → GHCR → Hetzner VPS (arm64) |
+| Concern     | Choice                                                      |
+| ----------- | ----------------------------------------------------------- |
+| Framework   | Next.js 16 (App Router), React 19, TypeScript               |
+| Styling     | Tailwind CSS v4                                             |
+| Motion      | framer-motion, `next/image`                                 |
+| Icons       | lucide-react                                                |
+| Font        | Manrope via `next/font` (self-hosted variable font)         |
+| i18n        | next-intl (English default, locale-ready)                   |
+| SEO         | Metadata API, `sitemap.ts`, `robots.ts`, `next/og`, JSON-LD |
+| Install/PWA | Custom banner + PWA manifest + service worker               |
+| Deploy      | Docker + GitHub Actions → GHCR → Hetzner VPS (arm64)        |
 
 ### Brand tokens (extracted from logo SVGs)
+
 - Navy: `#1E1E2E`
 - Orange: `#FF7622`
 - Surface: `#FFF9F5`
@@ -53,15 +54,15 @@ NEXT_PUBLIC_CONTACT_EMAIL (optional)
 
 ## Pages
 
-| Route            | Purpose                                              |
-|------------------|------------------------------------------------------|
-| `/`              | Hub: hero + Buy / Business / Rider role cards, how-it-works, features, cities, install banner |
-| `/order`         | Buyer funnel (TeincFood app)                          |
-| `/business`      | Merchant funnel (TeincFoodBusiness app)               |
-| `/rider`         | Rider funnel (TeincFoodBusiness app)                  |
-| `/about`, `/faq` | Trust + SEO long-tail                                 |
-| `/legal/privacy`, `/legal/terms` | Legal (required for app stores)        |
-| `/contact`       | Lead capture → SMTP API route                         |
+| Route                            | Purpose                                                                                       |
+| -------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/`                              | Hub: hero + Buy / Business / Rider role cards, how-it-works, features, cities, install banner |
+| `/order`                         | Buyer funnel (Teinc Food app)                                                                 |
+| `/business`                      | Merchant funnel (Teinc Food Business app)                                                     |
+| `/rider`                         | Rider funnel (Teinc Food Business app)                                                        |
+| `/about`, `/faq`                 | Trust + SEO long-tail                                                                         |
+| `/legal/privacy`, `/legal/terms` | Legal (required for app stores)                                                               |
+| `/contact`                       | Lead capture → SMTP API route                                                                 |
 
 Each page: unique title/description/canonical/OG image + JSON-LD
 (`Organization`, `WebSite`, `SoftwareApplication`, `FAQPage`).
@@ -73,7 +74,7 @@ Each page: unique title/description/canonical/OG image + JSON-LD
   in **`src/config/screens.ts`**. If the slot has no image, `<DeviceFrame />`
   renders a stylish on-brand placeholder screen. Swapping in real captures
   later = drop PNGs into `public/screens/` and update one entry.
-- Brand assets (SVG logos) come from `TeincFoodBrand Doc/Logo Asset/`.
+- Brand assets (SVG logos) come from `Teinc FoodBrand Doc/Logo Asset/`.
 
 ## Install / download UX
 
@@ -91,7 +92,7 @@ Each page: unique title/description/canonical/OG image + JSON-LD
 - LCP-performant: self-hosted font, `next/image` sizes/priority, lazy below fold.
 - Lighthouse mobile pass during build.
 
-## CI/CD (mirrors TeincFoodBackend)
+## CI/CD (mirrors Teinc FoodBackend)
 
 - Multi-stage Dockerfile → `next build` (standalone) → slim Node runtime, non-root, `linux/arm64`.
 - GitHub Actions: build & push image to GHCR → deploy on self-hosted runner

@@ -7,6 +7,14 @@ const config = [
   },
   js.configs.recommended,
   ...nextCoreWebVitals,
+  {
+    rules: {
+      "no-unused-vars": [
+        "error",
+        { args: "after-used", argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
+    },
+  },
 ];
 
 export default config;
