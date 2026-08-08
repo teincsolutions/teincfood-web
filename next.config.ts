@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
+  images: {
+    localPatterns: [{ pathname: "/logo/*" }],
+  },
   async headers() {
     return [
       {

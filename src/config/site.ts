@@ -36,7 +36,7 @@ export const siteConfig = {
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@teincfood.com",
   analyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",
   deleteAccountPath: "/delete-account",
-  logoVersion: process.env.NEXT_PUBLIC_LOGO_VERSION ?? "1",
+  logoVersion: process.env.NEXT_PUBLIC_LOGO_VERSION ?? "2",
 };
 
 export const authConfig = {

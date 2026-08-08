@@ -9,7 +9,7 @@ export function Logo({
   className,
   imgClassName,
 }: {
-  variant?: "navy" | "white" | "orange";
+  variant?: "navy" | "white" | "orange" | "footer";
   href?: string;
   className?: string;
   imgClassName?: string;
@@ -20,21 +20,29 @@ export function Logo({
   const horizontalSrc =
     variant === "white"
       ? `/logo/logo-horizontal-white.svg${assetVersion}`
-      : `/logo/logo-horizontal.svg${assetVersion}`;
+      : variant === "footer"
+        ? `/logo/logo-horizontal-footer.png${assetVersion}`
+        : `/logo/logo-horizontal.svg${assetVersion}`;
   const markSrc =
     variant === "white"
       ? `/logo/logo-white.svg${assetVersion}`
-      : `/logo/logo-orange.svg${assetVersion}`;
+      : variant === "footer"
+        ? `/logo/logo-orange.svg${assetVersion}`
+        : `/logo/logo-orange.svg${assetVersion}`;
 
   return (
     <Link href={href} className={cn("inline-flex items-center", className)}>
       <Image
         src={horizontalSrc}
         alt="Teinc Food"
-        width={816}
-        height={187}
+        width={variant === "footer" ? 1148 : 816}
+        height={variant === "footer" ? 269 : 187}
         priority
-        className={cn("hidden h-9 w-auto sm:block", imgClassName)}
+        className={cn(
+          "hidden h-9 w-auto sm:block",
+          variant === "footer" && "h-auto w-56 sm:w-72",
+          imgClassName,
+        )}
         style={{ width: "auto" }}
       />
       <Image
