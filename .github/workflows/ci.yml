@@ -104,10 +104,10 @@ jobs:
     name: Deploy to server
     runs-on: [self-hosted, teinc-run-1]
     needs: build-image
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.event_name != 'pull_request'
     env:
-      DEPLOY_TARGET: ${{ github.event.release.target_commitish }}
-      RELEASE_TAG: ${{ github.event.release.tag_name }}
+      DEPLOY_TARGET: ${{ github.ref_name }}
+      IMAGE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
     steps:
       - uses: actions/checkout@v4
 
@@ -120,10 +120,10 @@ jobs:
 
       - name: Deploy
         run: |
-          docker pull "ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}"
+          docker pull "ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}"
           docker compose up -d --pull always
         env:
-          APP_IMAGE: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}
+          APP_IMAGE: ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
           WEB_PORT: 3001
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_BUYER_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
