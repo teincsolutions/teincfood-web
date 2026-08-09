@@ -1,0 +1,56 @@
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag to deploy (e.g. v0.1.0 or commit SHA)"
+        required: true
+        type: string
+
+concurrency:
+  group: ci-CI/CD-rollback
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    name: Rollback to ${{ inputs.tag }}
+    runs-on: [self-hosted, teinc-run-1]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy
+        run: |
+          docker pull "ghcr.io/${{ github.repository }}:${{ inputs.tag }}"
+          docker compose up -d --pull always
+        env:
+          APP_IMAGE: ghcr.io/${{ github.repository }}:${{ inputs.tag }}
+          WEB_PORT: 3001
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_BUYER_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
+          NEXT_PUBLIC_BUYER_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
+          NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
+          NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
+          NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
+          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
+          TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
+
+      - name: Health check
+        run: |
+          for i in {1..30}; do
+            if curl -sf "${{ vars.NEXT_PUBLIC_SITE_URL }}/en" > /dev/null 2>&1; then
+              echo "Site is healthy"
+              exit 0
+            fi
+            echo "Waiting for site... ($i/30)"
+            sleep 2
+          done
+          echo "Health check failed"
+          exit 1
