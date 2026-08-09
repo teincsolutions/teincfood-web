@@ -6,9 +6,13 @@ build
 .gitignore
 .env
 .env*.local
-npm-debug.log*
 Dockerfile
 docker-compose*.yml
 README.md
 PLAN.md
 .dockerignore
+.github
+AGENTS.md
+*.md
+yarn-error.log
+npm-debug.log*
