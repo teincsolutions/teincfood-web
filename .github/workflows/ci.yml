@@ -17,33 +17,34 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   lint-build:
     name: Lint, typecheck & build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        run: |
+          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+          git fetch --depth 1 origin "${{ github.sha }}"
+          git checkout "${{ github.sha }}"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
+      - name: Setup Node
+        run: |
+          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          corepack enable
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
       - name: Typecheck
-        run: npm run typecheck
+        run: npx tsc --noEmit
 
       - name: Lint
-        run: npm run lint
+        run: npx eslint .
 
       - name: Build
-        run: npm run build
+        run: npx next build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
 
@@ -51,54 +52,55 @@ jobs:
     name: Build & push Docker image
     runs-on: ubuntu-latest
     needs: lint-build
-    outputs:
-      image-tag: ${{ steps.meta.outputs.tags }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        run: |
+          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+          git fetch --depth 1 origin "${{ github.sha }}"
+          git checkout "${{ github.sha }}"
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        run: |
+          docker run --rm --privileged tonistiigi/binfmt:latest --install arm64
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        run: |
+          docker buildx create --use --name multiarch || docker buildx use multiarch
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=tag
-            type=semver,pattern=v{{version}},event=tag
-            type=ref,event=branch
-            type=sha,prefix=
+      - name: Generate tags
+        id: tags
+        run: |
+          SHA_TAG="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+          BRANCH_TAG="ghcr.io/${{ github.repository }}:${{ github.ref_name }}"
+          TAGS="$SHA_TAG,$BRANCH_TAG"
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG_TAG="ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}"
+            TAGS="$TAGS,$TAG_TAG"
+          fi
+          echo "tags=$TAGS" >> $GITHUB_OUTPUT
+          echo "first_tag=$SHA_TAG" >> $GITHUB_OUTPUT
 
       - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
-            NEXT_PUBLIC_BUYER_APP_STORE=${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
-            NEXT_PUBLIC_BUYER_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
-            NEXT_PUBLIC_BUSINESS_APP_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
-            NEXT_PUBLIC_BUSINESS_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
-            NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
-            NEXT_PUBLIC_CONTACT_EMAIL=${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-            NEXT_PUBLIC_APPLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            ${{ github.event_name != 'pull_request' && '--push' || '' }} \
+            $(echo "${{ steps.tags.outputs.tags }}" | tr ',' '\n' | sed 's/^/-t /' | tr '\n' ' ') \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --build-arg NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}" \
+            --build-arg NEXT_PUBLIC_BUYER_APP_STORE="${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUYER_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUSINESS_APP_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUSINESS_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
+            --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}" \
+            --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}" \
+            --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
+            --build-arg NEXT_PUBLIC_APPLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
+            .
 
   deploy:
     name: Deploy to server
@@ -106,17 +108,16 @@ jobs:
     needs: build-image
     if: github.event_name != 'pull_request'
     env:
-      DEPLOY_TARGET: ${{ github.ref_name }}
       IMAGE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        run: |
+          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+          git fetch --depth 1 origin "${{ github.sha }}"
+          git checkout "${{ github.sha }}"
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Deploy
         run: |
@@ -136,7 +137,7 @@ jobs:
 
       - name: Health check
         run: |
-          for i in {1..30}; do
+          for i in $(seq 1 30); do
             if curl -sf "${{ vars.NEXT_PUBLIC_SITE_URL }}/en" > /dev/null 2>&1; then
               echo "Site is healthy"
               exit 0

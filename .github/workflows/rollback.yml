@@ -17,14 +17,12 @@ jobs:
     name: Rollback to ${{ inputs.tag }}
     runs-on: [self-hosted, teinc-run-1]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        run: |
+          git clone --depth 1 "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
       - name: Deploy
         run: |
@@ -44,7 +42,7 @@ jobs:
 
       - name: Health check
         run: |
-          for i in {1..30}; do
+          for i in $(seq 1 30); do
             if curl -sf "${{ vars.NEXT_PUBLIC_SITE_URL }}/en" > /dev/null 2>&1; then
               echo "Site is healthy"
               exit 0
