@@ -4,6 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS=--no-node-snapshot
 
 # NEXT_PUBLIC_* values are inlined into the client bundle at build time,
 # so they must be passed in as build args.
