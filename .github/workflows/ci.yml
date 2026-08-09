@@ -47,65 +47,10 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
 
-  build-image:
-    name: Build & push Docker image
-    runs-on: [self-hosted, teinc-run-1]
-    needs: lint-build
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      image-tag: ${{ steps.meta.outputs.tags }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=tag
-            type=semver,pattern=v{{version}},event=tag
-            type=ref,event=branch
-            type=sha,prefix=
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
-            NEXT_PUBLIC_BUYER_APP_STORE=${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
-            NEXT_PUBLIC_BUYER_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
-            NEXT_PUBLIC_BUSINESS_APP_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
-            NEXT_PUBLIC_BUSINESS_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
-            NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
-            NEXT_PUBLIC_CONTACT_EMAIL=${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-            NEXT_PUBLIC_APPLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}
-
   deploy:
-    name: Deploy to backend server
-    runs-on: [self-hosted, teinc-run-1]
-    needs: build-image
-    permissions:
-      contents: read
-      packages: read
+    name: Build & Deploy (ARM64)
+    runs-on: ubuntu-latest
+    needs: lint-build
     if: github.event_name == 'release' && github.event.action == 'published'
     env:
       DEPLOY_TARGET: ${{ github.event.release.target_commitish }}
@@ -113,49 +58,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Pull application image
-        run: docker pull ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}
-
-      - name: Deploy with docker-compose (same server as backend)
-        run: docker compose up -d --pull always
-        env:
-          APP_IMAGE: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}
-          WEB_PORT: 3001
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-          NEXT_PUBLIC_BUYER_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
-          NEXT_PUBLIC_BUYER_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
-          NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
-          NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
-          NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
-          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
-          TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
-
-      - name: Health check
+      - name: Build & Deploy
         run: |
-          for i in {1..30}; do
-            if curl -sf "${{ vars.NEXT_PUBLIC_SITE_URL }}/en" > /dev/null 2>&1; then
-              echo "Site is healthy"
-              exit 0
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'DEPLOY'
+            set -e
+
+            REPO_DIR=~/src/teincfoodweb
+            COMPOSE_DIR=~/teincfoodweb-deploy
+
+            if [ -d "$REPO_DIR/.git" ]; then
+              cd "$REPO_DIR" && git fetch && git checkout origin/main
+            else
+              git clone https://github.com/teincsolutions/TeincFoodWeb.git "$REPO_DIR"
             fi
-            echo "Waiting for site... ($i/30)"
-            sleep 2
-          done
-          echo "Health check failed"
-          exit 1
 
-      - name: Deployment summary
-        if: always()
-        run: |
-          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Environment: ${{ env.DEPLOY_TARGET }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Tag: ${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Image: ghcr.io/${{ github.repository }}:${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Server: shared with Teinc FoodBackend" >> $GITHUB_STEP_SUMMARY
-          echo "- Compose project: teincfoodweb (isolated from backend stack)" >> $GITHUB_STEP_SUMMARY
+            cd "$REPO_DIR"
+
+            docker build -t "teincfood-web:${{ env.RELEASE_TAG }}" \
+              --build-arg "NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}" \
+              --build-arg "NEXT_PUBLIC_CONTACT_EMAIL=${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}" \
+              --build-arg "NEXT_PUBLIC_GOOGLE_ANALYTICS=${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}" \
+              --build-arg "NEXT_PUBLIC_BUYER_APP_STORE=${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}" \
+              --build-arg "NEXT_PUBLIC_BUYER_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
+              --build-arg "NEXT_PUBLIC_BUSINESS_APP_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
+              --build-arg "NEXT_PUBLIC_BUSINESS_PLAY_STORE=${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
+              --build-arg "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
+              --build-arg "NEXT_PUBLIC_APPLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
+              .
+
+            cp docker-compose.yml "$COMPOSE_DIR/" 2>/dev/null || mkdir -p "$COMPOSE_DIR" && cp docker-compose.yml "$COMPOSE_DIR/"
+
+            cd "$COMPOSE_DIR"
+
+            APP_IMAGE="teincfood-web:${{ env.RELEASE_TAG }}" \
+            WEB_PORT=3001 \
+            NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL }}" \
+            NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}" \
+            NEXT_PUBLIC_GOOGLE_ANALYTICS="${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}" \
+            NEXT_PUBLIC_BUYER_APP_STORE="${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}" \
+            NEXT_PUBLIC_BUYER_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
+            NEXT_PUBLIC_BUSINESS_APP_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
+            NEXT_PUBLIC_BUSINESS_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
+            TEINCFOOD_API_BASE_URL="${{ secrets.TEINCFOOD_API_BASE_URL }}" \
+            docker compose -p teincfoodweb up -d
+
+            sleep 5
+            curl -sf http://localhost:3001/en > /dev/null && echo "HEALTHY"
+          DEPLOY
