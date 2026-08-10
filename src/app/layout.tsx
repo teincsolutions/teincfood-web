@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { siteConfig } from "@/config/site";
+import { siteConfig, storeLinks } from "@/config/site";
 
 const manrope = localFont({
   src: "../fonts/Manrope-VariableFont_wght.ttf",
@@ -10,6 +10,12 @@ const manrope = localFont({
   weight: "200 800",
   display: "swap",
 });
+
+function appleAppId(): string {
+  const url = storeLinks.buyer.appStore;
+  if (!url) return "";
+  return url.match(/\/id(\d+)/)?.[1] ?? "";
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -26,6 +32,18 @@ export const metadata: Metadata = {
     "delivery rider",
     "Teinc Food",
   ],
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Teinc Food",
+  },
+  itunes: {
+    appId: appleAppId(),
+  },
   openGraph: {
     type: "website",
     siteName: siteConfig.name,

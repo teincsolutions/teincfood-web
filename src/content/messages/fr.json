@@ -68,11 +68,17 @@
     "deleteAccount": "Supprimer le compte"
   },
   "install": {
-    "ios": "Télécharger sur l'App Store",
-    "android": "Obtenir sur Google Play",
+    "ios": "Télécharger sur l'",
+    "android": "Obtenir sur",
     "open": "Ouvrir Teinc Food",
     "dismiss": "Pas maintenant",
-    "scan": "Scannez pour télécharger Teinc Food"
+    "scan": "Scannez pour télécharger Teinc Food",
+    "forCustomers": "Pour les clients",
+    "forRidersSellers": "Pour les livreurs & vendeurs",
+    "buyerApp": "Teinc Food",
+    "businessApp": "Teinc Food Business",
+    "buyerTagline": "Commander la livraison de nourriture",
+    "businessTagline": "Développez votre entreprise ou livrez"
   },
   "home": {
     "hero": {

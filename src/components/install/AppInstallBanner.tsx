@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Apple, Play, X } from "lucide-react";
-import { storeLinks } from "@/config/site";
+import { siteConfig, storeLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { QrCode } from "@/components/install/QrCode";
 
 const STORAGE_KEY = "teincfood-install-dismissed";
 
@@ -18,12 +20,38 @@ function detectPlatform(): Platform {
   return "desktop";
 }
 
+function StoreButton({
+  href,
+  icon,
+  top,
+  label,
+}: {
+  href: string;
+  icon: ReactNode;
+  top: string;
+  label: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-orange px-3 text-sm font-bold text-white transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+    >
+      {icon}
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[9px] uppercase tracking-wide opacity-80">{top}</span>
+        <span className="text-sm">{label}</span>
+      </span>
+    </a>
+  );
+}
+
 export function AppInstallBanner() {
   const t = useTranslations("install");
   const [platform] = useState<Platform>(detectPlatform);
   const [visible, setVisible] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
+  const isDesktop = platform === "desktop";
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
@@ -32,37 +60,16 @@ export function AppInstallBanner() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
-
   const dismiss = () => {
     setVisible(false);
     localStorage.setItem(STORAGE_KEY, "1");
   };
 
-  const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      setDeferredPrompt(null);
-    } else if (platform === "android" && storeLinks.buyer.playStore) {
-      window.open(storeLinks.buyer.playStore, "_blank", "noopener");
-    } else if (platform === "ios" && storeLinks.buyer.appStore) {
-      window.open(storeLinks.buyer.appStore, "_blank", "noopener");
-    }
-    dismiss();
-  };
-
   if (!visible) return null;
 
-  const storeUrl =
-    platform === "ios" ? storeLinks.buyer.appStore : storeLinks.buyer.playStore;
+  const hasAnyLink = Boolean(
+    storeLinks.buyer.appStore || storeLinks.buyer.playStore,
+  );
 
   return (
     <aside
@@ -74,49 +81,57 @@ export function AppInstallBanner() {
         "bottom-4",
       )}
     >
-      <div className="flex items-center gap-3 rounded-2xl border border-navy/10 bg-white p-3 shadow-xl shadow-navy/10">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange text-white">
-          <Apple className="size-6" aria-hidden="true" />
-        </span>
+      <div className="flex items-center gap-4 rounded-2xl border border-navy/10 bg-white p-4 shadow-xl shadow-navy/10">
+        {isDesktop && siteConfig.url && (
+          <div className="hidden shrink-0 sm:block">
+            <QrCode value={siteConfig.url} size={96} />
+            <p className="mt-1 text-center text-[10px] leading-tight text-navy/60">
+              {t("scan")}
+            </p>
+          </div>
+        )}
         <div className="min-w-0 flex-1">
-          <p className="truncate font-bold text-navy">Teinc Food</p>
-          <p className="text-xs text-navy/60">Food delivery, reimagined</p>
+          <div className="flex items-center gap-2">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-orange text-white">
+              <Apple className="size-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-bold text-navy">Teinc Food</p>
+              <p className="truncate text-xs text-navy/60">
+                Food delivery, reimagined
+              </p>
+            </div>
+            <button
+              type="button"
+              aria-label={t("dismiss")}
+              onClick={dismiss}
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-navy/50 transition-colors hover:bg-navy/5 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+            >
+              <X className="size-5" aria-hidden="true" />
+            </button>
+          </div>
+          {hasAnyLink && (
+            <div className="mt-3 flex gap-2">
+              {storeLinks.buyer.appStore && (
+                <StoreButton
+                  href={storeLinks.buyer.appStore}
+                  icon={<Apple className="size-4" aria-hidden="true" />}
+                  top={t("ios")}
+                  label="App Store"
+                />
+              )}
+              {storeLinks.buyer.playStore && (
+                <StoreButton
+                  href={storeLinks.buyer.playStore}
+                  icon={<Play className="size-4 fill-current" aria-hidden="true" />}
+                  top={t("android")}
+                  label="Google Play"
+                />
+              )}
+            </div>
+          )}
         </div>
-        {deferredPrompt || platform === "android" ? (
-          <button
-            type="button"
-            onClick={handleInstall}
-            className="inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-full bg-orange px-4 text-sm font-bold text-white transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
-          >
-            <Play className="size-4 fill-current" aria-hidden="true" />
-            Install
-          </button>
-        ) : storeUrl ? (
-          <a
-            href={storeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-full bg-orange px-4 text-sm font-bold text-white transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
-          >
-            <Apple className="size-4" aria-hidden="true" />
-            Download
-          </a>
-        ) : null}
-        <button
-          type="button"
-          aria-label={t("dismiss")}
-          onClick={dismiss}
-          className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-navy/50 transition-colors hover:bg-navy/5 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
-        >
-          <X className="size-5" aria-hidden="true" />
-        </button>
       </div>
     </aside>
   );
 }
-
-// Keep type local & typed to avoid global pollution
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: string; platform: string }>;
-};

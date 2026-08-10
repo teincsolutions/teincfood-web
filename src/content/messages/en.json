@@ -68,11 +68,17 @@
     "deleteAccount": "Delete account"
   },
   "install": {
-    "ios": "Download on the App Store",
-    "android": "Get it on Google Play",
+    "ios": "Download on the",
+    "android": "Get it on",
     "open": "Open Teinc Food",
     "dismiss": "Not now",
-    "scan": "Scan to download Teinc Food"
+    "scan": "Scan to download Teinc Food",
+    "forCustomers": "For customers",
+    "forRidersSellers": "For riders & sellers",
+    "buyerApp": "Teinc Food",
+    "businessApp": "Teinc Food Business",
+    "buyerTagline": "Order food delivery",
+    "businessTagline": "Grow your business or deliver"
   },
   "home": {
     "hero": {

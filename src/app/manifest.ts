@@ -1,12 +1,17 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/config/site";
+import { siteConfig, storeLinks } from "@/config/site";
 
 export default function manifest(): MetadataRoute.Manifest {
+  const playStoreUrl = storeLinks.buyer.playStore;
+  const playId = playStoreUrl.match(/[?&]id=([^&]+)/)?.[1];
+
   return {
     name: siteConfig.name,
     short_name: "Teinc Food",
     description: siteConfig.description,
-    start_url: "/en",
+    id: `${siteConfig.url}/`,
+    start_url: `${siteConfig.url}/`,
+    scope: `${siteConfig.url}/`,
     display: "standalone",
     background_color: "#FFF9F5",
     theme_color: "#FF7622",
@@ -24,5 +29,14 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "maskable",
       },
     ],
+    related_applications: playId
+      ? [
+          {
+            platform: "play",
+            url: playStoreUrl,
+            id: playId,
+          },
+        ]
+      : undefined,
   };
 }
