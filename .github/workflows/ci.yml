@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         run: |
+          # Workspace persists on self-hosted runners — clear it before cloning
+          rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
@@ -58,6 +60,8 @@ jobs:
     steps:
       - name: Checkout
         run: |
+          # Workspace persists on self-hosted runners — clear it before cloning
+          rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
@@ -118,6 +122,8 @@ jobs:
     steps:
       - name: Checkout
         run: |
+          # Workspace persists on self-hosted runners — clear it before cloning
+          rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
