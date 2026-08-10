@@ -143,8 +143,10 @@ jobs:
 
       - name: Health check
         run: |
+          SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL }}"
+          if [ -z "$SITE_URL" ]; then SITE_URL="https://food.teincsolutions.com"; fi
           for i in $(seq 1 30); do
-            if curl -sf "${{ vars.NEXT_PUBLIC_SITE_URL }}/en" > /dev/null 2>&1; then
+            if curl -sf "$SITE_URL/en" > /dev/null 2>&1; then
               echo "Site is healthy"
               exit 0
             fi
