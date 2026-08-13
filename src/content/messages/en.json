@@ -391,5 +391,10 @@
     "mismatch": "Passwords do not match.",
     "tooShort": "Password must be at least 8 characters.",
     "error": "We couldn't reset your password. The link may be invalid or expired."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "We couldn't load this page. Please try again.",
+    "retry": "Try again"
   }
 }

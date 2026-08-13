@@ -9,6 +9,12 @@ import { getPage } from "@/lib/content";
 
 const legalPages = ["privacy", "terms"] as const;
 
+function formatUpdatedAt(value: string | undefined, locale: string): string {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString(locale);
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,6 +53,7 @@ export default async function LegalPage({
   setRequestLocale(locale);
 
   const page = await getPage(slug, locale);
+  const legal = await getTranslations({ locale, namespace: "legal" });
 
   if (page) {
     return (
@@ -54,10 +61,9 @@ export default async function LegalPage({
         <Container className="max-w-3xl">
           <SectionHeading align="left" title={page.title} />
           <p className="mt-2 text-sm text-navy/50">
-            Last updated:{" "}
-            {page.updated_at
-              ? new Date(page.updated_at).toLocaleDateString(locale)
-              : new Date().toLocaleDateString(locale)}
+            {legal("updated")}:{" "}
+            {formatUpdatedAt(page.updated_at, locale) ||
+              new Date().toLocaleDateString(locale)}
           </p>
           <div className="mt-8 space-y-8">
             {page.sections.map((s, i) => (
@@ -74,7 +80,6 @@ export default async function LegalPage({
 
   const ns = slug === "privacy" ? "legal.privacy" : "legal.terms";
   const t = await getTranslations({ locale, namespace: ns });
-  const legal = await getTranslations({ locale, namespace: "legal" });
 
   const sections = [1, 2, 3].map((i) => ({
     title: t(`section${i}`),

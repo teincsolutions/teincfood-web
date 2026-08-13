@@ -391,5 +391,10 @@
     "mismatch": "Les mots de passe ne correspondent pas.",
     "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
     "error": "Impossible de réinitialiser votre mot de passe. Le lien peut être invalide ou expiré."
+  },
+  "error": {
+    "title": "Une erreur s'est produite",
+    "description": "Impossible de charger cette page. Veuillez réessayer.",
+    "retry": "Réessayer"
   }
 }
