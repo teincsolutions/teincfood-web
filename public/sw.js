@@ -1,40 +1,19 @@
-const CACHE = "teincfood-shell-v1";
-const CORE = ["/en", "/en/order", "/en/business", "/en/rider", "/icon.png"];
-
+// Teinc Food — intentionally empty service worker.
+// The previous cache-first worker served stale app shells whose hashed
+// /next/static chunk URLs change every deploy, crashing the page on refresh
+// ("This page couldn't load"). This worker unregisters itself and clears all
+// caches so returning visitors fall back to network loading. No fetch handler
+// is registered and nothing is cached.
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CACHE)
-      .then((cache) => cache.addAll(CORE))
-      .then(() => self.skipWaiting()),
-  );
+  event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim()),
-  );
-});
-
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  if (request.method !== "GET" || !request.url.startsWith("http")) return;
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          if (response.ok && request.url.includes(self.location.origin)) {
-            const clone = response.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => caches.match("/en"));
-    }),
+      .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+      .then(() => self.registration.unregister()),
   );
 });
