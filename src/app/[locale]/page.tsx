@@ -7,6 +7,8 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { CitiesSection } from "@/components/home/CitiesSection";
 import { InstallCta } from "@/components/home/InstallCta";
+import { WhatsAppSection } from "@/components/home/WhatsAppSection";
+import { DesktopSection } from "@/components/home/DesktopSection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { storeLinks, siteConfig } from "@/config/site";
 import { localizeMetadata } from "@/lib/seo";
@@ -58,6 +60,8 @@ export default async function HomePage({
       <RolesSection />
       <HowItWorks />
       <FeaturesSection />
+      <WhatsAppSection />
+      <DesktopSection />
       <CitiesSection />
       <InstallCta />
     </>

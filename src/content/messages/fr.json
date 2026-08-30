@@ -44,17 +44,35 @@
     "resetPassword": {
       "title": "Réinitialiser votre mot de passe — Teinc Food",
       "description": "Choisissez un nouveau mot de passe pour votre compte Teinc Food."
+    },
+    "whatsapp": {
+      "title": "Commandez via WhatsApp IA — Teinc Food",
+      "description": "Commandez, suivez les livraisons et obtenez un support 24/7 via WhatsApp avec l'assistant IA de Teinc Food."
+    },
+    "desktop": {
+      "title": "Teinc Food Business Bureau — Gérez sur grand écran",
+      "description": "Téléchargez Teinc Food Business pour Windows, macOS, Linux ou terminaux POS. Gérez les commandes, le menu et la flotte depuis votre bureau."
+    },
+    "fleet": {
+      "title": "Gestion de flotte — Teinc Food Business",
+      "description": "Gérez votre flotte de livraison avec Teinc Food Business. Assignez des commandes, suivez les livreurs et optimisez les livraisons depuis mobile ou bureau."
     }
   },
   "nav": {
+    "home": "Accueil",
     "order": "Commander",
     "business": "Pour les entreprises",
+    "fleet": "Gestion de flotte",
     "rider": "Devenir livreur",
     "about": "À propos",
     "faq": "FAQ",
     "contact": "Contact",
     "download": "Télécharger l'app",
-    "menu": "Menu"
+    "menu": "Menu",
+    "whatsapp": "IA WhatsApp",
+    "desktop": "App Bureau",
+    "products": "Produits",
+    "company": "Entreprise"
   },
   "footer": {
     "tagline": "Commandez. Participez. Livrez. Teinc Food connecte la nourriture de votre ville.",
@@ -145,6 +163,45 @@
       "title": "Prêt à sentir la différence ?",
       "subtitle": "Téléchargez Teinc Food et faites livrer votre première commande rapidement.",
       "button": "Télécharger maintenant"
+    },
+    "whatsapp": {
+      "title": "Commandez via WhatsApp",
+      "subtitle": "Notre assistant IA est disponible 24/7 sur WhatsApp. Découvrez les restaurants, passez des commandes et obtenez du support — tout en discutant.",
+      "cta": "Discuter sur WhatsApp",
+      "item1": {
+        "title": "Support IA 24/7",
+        "description": "Obtenez des réponses instantanées à tout moment. Notre IA gère les questions et les problèmes en permanence."
+      },
+      "item2": {
+        "title": "Découvrir les restaurants",
+        "description": "Trouvez des restaurants et des menus près de vous par conversation."
+      },
+      "item3": {
+        "title": "Partagez votre position",
+        "description": "Envoyez votre emplacement et nous trouverons les restaurants qui livrent chez vous."
+      },
+      "item4": {
+        "title": "Passez des commandes",
+        "description": "Parcourez les menus, personnalisez votre commande et payez — tout via chat."
+      }
+    },
+    "desktop": {
+      "title": "Gérez sur grand écran",
+      "subtitle": "Des tablettes aux terminaux POS, gérez les commandes, les menus et votre flotte sur Windows, macOS ou Linux.",
+      "cta": "Découvrir l'app Bureau",
+      "downloads": "Voir les téléchargements",
+      "item1": {
+        "title": "Tableau de bord",
+        "description": "Consultez les commandes, revenus et performances du jour en un coup d'œil."
+      },
+      "item2": {
+        "title": "Terminal POS",
+        "description": "Traitez les commandes sur place avec une interface tactile intuitive."
+      },
+      "item3": {
+        "title": "Gestion d'équipe",
+        "description": "Invitez du personnel, attribuez des rôles et gérez les permissions."
+      }
     }
   },
   "order": {
@@ -174,6 +231,11 @@
         "title": "Paiement flexible",
         "description": "Carte, mobile money ou espèces à la livraison."
       }
+    },
+    "whatsapp": {
+      "title": "Aussi via WhatsApp",
+      "subtitle": "Vous préférez discuter ? Notre assistant IA peut vous aider à chercher, commander et suivre — tout via WhatsApp.",
+      "cta": "Commander sur WhatsApp"
     }
   },
   "business": {
@@ -213,6 +275,67 @@
         "title": "Prêt pour la flotte",
         "description": "Attribuez les livraisons et gérez les livreurs depuis une seule application."
       }
+    },
+    "desktop": {
+      "title": "Aussi disponible sur Bureau",
+      "subtitle": "Besoin d'un écran plus grand ? Téléchargez Teinc Food Business pour Windows, macOS ou Linux. Idéal pour les terminaux POS et la gestion de restaurant.",
+      "cta": "Découvrir l'app Bureau",
+      "feature1": {
+        "title": "Support Bureau & POS",
+        "description": "Application bureau complète avec intégration terminal POS pour les commandes sur place."
+      }
+    },
+    "screens": {
+      "eyebrow": "Découvrez l'app",
+      "title": "Tout pour gérer votre restaurant"
+    }
+  },
+  "fleet": {
+    "hero": {
+      "eyebrow": "Pour les gestionnaires de flotte",
+      "title": "Gérez votre flotte depuis une seule app.",
+      "subtitle": "Assignez des commandes, suivez les livreurs en temps réel et optimisez chaque livraison — sur mobile ou bureau avec Teinc Food Business.",
+      "cta": "Télécharger Teinc Food Business"
+    },
+    "steps": {
+      "title": "Lancez votre flotte en trois étapes",
+      "step1": {
+        "title": "Ajoutez vos livreurs",
+        "description": "Invitez des livreurs, configurez les véhicules et gérez votre équipe en un seul endroit."
+      },
+      "step2": {
+        "title": "Assignez les livraisons",
+        "description": "Répartissez les commandes aux livreurs disponibles avec une assignation intelligente."
+      },
+      "step3": {
+        "title": "Suivez et optimisez",
+        "description": "Surveillez les livraisons en direct et analysez les performances de votre flotte."
+      }
+    },
+    "features": {
+      "title": "Conçu pour les opérations de flotte",
+      "item1": {
+        "title": "Gestion des livreurs",
+        "description": "Ajoutez, organisez et gérez toute votre équipe de livreurs depuis un seul tableau de bord."
+      },
+      "item2": {
+        "title": "Suivi en temps réel",
+        "description": "Suivez chaque commande du ramassage à la livraison avec GPS en temps réel."
+      },
+      "item3": {
+        "title": "Analytiques de performance",
+        "description": "Comprenez les délais, l'efficacité des livreurs et les tendances de la flotte."
+      }
+    },
+    "screens": {
+      "eyebrow": "Aperçu",
+      "title": "Outils de flotte — bientôt disponible",
+      "subtitle": "Les écrans de gestion de flotte arrivent bientôt. La même app Teinc Food Business, adaptée aux opérations de flotte."
+    },
+    "desktop": {
+      "eyebrow": "Aussi sur Bureau",
+      "title": "Aussi sur Bureau",
+      "subtitle": "Gérez votre flotte depuis n'importe quel écran — Windows, macOS ou Linux. La même app Teinc Food Business."
     }
   },
   "rider": {
@@ -250,6 +373,103 @@
       "item3": {
         "title": "Livraison guidée",
         "description": "Navigation claire et processus de remise pour chaque commande."
+      }
+    },
+    "screens": {
+      "eyebrow": "Découvrez l'app",
+      "title": "Chaque livraison, entre vos mains"
+    }
+  },
+  "whatsapp": {
+    "hero": {
+      "eyebrow": "Support IA",
+      "title": "Commandez en discutant.",
+      "subtitle": "Notre assistant IA est disponible 24/7 sur WhatsApp. Découvrez les restaurants, passez des commandes, suivez les livraisons et obtenez du support instantané — tout en discutant.",
+      "cta": "Discuter sur WhatsApp"
+    },
+    "steps": {
+      "title": "Comment ça marche",
+      "step1": {
+        "title": "Enregistrez notre numéro",
+        "description": "Ajoutez +233 503 981 913 à vos contacts."
+      },
+      "step2": {
+        "title": "Envoyez un message",
+        "description": "Dites bonjour ou demandez à découvrir les restaurants."
+      },
+      "step3": {
+        "title": "L'IA s'occupe de vous",
+        "description": "Notre assistant vous aide à commander, suivre et plus encore."
+      }
+    },
+    "features": {
+      "title": "Tout ce que vous pouvez faire sur WhatsApp",
+      "item1": {
+        "title": "Support IA 24/7",
+        "description": "Obtenez des réponses instantanées à tout moment. Notre IA gère les questions et les problèmes en permanence."
+      },
+      "item2": {
+        "title": "Parcourir & Commander",
+        "description": "Découvrez les restaurants, consultez les menus et passez des commandes — sans quitter WhatsApp."
+      },
+      "item3": {
+        "title": "Suivre les livraisons",
+        "description": "Recevez des mises à jour en temps réel sur le statut de votre commande."
+      },
+      "item4": {
+        "title": "Support humain",
+        "description": "Quand l'IA ne peut pas aider, nous vous connectons instantanément à un agent humain."
+      }
+    }
+  },
+  "desktop": {
+    "hero": {
+      "eyebrow": "Bureau & POS",
+      "title": "Gérez votre activité sur tout écran.",
+      "subtitle": "Des tablettes aux terminaux POS, gérez les commandes, les menus et votre flotte sur Windows, macOS ou Linux.",
+      "cta": "Télécharger l'app Bureau"
+    },
+    "platforms": {
+      "title": "Disponible pour toutes les plateformes",
+      "subtitle": "Téléchargez pour votre plateforme préférée"
+    },
+    "features": {
+      "title": "Conçu pour les opérations sérieuses",
+      "item1": {
+        "title": "Gestion sur grand écran",
+        "description": "Voyez plus, gérez plus. Un tableau de bord complet pour les commandes, le menu et les analyses."
+      },
+      "item2": {
+        "title": "Intégration Terminal POS",
+        "description": "Connectez-vous directement à votre système de point de vente pour un flux de commandes fluide."
+      },
+      "item3": {
+        "title": "Gestion d'équipe multi-utilisateurs",
+        "description": "Invitez du personnel, attribuez des rôles et gérez les permissions de votre équipe."
+      }
+    },
+    "steps": {
+      "title": "Pour commencer",
+      "step1": {
+        "title": "Téléchargez pour votre plateforme",
+        "description": "Choisissez Windows, macOS ou Linux."
+      },
+      "step2": {
+        "title": "Connectez-vous",
+        "description": "Utilisez votre compte Teinc Food Business."
+      },
+      "step3": {
+        "title": "Commencez à gérer",
+        "description": "Accédez aux commandes, menus, analyses et outils flotte."
+      }
+    },
+    "downloads": {
+      "badge": "Téléchargement gratuit",
+      "title": "Télécharger Teinc Food Business",
+      "version": "Version {version}",
+      "subtitle": "Choisissez votre plateforme et téléchargez la dernière version.",
+      "requirements": {
+        "title": "Configuration requise"
       }
     }
   },

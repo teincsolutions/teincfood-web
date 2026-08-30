@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { locales } from "@/config/i18n";
 import { siteConfig } from "@/config/site";
 
-const staticRoutes = ["", "/order", "/business", "/rider", "/about", "/faq", "/contact", "/delete-account"];
+const staticRoutes = ["", "/order", "/business", "/business/fleet", "/rider", "/whatsapp", "/desktop", "/desktop/downloads", "/about", "/faq", "/contact", "/delete-account"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

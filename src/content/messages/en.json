@@ -44,17 +44,35 @@
     "resetPassword": {
       "title": "Reset your password — Teinc Food",
       "description": "Choose a new password for your Teinc Food account."
+    },
+    "whatsapp": {
+      "title": "Order via WhatsApp AI — Teinc Food",
+      "description": "Order food, track deliveries, and get 24/7 support through WhatsApp with Teinc Food's AI assistant."
+    },
+    "desktop": {
+      "title": "Teinc Food Business Desktop — Manage on any screen",
+      "description": "Download Teinc Food Business for Windows, macOS, Linux, or POS terminals. Manage orders, menu, and fleet from your desktop."
+    },
+    "fleet": {
+      "title": "Fleet Management — Teinc Food Business",
+      "description": "Manage your delivery fleet with Teinc Food Business. Assign orders, track riders, and optimize deliveries from mobile or desktop."
     }
   },
   "nav": {
+    "home": "Home",
     "order": "Order food",
     "business": "For business",
+    "fleet": "Fleet Managers",
     "rider": "Become a rider",
     "about": "About",
     "faq": "FAQ",
     "contact": "Contact",
     "download": "Get the app",
-    "menu": "Menu"
+    "menu": "Menu",
+    "whatsapp": "WhatsApp AI",
+    "desktop": "Desktop App",
+    "products": "Products",
+    "company": "Company"
   },
   "footer": {
     "tagline": "Order it. Partner it. Deliver it. Teinc Food connects your city's food.",
@@ -145,6 +163,45 @@
       "title": "Ready to taste the difference?",
       "subtitle": "Download Teinc Food and get your first order delivered fast.",
       "button": "Download now"
+    },
+    "whatsapp": {
+      "title": "Order via WhatsApp",
+      "subtitle": "Our AI assistant is available 24/7 on WhatsApp. Browse restaurants, place orders, and get support — all through chat.",
+      "cta": "Chat on WhatsApp",
+      "item1": {
+        "title": "24/7 AI Support",
+        "description": "Get instant answers anytime. Our AI handles questions and issues around the clock."
+      },
+      "item2": {
+        "title": "Browse restaurants",
+        "description": "Discover restaurants and menus near you through conversation."
+      },
+      "item3": {
+        "title": "Share your location",
+        "description": "Send your location and we'll find restaurants that deliver to you."
+      },
+      "item4": {
+        "title": "Place orders",
+        "description": "Browse menus, customize your order, and checkout — all via chat."
+      }
+    },
+    "desktop": {
+      "title": "Manage on any screen",
+      "subtitle": "From tablets to POS terminals, manage orders, menus, and your fleet on Windows, macOS, or Linux.",
+      "cta": "Explore Desktop App",
+      "downloads": "View downloads",
+      "item1": {
+        "title": "Business dashboard",
+        "description": "See today's orders, revenue, and performance at a glance."
+      },
+      "item2": {
+        "title": "POS terminal",
+        "description": "Process walk-in orders with a touch-friendly POS interface."
+      },
+      "item3": {
+        "title": "Team management",
+        "description": "Invite staff, assign roles, and manage permissions."
+      }
     }
   },
   "order": {
@@ -174,6 +231,11 @@
         "title": "Flexible payment",
         "description": "Card, mobile money, or cash at the door."
       }
+    },
+    "whatsapp": {
+      "title": "Also order via WhatsApp",
+      "subtitle": "Prefer chatting? Our AI assistant can help you browse, order, and track — all through WhatsApp.",
+      "cta": "Order on WhatsApp"
     }
   },
   "business": {
@@ -213,6 +275,67 @@
         "title": "Fleet ready",
         "description": "Assign deliveries and manage riders from one app."
       }
+    },
+    "desktop": {
+      "title": "Also available on Desktop",
+      "subtitle": "Need a bigger screen? Download Teinc Food Business for Windows, macOS, or Linux. Perfect for POS terminals and restaurant management.",
+      "cta": "Explore Desktop App",
+      "feature1": {
+        "title": "Desktop & POS support",
+        "description": "Full-featured desktop app with POS terminal integration for walk-in orders."
+      }
+    },
+    "screens": {
+      "eyebrow": "See the app",
+      "title": "Everything you need to run your restaurant"
+    }
+  },
+  "fleet": {
+    "hero": {
+      "eyebrow": "For fleet managers",
+      "title": "Run your delivery fleet from one app.",
+      "subtitle": "Assign orders, track riders in real time, and optimize every delivery — on mobile or desktop with Teinc Food Business.",
+      "cta": "Download Teinc Food Business"
+    },
+    "steps": {
+      "title": "Get your fleet moving in three steps",
+      "step1": {
+        "title": "Add your riders",
+        "description": "Invite riders, set up vehicles, and manage your team in one place."
+      },
+      "step2": {
+        "title": "Assign deliveries",
+        "description": "Dispatch orders to available riders with smart assignment."
+      },
+      "step3": {
+        "title": "Track & optimize",
+        "description": "Monitor deliveries live and review fleet performance over time."
+      }
+    },
+    "features": {
+      "title": "Built for fleet operations",
+      "item1": {
+        "title": "Rider management",
+        "description": "Add, organize, and manage your entire rider team from one dashboard."
+      },
+      "item2": {
+        "title": "Live delivery tracking",
+        "description": "Follow every order from pickup to dropoff with real-time GPS."
+      },
+      "item3": {
+        "title": "Performance analytics",
+        "description": "Understand delivery times, rider efficiency, and fleet trends."
+      }
+    },
+    "screens": {
+      "eyebrow": "Sneak peek",
+      "title": "Fleet tools — coming soon",
+      "subtitle": "Fleet management screens are on the way. The same Teinc Food Business app, tailored for fleet operations."
+    },
+    "desktop": {
+      "eyebrow": "Also on Desktop",
+      "title": "Also on Desktop",
+      "subtitle": "Manage your fleet from any screen — Windows, macOS, or Linux. Same Teinc Food Business app."
     }
   },
   "rider": {
@@ -250,6 +373,103 @@
       "item3": {
         "title": "Guided delivery",
         "description": "Clear navigation and handoff flows on every order."
+      }
+    },
+    "screens": {
+      "eyebrow": "See the app",
+      "title": "Every delivery, right in your hands"
+    }
+  },
+  "whatsapp": {
+    "hero": {
+      "eyebrow": "AI-Powered Support",
+      "title": "Order food, just by chatting.",
+      "subtitle": "Our AI assistant is available 24/7 on WhatsApp. Browse restaurants, place orders, track deliveries, and get instant support — all through chat.",
+      "cta": "Chat on WhatsApp"
+    },
+    "steps": {
+      "title": "How it works",
+      "step1": {
+        "title": "Save our number",
+        "description": "Add +233 503 981 913 to your contacts."
+      },
+      "step2": {
+        "title": "Send a message",
+        "description": "Say hi or ask to browse restaurants."
+      },
+      "step3": {
+        "title": "AI takes care of you",
+        "description": "Our assistant helps you order, track, and more."
+      }
+    },
+    "features": {
+      "title": "Everything you can do on WhatsApp",
+      "item1": {
+        "title": "24/7 AI Support",
+        "description": "Get instant answers anytime. Our AI handles questions, issues, and requests around the clock."
+      },
+      "item2": {
+        "title": "Browse & Order",
+        "description": "Discover restaurants, view menus, and place orders — all without leaving WhatsApp."
+      },
+      "item3": {
+        "title": "Track Deliveries",
+        "description": "Get real-time updates on your order status and delivery location."
+      },
+      "item4": {
+        "title": "Human support",
+        "description": "When AI can't help, we connect you with a human agent instantly."
+      }
+    }
+  },
+  "desktop": {
+    "hero": {
+      "eyebrow": "Desktop & POS",
+      "title": "Manage your business on any screen.",
+      "subtitle": "From tablets to POS terminals, manage orders, menus, and your fleet on Windows, macOS, or Linux.",
+      "cta": "Download Desktop App"
+    },
+    "platforms": {
+      "title": "Available for every platform",
+      "subtitle": "Download for your preferred platform"
+    },
+    "features": {
+      "title": "Built for serious operations",
+      "item1": {
+        "title": "Large Screen Management",
+        "description": "See more, manage more. A full dashboard for orders, menu, and analytics."
+      },
+      "item2": {
+        "title": "POS Terminal Integration",
+        "description": "Connect directly to your point-of-sale system for seamless order flow."
+      },
+      "item3": {
+        "title": "Multi-User Team Management",
+        "description": "Invite staff, assign roles, and manage permissions across your team."
+      }
+    },
+    "steps": {
+      "title": "Get started",
+      "step1": {
+        "title": "Download for your platform",
+        "description": "Choose Windows, macOS, or Linux."
+      },
+      "step2": {
+        "title": "Sign in",
+        "description": "Use your Teinc Food Business account."
+      },
+      "step3": {
+        "title": "Start managing",
+        "description": "Access orders, menu, analytics, and fleet tools."
+      }
+    },
+    "downloads": {
+      "badge": "Free Download",
+      "title": "Download Teinc Food Business",
+      "version": "Version {version}",
+      "subtitle": "Choose your platform and download the latest version.",
+      "requirements": {
+        "title": "System Requirements"
       }
     }
   },

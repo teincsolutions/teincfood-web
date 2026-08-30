@@ -13,6 +13,8 @@ export function Footer() {
     { href: "/order", label: nav("order") },
     { href: "/business", label: nav("business") },
     { href: "/rider", label: nav("rider") },
+    { href: "/whatsapp", label: nav("whatsapp") },
+    { href: "/desktop", label: nav("desktop") },
   ];
   const companyLinks = [
     { href: "/about", label: nav("about") },
