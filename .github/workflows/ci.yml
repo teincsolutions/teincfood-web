@@ -21,30 +21,24 @@ jobs:
   lint-build:
     name: Lint, typecheck & build
     runs-on: [self-hosted, teinc-run-1]
-    container:
-      image: node:22
     steps:
       - name: Checkout
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE" 2>/dev/null || git config --global --add safe.directory '*' 2>/dev/null || true
           rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Typecheck
-        run: npx tsc --noEmit
-
-      - name: Lint
-        run: npx eslint .
-
-      - name: Build
-        run: npx next build
-        env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
+      - name: Lint, typecheck & build (in Docker — no host Node needed)
+        run: |
+          docker run --rm \
+            -v "$PWD:/app" \
+            -w /app \
+            -e NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}" \
+            node:22 \
+            sh -c "yarn install --frozen-lockfile && npx tsc --noEmit && npx eslint . && npx next build"
+          # --rm ensures the build container and its anonymous volumes are removed;
+          # host bind-mount ($PWD) and deploy volumes/networks are left untouched.
 
   build-image:
     name: Build & push Docker image
