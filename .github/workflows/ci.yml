@@ -21,35 +21,15 @@ jobs:
   lint-build:
     name: Lint, typecheck & build
     runs-on: [self-hosted, teinc-run-1]
+    container:
+      image: node:22
     steps:
       - name: Checkout
         run: |
-          # Workspace persists on self-hosted runners — clear it before cloning
           rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
-
-      - name: Setup Node (no sudo — download binary directly)
-        run: |
-          if command -v node >/dev/null 2>&1 && node --version 2>/dev/null | grep -q "v22\."; then
-            echo "Node 22 already available: $(node --version) — $(which node)"
-            corepack enable 2>/dev/null || true
-            exit 0
-          fi
-          echo "Node 22 not found, downloading binary without sudo..."
-          NODE_VERSION=22.19.0
-          ARCH=$(uname -m)
-          case "$ARCH" in aarch64|arm64) NODE_ARCH=arm64 ;; *) NODE_ARCH=x64 ;; esac
-          echo "Downloading node v${NODE_VERSION} linux-${NODE_ARCH}..."
-          mkdir -p "$HOME/.local/node22"
-          curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" | tar -xJ -C "$HOME/.local/node22" --strip-components=1
-          echo "$HOME/.local/node22/bin" >> "$GITHUB_PATH"
-          export PATH="$HOME/.local/node22/bin:$PATH"
-          echo "Node now: $(node --version) — $(which node)"
-          echo "Yarn: $(yarn --version 2>/dev/null || echo 'yarn not yet')"
-          corepack enable 2>/dev/null || npm install -g corepack 2>/dev/null || true
-          corepack enable 2>/dev/null || true
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
