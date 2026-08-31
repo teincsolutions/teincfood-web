@@ -30,34 +30,26 @@ jobs:
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
-      - name: Setup Node
+      - name: Setup Node (no sudo — download binary directly)
         run: |
-          # No sudo — use whatever Node is already on the runner
-          if command -v node >/dev/null 2>&1; then
-            echo "Node found: $(node --version) — $(which node)"
-          else
-            echo "Node not in PATH, checking common locations..."
-            for p in /usr/local/bin/node /opt/node/bin/node /opt/hostedtoolcache/node/*/x64/bin/node /opt/hostedtoolcache/node/22*/x64/bin/node; do
-              if [ -x "$p" ]; then echo "Found node at $p: $($p --version)"; export PATH="$(dirname "$p"):$PATH"; break; fi
-            done
+          if command -v node >/dev/null 2>&1 && node --version 2>/dev/null | grep -q "v22\."; then
+            echo "Node 22 already available: $(node --version) — $(which node)"
+            corepack enable 2>/dev/null || true
+            exit 0
           fi
-          # Try fnm / nvm if still not Node 22
-          if ! node --version 2>/dev/null | grep -q "v22\."; then
-            if command -v fnm >/dev/null 2>&1; then echo "Trying fnm..."; fnm install 22 2>/dev/null; fnm use 22 2>/dev/null || true; fi
-            # Source nvm if present
-            if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; nvm install 22 2>/dev/null; nvm use 22 2>/dev/null || true; fi
-            if [ -s "/usr/local/nvm/nvm.sh" ]; then . "/usr/local/nvm/nvm.sh"; nvm install 22 2>/dev/null; nvm use 22 2>/dev/null || true; fi
-          fi
-          echo "Final check: $(node --version 2>/dev/null || echo 'node not available') — $(which node 2>/dev/null || echo 'no which')"
-          if ! command -v node >/dev/null 2>&1; then
-            echo "::error::Node.js 22 is not available on this runner and sudo is disabled. Please pre-install Node 22 on teinc-run-1 (via fnm/nvm or hostedtoolcache)."
-            exit 1
-          fi
-          if ! node --version | grep -q "v22\."; then
-            echo "::warning::Node version is $(node --version), expected v22.x — build may fail"
-          fi
-          corepack enable || true
-          yarn --version 2>/dev/null || npm --version 2>/dev/null || true
+          echo "Node 22 not found, downloading binary without sudo..."
+          NODE_VERSION=22.19.0
+          ARCH=$(uname -m)
+          case "$ARCH" in aarch64|arm64) NODE_ARCH=arm64 ;; *) NODE_ARCH=x64 ;; esac
+          echo "Downloading node v${NODE_VERSION} linux-${NODE_ARCH}..."
+          mkdir -p "$HOME/.local/node22"
+          curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" | tar -xJ -C "$HOME/.local/node22" --strip-components=1
+          echo "$HOME/.local/node22/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.local/node22/bin:$PATH"
+          echo "Node now: $(node --version) — $(which node)"
+          echo "Yarn: $(yarn --version 2>/dev/null || echo 'yarn not yet')"
+          corepack enable 2>/dev/null || npm install -g corepack 2>/dev/null || true
+          corepack enable 2>/dev/null || true
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
