@@ -26,6 +26,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" 2>/dev/null || git config --global --add safe.directory '*' 2>/dev/null || true
           rm -rf ./* ./.??* 2>/dev/null || true
           git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
