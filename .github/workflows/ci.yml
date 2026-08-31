@@ -32,27 +32,32 @@ jobs:
 
       - name: Setup Node
         run: |
+          # No sudo — use whatever Node is already on the runner
           if command -v node >/dev/null 2>&1; then
-            echo "Node already installed: $(node --version) — $(which node)"
-            if node --version | grep -q "v22\."; then corepack enable || true; exit 0; fi
-            echo "Node 22 not found, attempting install..."
-          fi
-          # Self-hosted runner may not have passwordless sudo; try with and without
-          if sudo -n true 2>/dev/null; then
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+            echo "Node found: $(node --version) — $(which node)"
           else
-            echo "No passwordless sudo — trying without sudo or checking for nvm/fnm"
-            if command -v fnm >/dev/null 2>&1; then fnm install 22 && fnm use 22; fi
-            if command -v nvm >/dev/null 2>&1; then nvm install 22 && nvm use 22; fi
-            # Fallback: check common Node install locations
-            for p in /usr/local/bin/node /opt/node/bin/node /opt/hostedtoolcache/node/*/x64/bin/node; do
-              if [ -x "$p" ]; then echo "Found node at $p: $($p --version)"; export PATH="$(dirname $p):$PATH"; break; fi
+            echo "Node not in PATH, checking common locations..."
+            for p in /usr/local/bin/node /opt/node/bin/node /opt/hostedtoolcache/node/*/x64/bin/node /opt/hostedtoolcache/node/22*/x64/bin/node; do
+              if [ -x "$p" ]; then echo "Found node at $p: $($p --version)"; export PATH="$(dirname "$p"):$PATH"; break; fi
             done
           fi
+          # Try fnm / nvm if still not Node 22
+          if ! node --version 2>/dev/null | grep -q "v22\."; then
+            if command -v fnm >/dev/null 2>&1; then echo "Trying fnm..."; fnm install 22 2>/dev/null; fnm use 22 2>/dev/null || true; fi
+            # Source nvm if present
+            if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; nvm install 22 2>/dev/null; nvm use 22 2>/dev/null || true; fi
+            if [ -s "/usr/local/nvm/nvm.sh" ]; then . "/usr/local/nvm/nvm.sh"; nvm install 22 2>/dev/null; nvm use 22 2>/dev/null || true; fi
+          fi
+          echo "Final check: $(node --version 2>/dev/null || echo 'node not available') — $(which node 2>/dev/null || echo 'no which')"
+          if ! command -v node >/dev/null 2>&1; then
+            echo "::error::Node.js 22 is not available on this runner and sudo is disabled. Please pre-install Node 22 on teinc-run-1 (via fnm/nvm or hostedtoolcache)."
+            exit 1
+          fi
+          if ! node --version | grep -q "v22\."; then
+            echo "::warning::Node version is $(node --version), expected v22.x — build may fail"
+          fi
           corepack enable || true
-          node --version || echo "Node still not available"
-          yarn --version || npm --version || true
+          yarn --version 2>/dev/null || npm --version 2>/dev/null || true
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
