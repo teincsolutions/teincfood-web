@@ -32,9 +32,27 @@ jobs:
 
       - name: Setup Node
         run: |
-          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          corepack enable
+          if command -v node >/dev/null 2>&1; then
+            echo "Node already installed: $(node --version) — $(which node)"
+            if node --version | grep -q "v22\."; then corepack enable || true; exit 0; fi
+            echo "Node 22 not found, attempting install..."
+          fi
+          # Self-hosted runner may not have passwordless sudo; try with and without
+          if sudo -n true 2>/dev/null; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          else
+            echo "No passwordless sudo — trying without sudo or checking for nvm/fnm"
+            if command -v fnm >/dev/null 2>&1; then fnm install 22 && fnm use 22; fi
+            if command -v nvm >/dev/null 2>&1; then nvm install 22 && nvm use 22; fi
+            # Fallback: check common Node install locations
+            for p in /usr/local/bin/node /opt/node/bin/node /opt/hostedtoolcache/node/*/x64/bin/node; do
+              if [ -x "$p" ]; then echo "Found node at $p: $($p --version)"; export PATH="$(dirname $p):$PATH"; break; fi
+            done
+          fi
+          corepack enable || true
+          node --version || echo "Node still not available"
+          yarn --version || npm --version || true
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
