@@ -45,6 +45,10 @@
       "title": "Reset your password — Teinc Food",
       "description": "Choose a new password for your Teinc Food account."
     },
+    "invite": {
+      "title": "Business invitation — Teinc Food",
+      "description": "Accept your invitation to join a business on Teinc Food Business."
+    },
     "whatsapp": {
       "title": "Order via WhatsApp AI — Teinc Food",
       "description": "Order food, track deliveries, and get 24/7 support through WhatsApp with Teinc Food's AI assistant."
@@ -611,6 +615,21 @@
     "mismatch": "Passwords do not match.",
     "tooShort": "Password must be at least 8 characters.",
     "error": "We couldn't reset your password. The link may be invalid or expired."
+  },
+  "invite": {
+    "title": "You've been invited",
+    "intro": "A business invited you to join their team on Teinc Food Business. Open the app or enter your code below.",
+    "copyCode": "Copy invitation code",
+    "copied": "Code copied",
+    "codeLabel": "Invitation code",
+    "codePlaceholder": "6-digit code",
+    "useCode": "Use code",
+    "invalidCode": "Enter the 6-digit code from your invitation.",
+    "openApp": "Open in TF Business app",
+    "getApp": "Get the Business app",
+    "step1": "Install TF Business and sign in (or create an account with your invited email or phone).",
+    "step2": "Open Invitations and enter the code above.",
+    "step3": "Accept to join the business team."
   },
   "error": {
     "title": "Something went wrong",

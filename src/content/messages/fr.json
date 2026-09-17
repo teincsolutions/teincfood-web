@@ -45,6 +45,10 @@
       "title": "Réinitialiser votre mot de passe — Teinc Food",
       "description": "Choisissez un nouveau mot de passe pour votre compte Teinc Food."
     },
+    "invite": {
+      "title": "Invitation d'entreprise — Teinc Food",
+      "description": "Acceptez votre invitation à rejoindre une entreprise sur Teinc Food Business."
+    },
     "whatsapp": {
       "title": "Commandez via WhatsApp IA — Teinc Food",
       "description": "Commandez, suivez les livraisons et obtenez un support 24/7 via WhatsApp avec l'assistant IA de Teinc Food."
@@ -611,6 +615,21 @@
     "mismatch": "Les mots de passe ne correspondent pas.",
     "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
     "error": "Impossible de réinitialiser votre mot de passe. Le lien peut être invalide ou expiré."
+  },
+  "invite": {
+    "title": "Vous êtes invité(e)",
+    "intro": "Une entreprise vous a invité(e) à rejoindre son équipe sur Teinc Food Business. Ouvrez l'app ou saisissez votre code ci-dessous.",
+    "copyCode": "Copier le code d'invitation",
+    "copied": "Code copié",
+    "codeLabel": "Code d'invitation",
+    "codePlaceholder": "Code à 6 chiffres",
+    "useCode": "Utiliser",
+    "invalidCode": "Saisissez le code à 6 chiffres de votre invitation.",
+    "openApp": "Ouvrir dans l'app TF Business",
+    "getApp": "Télécharger l'app Business",
+    "step1": "Installez TF Business et connectez-vous (ou créez un compte avec votre e-mail ou téléphone invité).",
+    "step2": "Ouvrez Invitations et saisissez le code ci-dessus.",
+    "step3": "Acceptez pour rejoindre l'équipe."
   },
   "error": {
     "title": "Une erreur s'est produite",
