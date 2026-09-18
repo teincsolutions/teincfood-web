@@ -2,13 +2,16 @@ import { NextResponse } from "next/server";
 
 /**
  * Apple universal-link association. Must be served from the link domain
- * (food.teincsolutions.com) so /invite?code= opens TF Business when installed.
- * Values are env-driven (see .env.example); Apple Team ID and bundle ID are
+ * (food.teincsolutions.com).
+ * - /invite and /reset-password open TF Business when installed.
+ * - /biz opens the Teinc Food buyer app when installed.
+ * Values are env-driven (see .env.example); Apple Team ID and bundle IDs are
  * public by design.
  */
 export async function GET() {
   const teamId = process.env.APPLE_TEAM_ID || "TEAMID";
-  const bundleId = process.env.IOS_BUSINESS_BUNDLE_ID || "com.teincfood.business";
+  const businessBundleId = process.env.IOS_BUSINESS_BUNDLE_ID || "com.teincfood.business";
+  const buyerBundleId = process.env.IOS_BUYER_BUNDLE_ID || "com.teincfood.app";
 
   return NextResponse.json(
     {
@@ -16,8 +19,12 @@ export async function GET() {
         apps: [],
         details: [
           {
-            appID: `${teamId}.${bundleId}`,
+            appID: `${teamId}.${businessBundleId}`,
             paths: ["/invite*", "/reset-password*"],
+          },
+          {
+            appID: `${teamId}.${buyerBundleId}`,
+            paths: ["/biz*"],
           },
         ],
       },

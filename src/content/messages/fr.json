@@ -49,6 +49,10 @@
       "title": "Invitation d'entreprise — Teinc Food",
       "description": "Acceptez votre invitation à rejoindre une entreprise sur Teinc Food Business."
     },
+    "biz": {
+      "title": "Entreprise — Teinc Food",
+      "description": "Voir cette entreprise sur Teinc Food et commander chez elle."
+    },
     "whatsapp": {
       "title": "Commandez via WhatsApp IA — Teinc Food",
       "description": "Commandez, suivez les livraisons et obtenez un support 24/7 via WhatsApp avec l'assistant IA de Teinc Food."
@@ -630,6 +634,14 @@
     "step1": "Installez TF Business et connectez-vous (ou créez un compte avec votre e-mail ou téléphone invité).",
     "step2": "Ouvrez Invitations et saisissez le code ci-dessus.",
     "step3": "Acceptez pour rejoindre l'équipe."
+  },
+  "biz": {
+    "intro": "Commandez chez cette entreprise sur Teinc Food. Ouvrez l'app ou installez-la ci-dessous.",
+    "openApp": "Ouvrir dans l'app Teinc Food",
+    "getApp": "Télécharger l'app Teinc Food",
+    "step1": "Installez Teinc Food et connectez-vous (ou créez un compte).",
+    "step2": "Vous arriverez directement sur cette entreprise.",
+    "step3": "Parcourez le menu et passez votre commande."
   },
   "error": {
     "title": "Une erreur s'est produite",
