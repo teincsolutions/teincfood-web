@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Apple, Play, X } from "lucide-react";
 import { siteConfig, storeLinks } from "@/config/site";
+import { trackEvent } from "@/utils/observability";
 import { cn } from "@/lib/utils";
 import { QrCode } from "@/components/install/QrCode";
 
@@ -25,17 +26,20 @@ function StoreButton({
   icon,
   top,
   label,
+  store,
 }: {
   href: string;
   icon: ReactNode;
   top: string;
   label: string;
+  store: "app_store" | "play_store";
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => trackEvent("install.store_clicked", { store })}
       className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl bg-orange px-3 text-sm font-bold text-white transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
     >
       {icon}
@@ -60,8 +64,13 @@ export function AppInstallBanner() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (visible) trackEvent("install.banner_shown", { platform });
+  }, [visible, platform]);
+
   const dismiss = () => {
     setVisible(false);
+    trackEvent("install.dismissed", { platform });
     localStorage.setItem(STORAGE_KEY, "1");
   };
 
@@ -118,6 +127,7 @@ export function AppInstallBanner() {
                   icon={<Apple className="size-4" aria-hidden="true" />}
                   top={t("ios")}
                   label="App Store"
+                  store="app_store"
                 />
               )}
               {storeLinks.buyer.playStore && (
@@ -126,6 +136,7 @@ export function AppInstallBanner() {
                   icon={<Play className="size-4 fill-current" aria-hidden="true" />}
                   top={t("android")}
                   label="Google Play"
+                  store="play_store"
                 />
               )}
             </div>

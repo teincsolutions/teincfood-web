@@ -27,7 +27,7 @@ jobs:
           # Self-hosted workspace persists; previous docker run (as root) may leave
           # root-owned files. Clean via docker (no host sudo needed) then fallback.
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
@@ -55,7 +55,7 @@ jobs:
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
@@ -74,7 +74,8 @@ jobs:
         id: tags
         run: |
           SHA_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          BRANCH_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
+          REF_SLUG="$(echo "${{ github.ref_name }}" | tr '/' '-')"
+          BRANCH_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${REF_SLUG}"
           TAGS="$SHA_TAG,$BRANCH_TAG"
           if [ "${{ github.event_name }}" = "release" ]; then
             TAG_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name }}"
@@ -100,6 +101,8 @@ jobs:
             --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
             --build-arg NEXT_PUBLIC_APPLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
+            --build-arg NEXT_PUBLIC_TELEMETRY_URL="${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}" \
+            --build-arg NEXT_PUBLIC_TELEMETRY_KEY="${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}" \
             .
 
   deploy:
@@ -116,7 +119,7 @@ jobs:
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
@@ -137,6 +140,8 @@ jobs:
           NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
+          NEXT_PUBLIC_TELEMETRY_URL: ${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}
+          NEXT_PUBLIC_TELEMETRY_KEY: ${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}
           TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
 
       - name: Health check

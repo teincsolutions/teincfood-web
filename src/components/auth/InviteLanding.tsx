@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Building2, Check, Copy, Smartphone } from "lucide-react";
 import { toast } from "@/components/ui/Toaster";
+import { trackEvent } from "@/utils/observability";
 import { storeLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,13 @@ export function InviteLanding() {
 
   const code = CODE_RE.test(linkedCode) ? linkedCode : manualCode.trim();
   const hasCode = CODE_RE.test(code);
+
+  useEffect(() => {
+    trackEvent("invite.viewed", {
+      platform,
+      has_code: CODE_RE.test(linkedCode),
+    });
+  }, [platform, linkedCode]);
 
   // Re-trigger the universal link — opens TF Business when installed
   // (email/SMS apps and in-app browsers often don't resolve applinks).
@@ -58,6 +66,7 @@ export function InviteLanding() {
       document.body.removeChild(el);
     }
     setCopied(true);
+    trackEvent("invite.code_copied", { platform });
     toast.success(t("copied"));
     window.setTimeout(() => setCopied(false), 2000);
   }
@@ -120,6 +129,7 @@ export function InviteLanding() {
           aria-disabled={!hasCode}
           onClick={(e) => {
             if (!hasCode) e.preventDefault();
+            else trackEvent("invite.open_app_clicked", { platform });
           }}
           className={cn(
             "inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-orange px-6 font-semibold text-white transition-colors hover:bg-orange-700",
@@ -132,6 +142,7 @@ export function InviteLanding() {
         {storeUrl ? (
           <a
             href={storeUrl}
+            onClick={() => trackEvent("invite.store_clicked", { platform })}
             className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-navy/15 px-6 font-semibold text-navy transition-colors hover:border-navy/30"
           >
             {t("getApp")}
