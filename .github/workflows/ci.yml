@@ -74,7 +74,8 @@ jobs:
         id: tags
         run: |
           SHA_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          BRANCH_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
+          REF_SLUG="$(echo "${{ github.ref_name }}" | tr '/' '-')"
+          BRANCH_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${REF_SLUG}"
           TAGS="$SHA_TAG,$BRANCH_TAG"
           if [ "${{ github.event_name }}" = "release" ]; then
             TAG_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name }}"
