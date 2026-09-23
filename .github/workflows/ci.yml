@@ -27,7 +27,7 @@ jobs:
           # Self-hosted workspace persists; previous docker run (as root) may leave
           # root-owned files. Clean via docker (no host sudo needed) then fallback.
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
@@ -55,7 +55,7 @@ jobs:
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
@@ -119,7 +119,7 @@ jobs:
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
-          git clone --depth 1 --branch "${{ github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
+          git clone --depth 1 --branch "${{ github.head_ref || github.ref_name }}" "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ env.IMAGE_NAME }}.git" .
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
