@@ -100,6 +100,8 @@ jobs:
             --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
             --build-arg NEXT_PUBLIC_APPLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
+            --build-arg NEXT_PUBLIC_TELEMETRY_URL="${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}" \
+            --build-arg NEXT_PUBLIC_TELEMETRY_KEY="${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}" \
             .
 
   deploy:
@@ -137,6 +139,8 @@ jobs:
           NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
+          NEXT_PUBLIC_TELEMETRY_URL: ${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}
+          NEXT_PUBLIC_TELEMETRY_KEY: ${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}
           TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
 
       - name: Health check

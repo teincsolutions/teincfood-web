@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { authConfig } from "@/config/site";
 import { toast } from "@/components/ui/Toaster";
+import { trackEvent } from "@/utils/observability";
 import { appleAuthHelpers } from "react-apple-signin-auth";
 import { cn } from "@/lib/utils";
 
@@ -89,15 +90,17 @@ export function DeleteAccountFlow() {
 
   const submitOtp = async () => {
     setStatus("loading");
-    const { ok, data } = await callApi("send_otp", {
+    const { ok, status, data } = await callApi("send_otp", {
       phone: phone.trim(),
       purpose: "login",
     });
     setStatus("idle");
     if (!ok) {
+      trackEvent("account.delete.otp_failed", { status });
       toast.error(errorMessage(data, t("errors.phoneSend")));
       return false;
     }
+    trackEvent("account.delete.otp_sent");
     toast.success(t("toast.codeSent", { phone: phone.trim() }));
     setOtpSent(true);
     setResendIn(RESEND_SECONDS);
@@ -124,15 +127,17 @@ export function DeleteAccountFlow() {
     }
     setFieldErrors((prev) => ({ ...prev, code: "" }));
     setStatus("loading");
-    const { ok, data } = await callApi("verify_otp", {
+    const { ok, status, data } = await callApi("verify_otp", {
       phone: phone.trim(),
       code: code.trim(),
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
+      trackEvent("account.delete.verify_failed", { status });
       toast.error(errorMessage(data, t("errors.otpVerify")));
       return;
     }
+    trackEvent("account.delete.identity_verified");
     toast.success(t("toast.identityVerified"));
     nextAfterAuth(data.user ?? {});
   };
@@ -145,15 +150,17 @@ export function DeleteAccountFlow() {
     setFieldErrors((prev) => ({ ...prev, ...nextErr }));
     if (Object.keys(nextErr).length > 0) return;
     setStatus("loading");
-    const { ok, data } = await callApi("login", {
+    const { ok, status, data } = await callApi("login", {
       email: email.trim(),
       password,
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
+      trackEvent("account.delete.verify_failed", { method: "email", status });
       toast.error(errorMessage(data, t("errors.login")));
       return;
     }
+    trackEvent("account.delete.identity_verified", { method: "email" });
     toast.success(t("toast.signedIn"));
     nextAfterAuth(data.user ?? {});
   };
@@ -163,18 +170,21 @@ export function DeleteAccountFlow() {
     const idToken = await obtainIdToken(provider);
     if (!idToken) {
       setStatus("idle");
+      trackEvent("account.delete.verify_failed", { method: "oidc", provider, status: 0 });
       toast.error(t("errors.oidc"));
       return;
     }
-    const { ok, data } = await callApi("oidc", {
+    const { ok, status, data } = await callApi("oidc", {
       provider,
       id_token: idToken,
     });
     setStatus("idle");
     if (!ok || !data.access_token) {
+      trackEvent("account.delete.verify_failed", { method: "oidc", provider, status });
       toast.error(errorMessage(data, t("errors.oidc")));
       return;
     }
+    trackEvent("account.delete.identity_verified", { method: "oidc", provider });
     toast.success(t("toast.signedIn"));
     nextAfterAuth(data.user ?? {});
   };
@@ -187,12 +197,14 @@ export function DeleteAccountFlow() {
     }
     setFieldErrors((prev) => ({ ...prev, confirm: "" }));
     setStatus("loading");
-    const { ok, data } = await callApi("delete_account", {});
+    const { ok, status, data } = await callApi("delete_account", {});
     setStatus("idle");
     if (!ok) {
+      trackEvent("account.delete.failed", { status });
       toast.error(errorMessage(data, t("errors.delete")));
       return;
     }
+    trackEvent("account.deleted");
     toast.success(t("toast.accountDeleted"));
     setStep("done");
   };

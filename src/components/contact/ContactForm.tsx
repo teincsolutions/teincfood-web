@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { toast } from "@/components/ui/Toaster";
+import { trackEvent } from "@/utils/observability";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "loading";
@@ -48,9 +49,11 @@ export function ContactForm() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error("failed");
+      trackEvent("contact.submitted");
       toast.success(t("success"));
       setForm({ name: "", email: "", message: "" });
     } catch {
+      trackEvent("contact.failed");
       toast.error(t("error"));
     } finally {
       setStatus("idle");

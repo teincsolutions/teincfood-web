@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { toast } from "@/components/ui/Toaster";
+import { trackEvent } from "@/utils/observability";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "success" | "noToken";
@@ -51,14 +52,17 @@ export function ResetPasswordForm() {
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as BackendError;
         const message = data.error?.message;
+        trackEvent("password.reset.failed", { status: res.status });
         toast.error(message || t("invalidRequest"));
         setStatus("idle");
         return;
       }
 
+      trackEvent("password.reset.completed");
       toast.success(t("success"));
       setStatus("success");
     } catch {
+      trackEvent("password.reset.failed", { status: 0 });
       toast.error(t("error"));
       setStatus("idle");
     }
