@@ -93,10 +93,10 @@ jobs:
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             --build-arg NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}" \
-            --build-arg NEXT_PUBLIC_BUYER_APP_STORE="${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}" \
-            --build-arg NEXT_PUBLIC_BUYER_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
-            --build-arg NEXT_PUBLIC_BUSINESS_APP_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
-            --build-arg NEXT_PUBLIC_BUSINESS_PLAY_STORE="${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUYER_APP_STORE="${{ vars.NEXT_PUBLIC_BUYER_APP_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUYER_PLAY_STORE="${{ vars.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUSINESS_APP_STORE="${{ vars.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
+            --build-arg NEXT_PUBLIC_BUSINESS_PLAY_STORE="${{ vars.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}" \
             --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
@@ -134,10 +134,10 @@ jobs:
           APP_IMAGE: ghcr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           WEB_PORT: 3001
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
-          NEXT_PUBLIC_BUYER_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_APP_STORE }}
-          NEXT_PUBLIC_BUYER_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUYER_PLAY_STORE }}
-          NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_APP_STORE }}
-          NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ secrets.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
+          NEXT_PUBLIC_BUYER_APP_STORE: ${{ vars.NEXT_PUBLIC_BUYER_APP_STORE }}
+          NEXT_PUBLIC_BUYER_PLAY_STORE: ${{ vars.NEXT_PUBLIC_BUYER_PLAY_STORE }}
+          NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ vars.NEXT_PUBLIC_BUSINESS_APP_STORE }}
+          NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ vars.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
           NEXT_PUBLIC_TELEMETRY_URL: ${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}
