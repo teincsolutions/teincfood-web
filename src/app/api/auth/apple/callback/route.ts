@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { API_CONFIGURED, apiUrl } from "@/lib/api-base";
 
 export const runtime = "nodejs";
-
-const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
 
 /**
  * Apple OAuth callback for desktop sign-in.
@@ -17,7 +16,7 @@ const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
  * `teincfood://`.
  */
 export async function POST(req: NextRequest) {
-  if (!API_BASE) {
+  if (!API_CONFIGURED) {
     return NextResponse.json(
       { error: { code: "SERVICE_UNCONFIGURED", message: "Backend not configured" } },
       { status: 503 },
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/auth/apple/web-callback`, {
+    const res = await fetch(apiUrl("/auth/apple/web-callback"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_token: idToken, state }),

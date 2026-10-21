@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { API_CONFIGURED, apiUrl } from "@/lib/api-base";
 
 export const runtime = "nodejs";
 
-const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
 const emailRegex = /^\S+@\S+\.\S+$/;
 
 /**
@@ -10,7 +10,7 @@ const emailRegex = /^\S+@\S+\.\S+$/;
  * message to the support inbox using its configured email provider.
  */
 export async function POST(req: Request) {
-  if (!API_BASE) {
+  if (!API_CONFIGURED) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/contact`, {
+    const res = await fetch(apiUrl("/contact"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
