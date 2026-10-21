@@ -26,6 +26,7 @@ services:
       NODE_ENV: production
       NEXT_PUBLIC_CONTACT_EMAIL: ${NEXT_PUBLIC_CONTACT_EMAIL:-hello@teincfood.com}
       TEINCFOOD_API_BASE_URL: ${TEINCFOOD_API_BASE_URL:-}
+      TEINCFOOD_API_VERSION: ${TEINCFOOD_API_VERSION:-v1}
     networks:
       - teinc-internal-net
     healthcheck:

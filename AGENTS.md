@@ -52,5 +52,11 @@ the CI pipeline fails otherwise.
   keep them in sync between `Dockerfile` args, `docker-compose.yml` build
   args, and the CI `build-args`. `TEINCFOOD_API_BASE_URL` is a runtime
   container env used by the contact + delete-account proxies.
+- `TEINCFOOD_API_BASE_URL` is **version-less** (e.g.
+  `https://food.teincsolutions.com/api`). The API version comes from
+  `TEINCFOOD_API_VERSION` (default `v1`) and is appended by
+  `src/lib/api-base.ts` — always build backend URLs with `apiUrl(path)`, never
+  by string-concatenating the base yourself, so a future v2 needs no code
+  change.
 - Secrets/vars are injected from GitHub; see `docker-compose.yml` for the env
   contract and `.env.example` for the local contract.

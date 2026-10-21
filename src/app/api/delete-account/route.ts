@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { API_CONFIGURED, apiUrl } from "@/lib/api-base";
 
 export const runtime = "nodejs";
-
-const API_BASE = process.env.TEINCFOOD_API_BASE_URL || "";
 
 const TOKEN_COOKIE = "teinc_delete_token";
 
@@ -26,7 +25,7 @@ const ACTIONS: Record<string, ActionDef> = {
  * and attached to the final deletion request, keeping it out of client JS.
  */
 export async function POST(req: NextRequest) {
-  if (!API_BASE) {
+  if (!API_CONFIGURED) {
     return NextResponse.json(
       {
         error: { code: "SERVICE_UNCONFIGURED", message: "Service unavailable" },
@@ -66,7 +65,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${API_BASE}${def.path}`, {
+    const res = await fetch(apiUrl(def.path), {
       method: def.method ?? "POST",
       headers: {
         "Content-Type": "application/json",

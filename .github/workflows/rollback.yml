@@ -41,6 +41,7 @@ jobs:
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
           TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
+          TEINCFOOD_API_VERSION: ${{ vars.TEINCFOOD_API_VERSION || 'v1' }}
 
       - name: Health check
         run: |

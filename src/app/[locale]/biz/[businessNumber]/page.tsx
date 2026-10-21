@@ -6,9 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { BizLanding } from "@/components/business/BizLanding";
 import { localizeMetadata } from "@/lib/seo";
-
-const API_BASE =
-  process.env.TEINCFOOD_API_BASE_URL || "http://localhost:4000/api/v1";
+import { apiUrl } from "@/lib/api-base";
 
 async function resolveBusiness(businessNumber: string): Promise<{
   id: string;
@@ -17,7 +15,7 @@ async function resolveBusiness(businessNumber: string): Promise<{
 } | null> {
   try {
     const res = await fetch(
-      `${API_BASE}/businesses/by-number/${encodeURIComponent(businessNumber)}`,
+      apiUrl(`/businesses/by-number/${encodeURIComponent(businessNumber)}`),
       { next: { revalidate: 300 } },
     );
     if (!res.ok) return null;

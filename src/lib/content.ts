@@ -1,6 +1,4 @@
-const API_BASE = (
-  process.env.TEINCFOOD_API_BASE_URL || "http://localhost:4000/api/v1"
-).replace(/\/+$/, "");
+import { apiUrl } from "@/lib/api-base";
 
 export interface ContentPage {
   id: string;
@@ -49,10 +47,10 @@ export async function getPage(
   locale: string = "en"
 ): Promise<ContentPage | null> {
   try {
-    const res = await fetch(
-      `${API_BASE}/pages/${slug}?locale=${locale}`,
-      { next: { revalidate: 3600 }, signal: AbortSignal.timeout(5000) }
-    );
+    const res = await fetch(apiUrl(`/pages/${slug}?locale=${locale}`), {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(5000),
+    });
     if (!res.ok) return null;
     const json = (await res.json()) as { data?: unknown };
     return normalizePage(json.data);
