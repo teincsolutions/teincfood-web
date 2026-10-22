@@ -543,7 +543,7 @@
   },
   "deleteAccount": {
     "title": "Delete your Teinc Food account",
-    "intro": "We're sorry to see you go. Verify your identity to permanently delete your account and personal data. This cannot be undone.",
+    "intro": "We're sorry to see you go. Verify your identity to request deletion of your account. We deactivate it right away and remove your personal data within 30 days — you can still restore it before then.",
     "step": {
       "identify": "Identify",
       "verify": "Verify",
@@ -569,19 +569,19 @@
       "google": "Continue with Google",
       "apple": "Continue with Apple",
       "back": "Back",
-      "delete": "Delete account permanently"
+      "delete": "Request account deletion"
     },
     "confirm": {
-      "warning": "This will permanently delete your account.",
-      "deleted": "Your profile, login details, and personal data will be erased. This action cannot be undone.",
+      "warning": "This deactivates your account immediately.",
+      "deleted": "You will be signed out everywhere. Your personal data is removed within 30 days unless you restore the account.",
       "email": "Email",
       "phone": "Phone",
       "id": "Account ID",
       "typeDelete": "Type DELETE to confirm"
     },
     "done": {
-      "title": "Your account has been deleted",
-      "body": "We've removed your Teinc Food account and personal data. Thanks for using Teinc Food."
+      "title": "Your account deletion is scheduled",
+      "body": "Your account is deactivated and you've been signed out everywhere. Your personal data will be removed within 30 days. Until then you can restore it from the sign-in screen."
     },
     "errors": {
       "invalidPhone": "Enter a valid phone number.",
@@ -604,7 +604,7 @@
       "codeSent": "We sent a code to {phone}.",
       "identityVerified": "Identity verified.",
       "signedIn": "You're signed in.",
-      "accountDeleted": "Your account has been deleted."
+      "accountDeleted": "Account deletion requested."
     }
   },
   "resetPassword": {
