@@ -543,7 +543,7 @@
   },
   "deleteAccount": {
     "title": "Supprimer votre compte Teinc Food",
-    "intro": "Nous sommes désolés de vous voir partir. Vérifiez votre identité pour supprimer définitivement votre compte et vos données personnelles. Cette action est irréversible.",
+    "intro": "Nous sommes désolés de vous voir partir. Vérifiez votre identité pour demander la suppression de votre compte. Il est désactivé immédiatement et vos données personnelles sont supprimées dans les 30 jours — vous pouvez encore le restaurer d'ici là.",
     "step": {
       "identify": "Identifier",
       "verify": "Vérifier",
@@ -569,19 +569,19 @@
       "google": "Continuer avec Google",
       "apple": "Continuer avec Apple",
       "back": "Retour",
-      "delete": "Supprimer définitivement le compte"
+      "delete": "Demander la suppression du compte"
     },
     "confirm": {
-      "warning": "Ceci supprimera définitivement votre compte.",
-      "deleted": "Votre profil, vos identifiants et vos données personnelles seront effacés. Cette action ne peut pas être annulée.",
+      "warning": "Cela désactive immédiatement votre compte.",
+      "deleted": "Vous serez déconnecté partout. Vos données personnelles seront supprimées dans les 30 jours, sauf si vous restaurez le compte.",
       "email": "E-mail",
       "phone": "Téléphone",
       "id": "Identifiant du compte",
       "typeDelete": "Tapez DELETE pour confirmer"
     },
     "done": {
-      "title": "Votre compte a été supprimé",
-      "body": "Nous avons supprimé votre compte Teinc Food et vos données personnelles. Merci d'avoir utilisé Teinc Food."
+      "title": "La suppression de votre compte est programmée",
+      "body": "Votre compte est désactivé et vous avez été déconnecté partout. Vos données personnelles seront supprimées dans les 30 jours. D'ici là, vous pouvez le restaurer depuis l'écran de connexion."
     },
     "errors": {
       "invalidPhone": "Entrez un numéro de téléphone valide.",
@@ -604,7 +604,7 @@
       "codeSent": "Nous avons envoyé un code au {phone}.",
       "identityVerified": "Identité vérifiée.",
       "signedIn": "Vous êtes connecté(e).",
-      "accountDeleted": "Votre compte a été supprimé."
+      "accountDeleted": "Suppression du compte demandée."
     }
   },
   "resetPassword": {
