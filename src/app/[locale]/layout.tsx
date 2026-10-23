@@ -9,6 +9,7 @@ import { AppInstallBanner } from "@/components/install/AppInstallBanner";
 import { ServiceWorker } from "@/components/install/ServiceWorker";
 import { TelemetryMount } from "@/components/telemetry/TelemetryMount";
 import { Toaster } from "@/components/ui/Toaster";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -41,6 +42,7 @@ export default async function LocaleLayout({
         <ServiceWorker />
         <TelemetryMount />
         <Toaster />
+        <ChatWidget />
       </div>
     </NextIntlClientProvider>
   );
