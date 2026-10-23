@@ -78,31 +78,44 @@ export function ChatWidget() {
       clientRef.current = client;
 
       client.on("connection:status", (c) => setStatus(String(c)));
-      client.on("message:sending", (m) => setPending((p) => [...p, m]));
-      client.on("message:sent", (m) => {
-        setPending((p) => p.filter((x) => (x as any)._clientId !== (m as any)._clientId));
-        setMessages((prev) => {
-          if (prev.some((x) => x.id === m.id)) return prev;
-          return [...prev, m];
+      const sync = () => {
+        const cid = convIdRef.current;
+        const c = clientRef.current;
+        if (!cid || !c) return;
+        const stored = c.store.getMessages(cid);
+        const pending = c.getPendingMessages(cid);
+        const pendingMap = new Map<string, any>();
+        for (const p of pending) pendingMap.set(`pending_${p._clientId}`, p);
+        for (const m of stored) if (m.id) pendingMap.delete(`pending_${m.id}`);
+        const all = [...stored, ...pendingMap.values()];
+        all.sort((a: any, b: any) => {
+          const aPending = "_clientId" in a ? 1 : 0;
+          const bPending = "_clientId" in b ? 1 : 0;
+          if (aPending !== bPending) return aPending - bPending;
+          const aTime = new Date(a.inserted_at).getTime();
+          const bTime = new Date(b.inserted_at).getTime();
+          if (isNaN(aTime) && isNaN(bTime)) return 0;
+          if (isNaN(aTime)) return 1;
+          if (isNaN(bTime)) return -1;
+          if (aTime !== bTime) return aTime - bTime;
+          return (a.id ?? "").localeCompare(b.id ?? "");
         });
-      });
-      client.on("message:received", (m) => {
-        setMessages((prev) => {
-          if (prev.some((x) => x.id === m.id)) return prev;
-          return [...prev, m];
-        });
-      });
-      client.on("message:failed", (m) => {
-        setPending((p) => p.filter((x) => (x as any)._clientId !== (m as any)._clientId));
-      });
+        setMessages(all as any);
+        setPending([]);
+      };
+      client.on("message:sending", () => sync());
+      client.on("message:sent", () => sync());
+      client.on("message:received", () => sync());
+      client.on("message:failed", () => sync());
+      client.on("messages:loaded", (p: any) => { if (p.conversationId === convIdRef.current) sync(); });
 
       const deviceId = getDeviceId();
       try {
         const convId = await client.startGuest(deviceId, turnstileToken ?? undefined);
         convIdRef.current = convId;
         setUserId(client.getCurrentUserId());
-        setMessages(client.store.getMessages(convId));
-        setPending(client.getPendingMessages(convId));
+        try { await client.loadMessages(convId, 50, 0); } catch {}
+        sync();
       } catch (e) {
         console.error("guest chat start failed", e);
       }
@@ -165,20 +178,13 @@ export function ChatWidget() {
               <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#ff7622] text-white" : "bg-white text-gray-900 shadow"}`}>
                 <MarkdownText text={m.content} />
                 <div className={`mt-1 text-[10px] ${isOut ? "text-white/70" : "text-gray-400"}`}>
-                  {new Date(m.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  {"_clientId" in m ? "Sending…" : new Date(m.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
               </div>
             </div>
           );
         })}
-        {pending.map((m) => (
-          <div key={(m as any)._clientId} className="flex justify-end">
-            <div className="max-w-[80%] rounded-2xl bg-[#ff7622]/70 px-3 py-2 text-sm text-white">
-              <MarkdownText text={m.content} />
-              <div className="mt-1 text-[10px] text-white/70">Sending…</div>
-            </div>
-          </div>
-        ))}
+        {/* pending merged into messages list above */}
       </div>
 
       <div className="flex flex-wrap gap-2 border-t border-gray-100 px-3 py-2">
