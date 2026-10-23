@@ -22,6 +22,7 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -99,8 +100,9 @@ export function ChatWidget() {
       try {
         const convId = await client.startGuest(deviceId, turnstileToken ?? undefined);
         convIdRef.current = convId;
-        const loaded = client.store.getMessages(convId);
-        setMessages(loaded);
+        setUserId(client.getCurrentUserId());
+        setMessages(client.store.getMessages(convId));
+        setPending(client.getPendingMessages(convId));
       } catch (e) {
         console.error("guest chat start failed", e);
       }
@@ -157,7 +159,7 @@ export function ChatWidget() {
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
         {messages.map((m) => {
-          const isOut = m.direction === "outbound";
+          const isOut = !!userId && m.sender_id === userId;
           return (
             <div key={m.id ?? (m as any)._clientId} className={`flex ${isOut ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#ff7622] text-white" : "bg-white text-gray-900 shadow"}`}>
