@@ -135,7 +135,7 @@ export function ChatWidget() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#E53935] text-white shadow-lg hover:scale-105 transition-transform"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#ff7622] text-white shadow-lg hover:scale-105 transition-transform"
         aria-label="Open chat"
       >
         <MessageCircle size={26} />
@@ -145,7 +145,7 @@ export function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex h-[520px] w-[360px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
-      <div className="flex items-center justify-between bg-[#E53935] px-4 py-3 text-white">
+      <div className="flex items-center justify-between bg-[#ff7622] px-4 py-3 text-white">
         <div>
           <p className="font-semibold">TeincFood Support</p>
           <p className="text-xs opacity-80">{status === "connected" ? "Online" : "Connecting…"}</p>
@@ -160,7 +160,7 @@ export function ChatWidget() {
           const isOut = m.direction === "outbound";
           return (
             <div key={m.id ?? (m as any)._clientId} className={`flex ${isOut ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#E53935] text-white" : "bg-white text-gray-900 shadow"}`}>
+              <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#ff7622] text-white" : "bg-white text-gray-900 shadow"}`}>
                 <MarkdownText text={m.content} />
                 <div className={`mt-1 text-[10px] ${isOut ? "text-white/70" : "text-gray-400"}`}>
                   {new Date(m.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
@@ -171,7 +171,7 @@ export function ChatWidget() {
         })}
         {pending.map((m) => (
           <div key={(m as any)._clientId} className="flex justify-end">
-            <div className="max-w-[80%] rounded-2xl bg-[#E53935]/70 px-3 py-2 text-sm text-white">
+            <div className="max-w-[80%] rounded-2xl bg-[#ff7622]/70 px-3 py-2 text-sm text-white">
               <MarkdownText text={m.content} />
               <div className="mt-1 text-[10px] text-white/70">Sending…</div>
             </div>
@@ -198,12 +198,12 @@ export function ChatWidget() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
           placeholder="Type a message…"
-          className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#E53935]"
+          className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#ff7622]"
         />
         <button
           onClick={send}
           disabled={sending || !input.trim()}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E53935] text-white disabled:opacity-50"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff7622] text-white disabled:opacity-50"
         >
           {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
         </button>
