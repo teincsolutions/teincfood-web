@@ -188,6 +188,27 @@ export function ChatWidget() {
       </div>
 
       <div className="flex flex-wrap gap-2 border-t border-gray-100 px-3 py-2">
+        <button
+          onClick={async () => {
+            if (!navigator.geolocation) { alert("Geolocation not supported"); return; }
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                const c = clientRef.current;
+                const cid = convIdRef.current;
+                if (!c || !cid) return;
+                c.sendMessage(cid, "Here is my location", {
+                  location: { latitude: pos.coords.latitude, longitude: pos.coords.longitude },
+                  page_url: window.location.href,
+                  page_title: document.title,
+                });
+              },
+              (err) => alert("Could not get location: " + err.message),
+            );
+          }}
+          className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
+        >
+          📍 Share my location
+        </button>
         {quickActions.map((q) => (
           <button
             key={q.label}
