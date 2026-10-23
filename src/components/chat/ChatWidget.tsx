@@ -20,6 +20,8 @@ function getDeviceId(): string {
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -28,6 +30,34 @@ export function ChatWidget() {
   const clientRef = useRef<ChatClient | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const convIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    const interval = setInterval(() => {
+      const w = (window as any).turnstile;
+      if (w && turnstileRef.current && !turnstileRef.current.dataset.rendered) {
+        turnstileRef.current.dataset.rendered = "1";
+        try {
+          w.render(turnstileRef.current, {
+            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
+            callback: (token: string) => setTurnstileToken(token),
+            "expired-callback": () => setTurnstileToken(null),
+            theme: "light",
+          });
+        } catch (e) {
+          console.warn("turnstile render failed", e);
+        }
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -67,7 +97,7 @@ export function ChatWidget() {
 
       const deviceId = getDeviceId();
       try {
-        const convId = await client.startGuest(deviceId);
+        const convId = await client.startGuest(deviceId, turnstileToken ?? undefined);
         convIdRef.current = convId;
         const loaded = client.store.getMessages(convId);
         setMessages(loaded);
@@ -161,6 +191,7 @@ export function ChatWidget() {
         ))}
       </div>
 
+      <div ref={turnstileRef} className="px-3 pt-2" />
       <div className="flex items-center gap-2 border-t border-gray-200 p-3">
         <input
           value={input}
