@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createLocalStorageAdapter, type Message, type ChatClient } from "@teincfood/chat-client";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Maximize2, Minimize2, MapPin, RefreshCw } from "lucide-react";
 import { MarkdownText } from "./MarkdownText";
 import { chatConfig } from "@/config/site";
 
@@ -22,7 +22,9 @@ function getDeviceId(): string {
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetIdRef = useRef<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState<Message[]>([]);
@@ -30,6 +32,10 @@ export function ChatWidget() {
   const [status, setStatus] = useState<string>("disconnected");
   const [sessionReady, setSessionReady] = useState(false);
   const [sending, setSending] = useState(false);
+  // Notice shown above the composer instead of a chat bubble: a failed
+  // security check is not something the customer said, and repeating it in
+  // the transcript made the chat look broken.
+  const [notice, setNotice] = useState<{ kind: "captcha" | "session"; text: string } | null>(null);
   const clientRef = useRef<ChatClient | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const convIdRef = useRef<string | null>(null);
@@ -56,10 +62,11 @@ export function ChatWidget() {
       if (w && turnstileRef.current && !turnstileRef.current.dataset.rendered) {
         turnstileRef.current.dataset.rendered = "1";
         try {
-          w.render(turnstileRef.current, {
+          const widgetId = w.render(turnstileRef.current, {
             sitekey: TURNSTILE_SITE_KEY,
             callback: (token: string) => {
               captchaTokenRef.current = token;
+              setNotice(null);
               // Now that we have a token the guest session can be created.
               void startGuestRef.current?.();
             },
@@ -71,36 +78,50 @@ export function ChatWidget() {
               // Without this the widget would sit on "Verifying…" forever.
               console.warn("turnstile error", code);
               captchaTokenRef.current = null;
-              setStatus("error");
-              setMessages((prev) => [
-                ...prev,
-                {
-                  id: "captcha-error",
-                  content:
-                    "I couldn't verify your browser just now. Please refresh the page and try again.",
-                  sender_id: "system",
-                  conversation_id: "",
-                  direction: "inbound",
-                  channel: "app",
-                  message_type: "text",
-                  status: "sent",
-                  external_id: null,
-                  metadata: null,
-                  replied_by_id: null,
-                  read: true,
-                  sent_at: new Date().toISOString(),
-                  inserted_at: new Date().toISOString(),
-                } as Message,
-              ]);
+              setStatus("verifying");
+              setNotice({
+                kind: "captcha",
+                text:
+                  "The security check didn't load. Please reload the page, or tap Retry.",
+              });
             },
             theme: "light",
           });
+          turnstileWidgetIdRef.current = widgetId ?? null;
         } catch (e) {
           console.warn("turnstile render failed", e);
+          setNotice({
+            kind: "captcha",
+            text: "The security check didn't load. Please reload the page, or tap Retry.",
+          });
         }
       }
     }, 500);
     return () => clearInterval(interval);
+  }, []);
+
+  /**
+   * Re-run the security check (and, when we already have a token, re-create
+   * the guest session). Wired to the Retry button in the notice banner.
+   */
+  const retry = useCallback(async () => {
+    setNotice(null);
+    setStatus("verifying");
+    const w = (window as any).turnstile;
+
+    if (w && turnstileWidgetIdRef.current != null) {
+      try {
+        w.reset(turnstileWidgetIdRef.current);
+      } catch {
+        // reset() can throw if the widget is gone - fall through to the
+        // token we may already hold.
+      }
+    }
+
+    if (captchaTokenRef.current) {
+      sessionStartedRef.current = false;
+      await startGuestRef.current?.();
+    }
   }, []);
 
   useEffect(() => {
@@ -177,26 +198,13 @@ export function ChatWidget() {
         } catch (e) {
           console.error("guest chat start failed", e);
           sessionStartedRef.current = false;
-          setStatus("error");
-          setMessages([
-            {
-              id: "guest-start-error",
-              content:
-                "Sorry — I couldn't start the chat just now. Please try again in a moment.",
-              sender_id: "system",
-              conversation_id: "",
-              direction: "inbound",
-              channel: "app",
-              message_type: "text",
-              status: "sent",
-              external_id: null,
-              metadata: null,
-              replied_by_id: null,
-              read: true,
-              sent_at: new Date().toISOString(),
-              inserted_at: new Date().toISOString(),
-            } as Message,
-          ]);
+          setSessionReady(false);
+          setStatus("verifying");
+          setNotice({
+            kind: "session",
+            text:
+              "We couldn't start the chat just now. Please tap Retry — your security check may need another go.",
+          });
         }
       };
 
@@ -223,25 +231,10 @@ export function ChatWidget() {
     const convId = convIdRef.current;
     if (!client || !convId || !input.trim()) {
       if (client && !convId && input.trim()) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: "not-ready",
-            content: "One moment — finish the security check above, then send your message.",
-            sender_id: "system",
-            conversation_id: "",
-            direction: "inbound",
-            channel: "app",
-            message_type: "text",
-            status: "sent",
-            external_id: null,
-            metadata: null,
-            replied_by_id: null,
-            read: true,
-            sent_at: new Date().toISOString(),
-            inserted_at: new Date().toISOString(),
-          } as Message,
-        ]);
+        setNotice({
+          kind: "captcha",
+          text: "One moment — finish the security check above, then send your message.",
+        });
       }
       return;
     }
@@ -273,7 +266,13 @@ export function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex h-[520px] w-[360px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+    <div
+      className={
+        expanded
+          ? "fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:inset-6"
+          : "fixed bottom-4 right-4 z-50 flex h-[min(520px,calc(100dvh-5rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:bottom-6 sm:right-6"
+      }
+    >
       <div className="flex items-center justify-between bg-[#ff7622] px-4 py-3 text-white">
         <div>
           <p className="font-semibold">TeincFood Support</p>
@@ -287,9 +286,26 @@ export function ChatWidget() {
                   : "Connecting…"}
           </p>
         </div>
-        <button onClick={() => setOpen(false)} aria-label="Close chat">
-          <X size={20} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? "Minimise chat" : "Expand chat"}
+            title={expanded ? "Minimise chat" : "Expand chat"}
+            className="rounded-md p-1.5 transition-colors hover:bg-white/20"
+          >
+            {expanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
+          <button
+            onClick={() => {
+              setOpen(false);
+              setExpanded(false);
+            }}
+            aria-label="Close chat"
+            className="rounded-md p-1.5 transition-colors hover:bg-white/20"
+          >
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
@@ -347,7 +363,8 @@ export function ChatWidget() {
           }}
           className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
         >
-          📍 Share my location
+          <MapPin size={13} className="mr-1 inline" aria-hidden />
+          Share my location
         </button>
         {quickActions.map((q) => (
           <button
@@ -361,18 +378,40 @@ export function ChatWidget() {
       </div>
 
       {TURNSTILE_SITE_KEY ? <div ref={turnstileRef} className="px-3 pt-2" /> : null}
+
+      {notice && (
+        <div className="flex items-start gap-2 border-t border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          <p className="flex-1">{notice.text}</p>
+          <button
+            onClick={() => void retry()}
+            className="flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-white px-2 py-1 font-medium text-amber-900 hover:bg-amber-100"
+          >
+            <RefreshCw size={12} aria-hidden />
+            Retry
+          </button>
+          <button
+            onClick={() => setNotice(null)}
+            aria-label="Dismiss notice"
+            className="shrink-0 rounded-md p-1 text-amber-700 hover:bg-amber-100"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 border-t border-gray-200 p-3">
         <input
           value={input}
           disabled={!sessionReady}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          placeholder="Type a message…"
-          className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#ff7622]"
+          placeholder={sessionReady ? "Type a message…" : "Complete the security check above"}
+          className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#ff7622] disabled:bg-gray-50 disabled:text-gray-400"
         />
         <button
           onClick={send}
           disabled={sending || !input.trim() || !sessionReady}
+          aria-label="Send message"
           className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff7622] text-white disabled:opacity-50"
         >
           {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
