@@ -1023,10 +1023,10 @@
     postcss "^8.5.16"
     tailwindcss "4.3.3"
 
-"@teincfood/chat-client@^0.1.26":
-  version "0.1.26"
-  resolved "https://registry.yarnpkg.com/@teincfood/chat-client/-/chat-client-0.1.26.tgz#c90e5e3e148d8bba79e0bf265e178f7993505d74"
-  integrity sha512-kR9/kCLUwpFtJrS3iwoiHMR7gSZu5jiz7KWpHR5n+QXgM2MOU55pS6C47ts63Jt9v6/Isuk6gJVx0GsgQHXAmQ==
+"@teincfood/chat-client@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@teincfood/chat-client/-/chat-client-0.1.27.tgz#c71dfea9b937ae71003caa8382607dfcae2e4b98"
+  integrity sha512-K3v1Rf7FPUmdOSpi7i3ISqD6uVHX3Cc2EVit7PU5QDrXDIN1qm5/ayD4jo570mf9GfwEZTKfE+yqDx9xJOdZow==
 
 "@teincfood/observability@^0.1.0":
   version "0.1.0"
