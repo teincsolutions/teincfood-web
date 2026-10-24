@@ -22,17 +22,22 @@ function getDeviceId(): string {
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<string>("disconnected");
+  const [sessionReady, setSessionReady] = useState(false);
   const [sending, setSending] = useState(false);
   const clientRef = useRef<ChatClient | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const convIdRef = useRef<string | null>(null);
+  // Captcha token + guest-session starter, kept in refs because the
+  // Turnstile callback and the client bootstrap run in separate effects.
+  const captchaTokenRef = useRef<string | null>(null);
+  const startGuestRef = useRef<(() => Promise<void>) | null>(null);
+  const sessionStartedRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -53,8 +58,14 @@ export function ChatWidget() {
         try {
           w.render(turnstileRef.current, {
             sitekey: TURNSTILE_SITE_KEY,
-            callback: (token: string) => setTurnstileToken(token),
-            "expired-callback": () => setTurnstileToken(null),
+            callback: (token: string) => {
+              captchaTokenRef.current = token;
+              // Now that we have a token the guest session can be created.
+              void startGuestRef.current?.();
+            },
+            "expired-callback": () => {
+              captchaTokenRef.current = null;
+            },
             theme: "light",
           });
         } catch (e) {
@@ -115,25 +126,81 @@ export function ChatWidget() {
       client.on("messages:loaded", (p: any) => { if (p.conversationId === convIdRef.current) sync(); });
 
       const deviceId = getDeviceId();
-      try {
-        const convId = await client.startGuest(deviceId, turnstileToken ?? undefined);
-        convIdRef.current = convId;
-        setUserId(client.getCurrentUserId());
+
+      // The backend only accepts a guest session with a valid captcha token
+      // once GUEST_CAPTCHA_SECRET is configured, so the session must NOT be
+      // started before the Turnstile widget has produced a token.
+      const startGuestSession = async () => {
+        if (sessionStartedRef.current) return;
+        const token = captchaTokenRef.current;
+        if (TURNSTILE_SITE_KEY && !token) return; // wait for the captcha
+        sessionStartedRef.current = true;
         try {
-          await client.loadMessages(convId, 50, 0);
-        } catch {
-          // history load failed — the live socket still works
+          const convId = await client.startGuest(deviceId, token ?? undefined);
+          convIdRef.current = convId;
+          setUserId(client.getCurrentUserId());
+          setSessionReady(true);
+          try {
+            await client.loadMessages(convId, 50, 0);
+          } catch {
+            // history load failed — the live socket still works
+          }
+          client.flushPending(convId);
+          sync();
+        } catch (e) {
+          console.error("guest chat start failed", e);
+          sessionStartedRef.current = false;
+          setStatus("error");
+          setMessages([
+            {
+              id: "guest-start-error",
+              content:
+                "Sorry — I couldn't start the chat just now. Please try again in a moment.",
+              sender_id: "system",
+              conversation_id: "",
+              direction: "inbound",
+              channel: "app",
+              message_type: "text",
+              status: "sent",
+              external_id: null,
+              metadata: null,
+              replied_by_id: null,
+              read: true,
+              sent_at: new Date().toISOString(),
+              inserted_at: new Date().toISOString(),
+            } as Message,
+          ]);
         }
-        client.flushPending(convId);
-        sync();
-      } catch (e) {
-        console.error("guest chat start failed", e);
-        setStatus("error");
-        setMessages([
+      };
+
+      // The Turnstile callback fires later (when the visitor opens the panel
+      // and solves the challenge), so the starter is kept in a ref.
+      startGuestRef.current = startGuestSession;
+
+      if (!TURNSTILE_SITE_KEY) {
+        // No captcha on this environment — connect straight away.
+        await startGuestSession();
+      } else {
+        setStatus("verifying");
+      }
+    })();
+    return () => { cancelled = true; clientRef.current?.stop(); };
+  }, []);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, pending]);
+
+  const send = useCallback(async () => {
+    const client = clientRef.current;
+    const convId = convIdRef.current;
+    if (!client || !convId || !input.trim()) {
+      if (client && !convId && input.trim()) {
+        setMessages((prev) => [
+          ...prev,
           {
-            id: "guest-start-error",
-            content:
-              "Sorry — I couldn't start the chat just now. Please try again in a moment.",
+            id: "not-ready",
+            content: "One moment — finish the security check above, then send your message.",
             sender_id: "system",
             conversation_id: "",
             direction: "inbound",
@@ -149,18 +216,8 @@ export function ChatWidget() {
           } as Message,
         ]);
       }
-    })();
-    return () => { cancelled = true; clientRef.current?.stop(); };
-  }, []);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, pending]);
-
-  const send = useCallback(async () => {
-    const client = clientRef.current;
-    const convId = convIdRef.current;
-    if (!client || !convId || !input.trim()) return;
+      return;
+    }
     setSending(true);
     try {
       client.sendMessage(convId, input.trim());
@@ -194,7 +251,13 @@ export function ChatWidget() {
         <div>
           <p className="font-semibold">TeincFood Support</p>
           <p className="text-xs opacity-80">
-            {status === "connected" ? "Online" : status === "error" ? "Unavailable" : "Connecting…"}
+            {status === "connected"
+              ? "Online"
+              : status === "error"
+                ? "Unavailable"
+                : status === "verifying"
+                  ? "Verifying…"
+                  : "Connecting…"}
           </p>
         </div>
         <button onClick={() => setOpen(false)} aria-label="Close chat">
@@ -274,6 +337,7 @@ export function ChatWidget() {
       <div className="flex items-center gap-2 border-t border-gray-200 p-3">
         <input
           value={input}
+          disabled={!sessionReady}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
           placeholder="Type a message…"
@@ -281,7 +345,7 @@ export function ChatWidget() {
         />
         <button
           onClick={send}
-          disabled={sending || !input.trim()}
+          disabled={sending || !input.trim() || !sessionReady}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff7622] text-white disabled:opacity-50"
         >
           {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
