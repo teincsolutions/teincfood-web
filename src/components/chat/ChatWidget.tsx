@@ -178,8 +178,26 @@ export function ChatWidget() {
               <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#ff7622] text-white" : "bg-white text-gray-900 shadow"}`}>
                 <MarkdownText text={m.content} />
                 <div className={`mt-1 text-[10px] ${isOut ? "text-white/70" : "text-gray-400"}`}>
-                  {"_clientId" in m ? "Sending…" : new Date(m.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  {"_clientId" in m
+                    ? (m as any).status === "failed"
+                      ? "Failed — tap to retry"
+                      : "Sending…"
+                    : new Date(m.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
+                {"_clientId" in m && (m as any).status === "failed" && (
+                  <button
+                    onClick={() => {
+                      const c = clientRef.current;
+                      const cid = convIdRef.current;
+                      if (!c || !cid) return;
+                      c.removePendingMessage((m as any)._clientId);
+                      c.sendMessage(cid, (m as any).content, (m as any).metadata ?? null);
+                    }}
+                    className="mt-1 text-[10px] underline text-white/90"
+                  >
+                    Retry
+                  </button>
+                )}
               </div>
             </div>
           );
