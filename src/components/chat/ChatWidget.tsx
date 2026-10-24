@@ -36,6 +36,11 @@ export function ChatWidget() {
   // security check is not something the customer said, and repeating it in
   // the transcript made the chat look broken.
   const [notice, setNotice] = useState<{ kind: "captcha" | "session"; text: string } | null>(null);
+  // True once Turnstile has produced a token. The widget stays mounted (it
+  // must, so it can be reset) but collapses out of the layout: leaving the
+  // Cloudflare card on screen after it succeeded covered the transcript in a
+  // panel this size.
+  const [captchaSolved, setCaptchaSolved] = useState(false);
   const clientRef = useRef<ChatClient | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const convIdRef = useRef<string | null>(null);
@@ -59,6 +64,9 @@ export function ChatWidget() {
     }
     const interval = setInterval(() => {
       const w = (window as any).turnstile;
+      // Once the guest session exists the check is no longer needed; this also
+      // avoids rendering a second widget when the panel is reopened.
+      if (sessionStartedRef.current) return;
       if (w && turnstileRef.current && !turnstileRef.current.dataset.rendered) {
         turnstileRef.current.dataset.rendered = "1";
         try {
@@ -66,18 +74,24 @@ export function ChatWidget() {
             sitekey: TURNSTILE_SITE_KEY,
             callback: (token: string) => {
               captchaTokenRef.current = token;
+              setCaptchaSolved(true);
               setNotice(null);
               // Now that we have a token the guest session can be created.
               void startGuestRef.current?.();
             },
             "expired-callback": () => {
               captchaTokenRef.current = null;
+              setCaptchaSolved(false);
+              // An expired token only matters while the session has not been
+              // created yet - after that the backend never asks for it again.
+              if (!sessionStartedRef.current) setStatus("verifying");
             },
             "error-callback": (code: string) => {
               // e.g. 110200 = the site key is not allowed for this hostname.
               // Without this the widget would sit on "Verifying…" forever.
               console.warn("turnstile error", code);
               captchaTokenRef.current = null;
+              setCaptchaSolved(false);
               setStatus("verifying");
               setNotice({
                 kind: "captcha",
@@ -107,20 +121,29 @@ export function ChatWidget() {
   const retry = useCallback(async () => {
     setNotice(null);
     setStatus("verifying");
+    // A Turnstile token is single-use: resetting the widget invalidates it, so
+    // start over and let the callback create the session with the new token.
+    captchaTokenRef.current = null;
+    sessionStartedRef.current = false;
+    setCaptchaSolved(false);
+
+    if (!TURNSTILE_SITE_KEY) {
+      await startGuestRef.current?.();
+      return;
+    }
+
     const w = (window as any).turnstile;
 
     if (w && turnstileWidgetIdRef.current != null) {
       try {
         w.reset(turnstileWidgetIdRef.current);
       } catch {
-        // reset() can throw if the widget is gone - fall through to the
-        // token we may already hold.
+        // reset() can throw if the widget is gone; the next render will
+        // create a fresh one.
+        turnstileRef.current?.removeAttribute("data-rendered");
       }
-    }
-
-    if (captchaTokenRef.current) {
-      sessionStartedRef.current = false;
-      await startGuestRef.current?.();
+    } else {
+      turnstileRef.current?.removeAttribute("data-rendered");
     }
   }, []);
 
@@ -253,6 +276,10 @@ export function ChatWidget() {
     { label: "Talk to a human", text: "I'd like to speak to a support agent" },
   ];
 
+  // The security check is only needed until the guest session exists. Once
+  // Turnstile succeeds its card collapses so the transcript gets the space.
+  const showCaptcha = !!TURNSTILE_SITE_KEY && !sessionReady && !captchaSolved;
+
   if (!open) {
     return (
       <button
@@ -270,7 +297,7 @@ export function ChatWidget() {
       className={
         expanded
           ? "fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:inset-6"
-          : "fixed bottom-4 right-4 z-50 flex h-[min(520px,calc(100dvh-5rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:bottom-6 sm:right-6"
+          : "fixed bottom-4 right-4 z-50 flex h-[min(560px,calc(100dvh-5rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:bottom-6 sm:right-6"
       }
     >
       <div className="flex items-center justify-between bg-[#ff7622] px-4 py-3 text-white">
@@ -366,18 +393,25 @@ export function ChatWidget() {
           <MapPin size={13} className="mr-1 inline" aria-hidden />
           Share my location
         </button>
-        {quickActions.map((q) => (
-          <button
-            key={q.label}
-            onClick={() => { setInput(q.text); }}
-            className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
-          >
-            {q.label}
-          </button>
-        ))}
+        {messages.length === 0 &&
+          quickActions.map((q) => (
+            <button
+              key={q.label}
+              onClick={() => { setInput(q.text); }}
+              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
+            >
+              {q.label}
+            </button>
+          ))}
       </div>
 
-      {TURNSTILE_SITE_KEY ? <div ref={turnstileRef} className="px-3 pt-2" /> : null}
+      {/* Kept mounted so turnstile.reset() still works on Retry, but
+          collapsed out of the layout once it has done its job. */}
+      <div
+        ref={turnstileRef}
+        className={showCaptcha ? "flex justify-center px-3 pt-2" : "h-0 overflow-hidden"}
+        aria-hidden={!showCaptcha}
+      />
 
       {notice && (
         <div className="flex items-start gap-2 border-t border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
@@ -405,7 +439,13 @@ export function ChatWidget() {
           disabled={!sessionReady}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          placeholder={sessionReady ? "Type a message…" : "Complete the security check above"}
+          placeholder={
+            sessionReady
+              ? "Type a message…"
+              : showCaptcha
+                ? "Complete the security check above"
+                : "Starting chat…"
+          }
           className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#ff7622] disabled:bg-gray-50 disabled:text-gray-400"
         />
         <button
