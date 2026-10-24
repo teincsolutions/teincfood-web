@@ -193,10 +193,10 @@ export function ChatWidget() {
                   <button
                     onClick={() => {
                       const c = clientRef.current;
-                      const cid = convIdRef.current;
-                      if (!c || !cid) return;
-                      c.removePendingMessage((m as any)._clientId);
-                      c.sendMessage(cid, (m as any).content, (m as any).metadata ?? null);
+                      if (!c) return;
+                      // Retry keeps the same _client_id so the server
+                      // recognises it and does not create a duplicate.
+                      c.retryPendingMessage((m as any)._clientId);
                     }}
                     className="mt-1 text-[10px] underline text-white/90"
                   >
