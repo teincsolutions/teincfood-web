@@ -114,7 +114,11 @@ export function ChatWidget() {
         const convId = await client.startGuest(deviceId, turnstileToken ?? undefined);
         convIdRef.current = convId;
         setUserId(client.getCurrentUserId());
-        try { await client.loadMessages(convId, 50, 0); } catch {}
+        try {
+          await client.loadMessages(convId, 50, 0);
+        } catch {
+          // history load failed — the live socket still works
+        }
         client.flushPending(convId);
         sync();
       } catch (e) {
