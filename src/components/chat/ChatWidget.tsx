@@ -4,9 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createLocalStorageAdapter, type Message, type ChatClient } from "@teincfood/chat-client";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { MarkdownText } from "./MarkdownText";
+import { chatConfig } from "@/config/site";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://testing-food.teincsolutions.com/api/v1";
-const WS_BASE = process.env.NEXT_PUBLIC_WS_URL ?? "wss://testing-food.teincsolutions.com/ws";
+const API_BASE = chatConfig.apiBase;
+const WS_BASE = chatConfig.wsBase;
+const TURNSTILE_SITE_KEY = chatConfig.turnstileSiteKey;
 
 function getDeviceId(): string {
   if (typeof window === "undefined") return "";
@@ -34,6 +36,9 @@ export function ChatWidget() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // No site key configured -> the captcha is not enforced on this
+    // environment, so don't render an empty/broken Turnstile box.
+    if (!TURNSTILE_SITE_KEY) return;
     if (!document.querySelector('script[src*="turnstile"]')) {
       const script = document.createElement("script");
       script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
@@ -47,7 +52,7 @@ export function ChatWidget() {
         turnstileRef.current.dataset.rendered = "1";
         try {
           w.render(turnstileRef.current, {
-            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
+            sitekey: TURNSTILE_SITE_KEY,
             callback: (token: string) => setTurnstileToken(token),
             "expired-callback": () => setTurnstileToken(null),
             theme: "light",
@@ -123,6 +128,26 @@ export function ChatWidget() {
         sync();
       } catch (e) {
         console.error("guest chat start failed", e);
+        setStatus("error");
+        setMessages([
+          {
+            id: "guest-start-error",
+            content:
+              "Sorry — I couldn't start the chat just now. Please try again in a moment.",
+            sender_id: "system",
+            conversation_id: "",
+            direction: "inbound",
+            channel: "app",
+            message_type: "text",
+            status: "sent",
+            external_id: null,
+            metadata: null,
+            replied_by_id: null,
+            read: true,
+            sent_at: new Date().toISOString(),
+            inserted_at: new Date().toISOString(),
+          } as Message,
+        ]);
       }
     })();
     return () => { cancelled = true; clientRef.current?.stop(); };
@@ -168,7 +193,9 @@ export function ChatWidget() {
       <div className="flex items-center justify-between bg-[#ff7622] px-4 py-3 text-white">
         <div>
           <p className="font-semibold">TeincFood Support</p>
-          <p className="text-xs opacity-80">{status === "connected" ? "Online" : "Connecting…"}</p>
+          <p className="text-xs opacity-80">
+            {status === "connected" ? "Online" : status === "error" ? "Unavailable" : "Connecting…"}
+          </p>
         </div>
         <button onClick={() => setOpen(false)} aria-label="Close chat">
           <X size={20} />
@@ -243,7 +270,7 @@ export function ChatWidget() {
         ))}
       </div>
 
-      <div ref={turnstileRef} className="px-3 pt-2" />
+      {TURNSTILE_SITE_KEY ? <div ref={turnstileRef} className="px-3 pt-2" /> : null}
       <div className="flex items-center gap-2 border-t border-gray-200 p-3">
         <input
           value={input}

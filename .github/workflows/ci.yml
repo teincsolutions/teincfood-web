@@ -38,6 +38,9 @@ jobs:
             -w /app \
             --user "$(id -u):$(id -g)" \
             -e NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}" \
+            -e NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
+            -e NEXT_PUBLIC_API_URL="${{ vars.NEXT_PUBLIC_API_URL }}" \
+            -e NEXT_PUBLIC_WS_URL="${{ vars.NEXT_PUBLIC_WS_URL }}" \
             node:22 \
             sh -c "yarn install --frozen-lockfile && npx tsc --noEmit && npx eslint . && npx next build"
           # --rm removes the build container and its anonymous volumes only;
@@ -103,6 +106,9 @@ jobs:
             --build-arg NEXT_PUBLIC_APPLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
             --build-arg NEXT_PUBLIC_TELEMETRY_URL="${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}" \
             --build-arg NEXT_PUBLIC_TELEMETRY_KEY="${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}" \
+            --build-arg NEXT_PUBLIC_TURNSTILE_SITE_KEY="${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" \
+            --build-arg NEXT_PUBLIC_API_URL="${{ vars.NEXT_PUBLIC_API_URL }}" \
+            --build-arg NEXT_PUBLIC_WS_URL="${{ vars.NEXT_PUBLIC_WS_URL }}" \
             .
 
   deploy:

@@ -44,5 +44,23 @@ export const authConfig = {
   appleClientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "",
 };
 
+/**
+ * Public guest chat (the floating widget).
+ *
+ * `turnstileSiteKey` is the Cloudflare Turnstile PUBLIC site key — the same
+ * key pair the backend verifies with `GUEST_CAPTCHA_SECRET`. When it is
+ * empty the captcha box is not rendered and the guest flow stays open, which
+ * is what local development and the open test backend use.
+ *
+ * `apiBase` / `wsBase` point the widget at the right backend per
+ * environment. They default to the testing backend so a misconfigured
+ * deployment still talks to a working backend rather than to itself.
+ */
+export const chatConfig = {
+  turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
+  apiBase: process.env.NEXT_PUBLIC_API_URL || "https://testing-food.teincsolutions.com/api/v1",
+  wsBase: process.env.NEXT_PUBLIC_WS_URL || "wss://testing-food.teincsolutions.com/ws",
+};
+
 export type { Locale };
 export type Locales = typeof locales;
