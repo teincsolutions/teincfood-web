@@ -3,6 +3,51 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
+/** Origin (scheme + host) of a URL, or null when it is unset/invalid. */
+function originOf(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The CSP has to list the same origins the app actually talks to, otherwise
+ * the browser silently blocks them:
+ *  - the API + websocket of the chat widget (NEXT_PUBLIC_API_URL / WS_URL)
+ *  - the telemetry collector (NEXT_PUBLIC_TELEMETRY_URL)
+ *  - Cloudflare Turnstile, which runs the guest-chat captcha
+ */
+function contentSecurityPolicy(): string {
+  const connect: string[] = ["'self'"];
+
+  for (const value of [
+    process.env.NEXT_PUBLIC_API_URL,
+    process.env.NEXT_PUBLIC_WS_URL,
+    process.env.NEXT_PUBLIC_TELEMETRY_URL,
+  ]) {
+    const origin = originOf(value);
+    if (origin && !connect.includes(origin)) connect.push(origin);
+  }
+
+  connect.push("https://challenges.cloudflare.com");
+  connect.push("https://*.challenges.cloudflare.com");
+
+  return (
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' " +
+    (process.env.NODE_ENV === "production" ? "" : "'unsafe-eval' ") +
+    "https://challenges.cloudflare.com; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    `connect-src ${connect.join(" ")}; ` +
+    "frame-src https://challenges.cloudflare.com; " +
+    "font-src 'self' data:;"
+  );
+}
+
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
@@ -17,10 +62,7 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
           {
             key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' " +
-              (process.env.NODE_ENV === "production" ? "" : "'unsafe-eval' ") +
-              "https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://testing-food.teincsolutions.com wss://testing-food.teincsolutions.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; font-src 'self' data:;",
+            value: contentSecurityPolicy(),
           },
         ],
       },

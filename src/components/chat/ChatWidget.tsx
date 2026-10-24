@@ -66,6 +66,33 @@ export function ChatWidget() {
             "expired-callback": () => {
               captchaTokenRef.current = null;
             },
+            "error-callback": (code: string) => {
+              // e.g. 110200 = the site key is not allowed for this hostname.
+              // Without this the widget would sit on "Verifying…" forever.
+              console.warn("turnstile error", code);
+              captchaTokenRef.current = null;
+              setStatus("error");
+              setMessages((prev) => [
+                ...prev,
+                {
+                  id: "captcha-error",
+                  content:
+                    "I couldn't verify your browser just now. Please refresh the page and try again.",
+                  sender_id: "system",
+                  conversation_id: "",
+                  direction: "inbound",
+                  channel: "app",
+                  message_type: "text",
+                  status: "sent",
+                  external_id: null,
+                  metadata: null,
+                  replied_by_id: null,
+                  read: true,
+                  sent_at: new Date().toISOString(),
+                  inserted_at: new Date().toISOString(),
+                } as Message,
+              ]);
+            },
             theme: "light",
           });
         } catch (e) {
