@@ -45,7 +45,7 @@ export function DesktopSection() {
               {t("cta")}
             </Link>
             <Link
-              href="/desktop/downloads"
+              href="/download"
               className="inline-flex items-center gap-2 rounded-full border border-navy/20 px-6 py-3 text-sm font-semibold text-navy transition-colors hover:bg-navy/5"
             >
               {t("downloads")}

@@ -249,11 +249,12 @@ export function ChatWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, pending]);
 
-  const send = useCallback(async () => {
+  const sendText = useCallback((raw: string) => {
     const client = clientRef.current;
     const convId = convIdRef.current;
-    if (!client || !convId || !input.trim()) {
-      if (client && !convId && input.trim()) {
+    const text = raw.trim();
+    if (!client || !convId || !text) {
+      if (client && !convId && text) {
         setNotice({
           kind: "captcha",
           text: "One moment — finish the security check above, then send your message.",
@@ -261,14 +262,34 @@ export function ChatWidget() {
       }
       return;
     }
+    client.sendMessage(convId, text);
+  }, []);
+
+  const send = useCallback(async () => {
+    if (!input.trim()) return;
     setSending(true);
     try {
-      client.sendMessage(convId, input.trim());
+      sendText(input);
       setInput("");
     } finally {
       setSending(false);
     }
-  }, [input]);
+  }, [input, sendText]);
+
+  // Quick replies travel on the bot message metadata. Only the latest bot
+  // message can own the chips; once the customer sends anything they go away.
+  const suggestions: string[] = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+      if (userId && message.sender_id === userId) continue;
+      const raw = message.metadata?.suggested_replies;
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+        .slice(0, 5);
+    }
+    return [];
+  })();
 
   const quickActions = [
     { label: "Track my order", text: "I want to track my order" },
@@ -393,16 +414,25 @@ export function ChatWidget() {
           <MapPin size={13} className="mr-1 inline" aria-hidden />
           Share my location
         </button>
-        {messages.length === 0 &&
-          quickActions.map((q) => (
-            <button
-              key={q.label}
-              onClick={() => { setInput(q.text); }}
-              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
-            >
-              {q.label}
-            </button>
-          ))}
+        {messages.length === 0
+          ? quickActions.map((q) => (
+              <button
+                key={q.label}
+                onClick={() => { setInput(q.text); }}
+                className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
+              >
+                {q.label}
+              </button>
+            ))
+          : suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => sendText(s)}
+                className="rounded-full border border-[#ff7622]/40 bg-[#ff7622]/10 px-3 py-1 text-xs font-medium text-[#c85a12] transition-colors hover:bg-[#ff7622]/20"
+              >
+                {s}
+              </button>
+            ))}
       </div>
 
       {/* Kept mounted so turnstile.reset() still works on Retry, but

@@ -15,6 +15,7 @@ const productLinks = [
   { href: "/rider", key: "rider" },
   { href: "/whatsapp", key: "whatsapp" },
   { href: "/desktop", key: "desktop" },
+  { href: "/download", key: "downloads" },
 ] as const;
 
 const secondaryLinks = [
@@ -129,7 +130,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <ButtonLink
-            href="#install"
+            href="/download"
             variant="primary"
             size="sm"
             className="hidden min-h-0 px-5 py-2.5 sm:inline-flex"
@@ -212,7 +213,7 @@ export function Navbar() {
           ))}
           <li className="pt-3">
             <ButtonLink
-              href="#install"
+              href="/download"
               onClick={() => setOpen(false)}
               className="w-full"
             >
