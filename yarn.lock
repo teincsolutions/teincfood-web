@@ -1023,15 +1023,15 @@
     postcss "^8.5.16"
     tailwindcss "4.3.3"
 
-"@teincfood/chat-client@^0.1.31":
-  version "0.1.31"
-  resolved "https://registry.yarnpkg.com/@teincfood/chat-client/-/chat-client-0.1.31.tgz#89596d29e8fc8b29a79cdbff0d7417d8c99809f8"
-  integrity sha512-2vkaEAr8uUj2U5FonBqqnr4tptQ93W9MnGAeu4IST/ye7IYRbzDXPdcxAxYG5iEpMwwcPBL4PnEl71az1sjDeA==
+"@teincfood/chat-client@^0.1.32":
+  version "0.1.32"
+  resolved "https://registry.yarnpkg.com/@teincfood/chat-client/-/chat-client-0.1.32.tgz#ce0b58156e1829a8843ec664acb21389cbe3d9f6"
+  integrity sha512-3HWj7Z39oO9xogM4Xdg+uH8rQmQJpkJf83H8UwqMFu1OSY3dRpcgrVwXxB3N+YrAbcCRs1hxq0Z/u1RBsakM9w==
 
-"@teincfood/observability@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@teincfood/observability/-/observability-0.1.0.tgz#fff4f443e72054e3363e6c7bb884b37ae0f82107"
-  integrity sha512-v6TwVV+GdSZ9VeQmY5X3eS4s9WLu7KL9fyjwHZmnv3i0dmjMYNkYJgeMu/zIJ/vBNmKEVJu4vrj6Dwt5IkJt+g==
+"@teincfood/observability@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@teincfood/observability/-/observability-0.1.2.tgz#08df8f8da763915f7f2793cc0749ed6bc38b817d"
+  integrity sha512-cfFhCU96J1RvuGhB9ICLEEJZSbyDgqcAj06TaJ6cuY8myycUh4pv8pvArGCSl5KtwEur4QfVbRzGONen35y/1g==
   dependencies:
     "@opentelemetry/api" "^1.9.0"
 

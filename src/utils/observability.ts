@@ -8,6 +8,7 @@ import {
   getObservability,
 } from "@teincfood/observability";
 import { locales } from "@/config/i18n";
+import { telemetryConfig } from "@/config/site";
 
 let started = false;
 
@@ -26,13 +27,9 @@ export function ensureObservability(): void {
   void initObservability({
     app: "teincfood-web",
     appVersion: process.env.NEXT_PUBLIC_APP_VERSION ?? "0.1.0",
-    env: process.env.NODE_ENV === "production" ? "production" : "development",
-    ...(process.env.NEXT_PUBLIC_TELEMETRY_URL
-      ? { endpoint: process.env.NEXT_PUBLIC_TELEMETRY_URL }
-      : {}),
-    ...(process.env.NEXT_PUBLIC_TELEMETRY_KEY
-      ? { apiKey: process.env.NEXT_PUBLIC_TELEMETRY_KEY }
-      : {}),
+    env: telemetryConfig.env,
+    ...(telemetryConfig.url ? { endpoint: telemetryConfig.url } : {}),
+    ...(telemetryConfig.key ? { apiKey: telemetryConfig.key } : {}),
     adapter: createWebAdapter(),
   })
     .then((obs) => {

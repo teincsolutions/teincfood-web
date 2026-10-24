@@ -19,6 +19,10 @@ function originOf(value: string | undefined): string | null {
  *  - the API + websocket of the chat widget (NEXT_PUBLIC_API_URL / WS_URL)
  *  - the telemetry collector (NEXT_PUBLIC_TELEMETRY_URL)
  *  - Cloudflare Turnstile, which runs the guest-chat captcha
+ *  - Cloudflare Web Analytics, whose beacon is injected into the HTML by
+ *    Cloudflare's own edge and would otherwise be blocked as a third-party
+ *    script (it loads from static.cloudflareinsights.com and reports to
+ *    cloudflareinsights.com).
  */
 function contentSecurityPolicy(): string {
   const connect: string[] = ["'self'"];
@@ -34,12 +38,14 @@ function contentSecurityPolicy(): string {
 
   connect.push("https://challenges.cloudflare.com");
   connect.push("https://*.challenges.cloudflare.com");
+  connect.push("https://cloudflareinsights.com");
 
   return (
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' " +
     (process.env.NODE_ENV === "production" ? "" : "'unsafe-eval' ") +
-    "https://challenges.cloudflare.com; " +
+    "https://challenges.cloudflare.com " +
+    "https://static.cloudflareinsights.com; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
     `connect-src ${connect.join(" ")}; ` +

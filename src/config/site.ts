@@ -62,5 +62,25 @@ export const chatConfig = {
   wsBase: process.env.NEXT_PUBLIC_WS_URL || "wss://testing-food.teincsolutions.com/ws",
 };
 
+/**
+ * Telemetry collector for the shared observability layer.
+ *
+ * `url` and `key` must belong to the same collector — each environment has
+ * its own ingest key and the wrong pairing is rejected with 401.
+ *
+ * `env` is the label attached to every event so dashboards can filter by
+ * environment. It has to be one of the values the library accepts:
+ * development | testing | staging | production.
+ */
+export const telemetryConfig = {
+  url: process.env.NEXT_PUBLIC_TELEMETRY_URL || "",
+  key: process.env.NEXT_PUBLIC_TELEMETRY_KEY || "",
+  env: (process.env.NEXT_PUBLIC_TELEMETRY_ENV || "development") as
+    | "development"
+    | "testing"
+    | "staging"
+    | "production",
+};
+
 export type { Locale };
 export type Locales = typeof locales;

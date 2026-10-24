@@ -15,6 +15,7 @@ ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 ARG NEXT_PUBLIC_APPLE_CLIENT_ID=
 ARG NEXT_PUBLIC_TELEMETRY_URL=
 ARG NEXT_PUBLIC_TELEMETRY_KEY=
+ARG NEXT_PUBLIC_TELEMETRY_ENV=
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 ARG NEXT_PUBLIC_API_URL=
 ARG NEXT_PUBLIC_WS_URL=
@@ -29,6 +30,9 @@ ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ENV NEXT_PUBLIC_APPLE_CLIENT_ID=$NEXT_PUBLIC_APPLE_CLIENT_ID
 ENV NEXT_PUBLIC_TELEMETRY_URL=$NEXT_PUBLIC_TELEMETRY_URL
 ENV NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
+# Environment label attached to every telemetry event (development | testing |
+# staging | production). Must match the collector the URL points at.
+ENV NEXT_PUBLIC_TELEMETRY_ENV=$NEXT_PUBLIC_TELEMETRY_ENV
 # Cloudflare Turnstile public site key (the matching SECRET key lives in the
 # backend as GUEST_CAPTCHA_SECRET — both must come from the same widget).
 # Empty means the captcha box is not rendered and the guest flow is open.
