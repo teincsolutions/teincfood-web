@@ -341,7 +341,7 @@ export function DownloadHub({ release, stores }: DownloadHubProps) {
               />
               <MobileCard
                 title="TeincFood Business"
-                description="Orders, menu, POS, wallet and fleet tools."
+                description="Orders, menu, wallet and fleet tools."
                 appStore={stores.business.appStore}
                 playStore={stores.business.playStore}
               />
