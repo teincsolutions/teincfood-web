@@ -115,6 +115,7 @@ export function ChatWidget() {
         convIdRef.current = convId;
         setUserId(client.getCurrentUserId());
         try { await client.loadMessages(convId, 50, 0); } catch {}
+        client.flushPending(convId);
         sync();
       } catch (e) {
         console.error("guest chat start failed", e);
