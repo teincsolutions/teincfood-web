@@ -28,9 +28,8 @@ jobs:
     steps:
       - name: Free disk space on runner
         run: |
-          docker container prune -f || true
-          docker image prune -f || true
-          docker builder prune -f || true
+          docker system prune -af || true
+          docker builder prune -af || true
           df -h
 
       - name: Checkout
@@ -70,9 +69,8 @@ jobs:
     steps:
       - name: Free disk space on runner
         run: |
-          docker container prune -f || true
-          docker image prune -f || true
-          docker builder prune -f || true
+          docker system prune -af || true
+          docker builder prune -af || true
           df -h
 
       - name: Checkout
@@ -146,9 +144,8 @@ jobs:
     steps:
       - name: Free disk space on runner
         run: |
-          docker container prune -f || true
-          docker image prune -f || true
-          docker builder prune -f || true
+          docker system prune -af || true
+          docker builder prune -af || true
           df -h
 
       - name: Checkout
