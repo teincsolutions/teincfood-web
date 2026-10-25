@@ -54,7 +54,7 @@ export function AppsDownloadSection() {
         <div className="relative mt-8 grid gap-4 lg:grid-cols-2">
           {APPS.map((app) => {
             const stores = storeLinks[app.id];
-            const qrUrl = `${baseUrl}/api/apps/${app.id}?locale=${locale}`;
+            const qrUrl = `${baseUrl}/${locale}/download/go/${app.id}`;
 
             return (
               <div

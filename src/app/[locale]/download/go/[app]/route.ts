@@ -17,10 +17,11 @@ function isMobileAppId(value: string): value is MobileAppId {
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ app: string }> },
+  { params }: { params: Promise<{ locale: string; app: string }> },
 ) {
-  const { app } = await params;
-  const requestedLocale = request.nextUrl.searchParams.get("locale");
+  const { locale: rawLocale, app } = await params;
+  const requestedLocale =
+    request.nextUrl.searchParams.get("locale") ?? rawLocale;
   const locale: Locale = locales.includes(requestedLocale as Locale)
     ? (requestedLocale as Locale)
     : defaultLocale;

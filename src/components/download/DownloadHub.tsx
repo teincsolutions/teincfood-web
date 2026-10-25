@@ -233,7 +233,7 @@ const MobileDownloads = ({
   const key = app;
   const hasStoreLinks = Boolean(stores.appStore || stores.playStore);
   const baseUrl = siteConfig.url.replace(/\/+$/, "");
-  const qrUrl = `${baseUrl}/api/apps/${key}?locale=${locale}`;
+  const qrUrl = `${baseUrl}/${locale}/download/go/${key}`;
 
   return (
     <Section className="bg-white">
