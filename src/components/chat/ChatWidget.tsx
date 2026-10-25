@@ -282,7 +282,7 @@ export function ChatWidget() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, pending, visualViewport?.height]);
+  }, [messages, pending]);
 
   const sendText = useCallback((raw: string) => {
     const client = clientRef.current;
