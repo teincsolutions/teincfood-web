@@ -64,6 +64,14 @@
     "fleet": {
       "title": "Gestion de flotte — Teinc Food Business",
       "description": "Gérez votre flotte de livraison avec Teinc Food Business. Assignez des commandes, suivez les livreurs et optimisez les livraisons depuis mobile ou bureau."
+    },
+    "download": {
+      "title": "Télécharger Teinc Food — app, business et bureau",
+      "description": "Téléchargez l’app client ou Business Teinc Food pour iOS et Android, ou Teinc Food Bureau pour Windows, macOS et Linux."
+    },
+    "apps": {
+      "title": "Aperçu des apps — Teinc Food",
+      "description": "Découvrez Teinc Food sur ordinateur, mobile et tablette."
     }
   },
   "nav": {
@@ -81,7 +89,17 @@
     "desktop": "App Bureau",
     "products": "Produits",
     "company": "Entreprise",
-    "downloads": "Téléchargements"
+    "downloads": "Téléchargements",
+    "language": "Langue",
+    "closeMenu": "Fermer le menu",
+    "skipToContent": "Aller au contenu principal",
+    "resources": "Ressources",
+    "businessApp": "App Business",
+    "merchants": "Restaurants et commerçants",
+    "fleetManagement": "Gestion de flotte",
+    "customers": "Pour les clients",
+    "riders": "Livreurs",
+    "apps": "Applications"
   },
   "footer": {
     "tagline": "Commandez. Participez. Livrez. Teinc Food connecte la nourriture de votre ville.",
@@ -92,7 +110,13 @@
     "rights": "Tous droits réservés.",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation",
-    "deleteAccount": "Supprimer le compte"
+    "deleteAccount": "Supprimer le compte",
+    "apps": {
+      "customer": "App Teinc Food",
+      "business": "Teinc Food Business",
+      "desktop": "Teinc Food Bureau",
+      "whatsapp": "WhatsApp"
+    }
   },
   "install": {
     "ios": "Télécharger sur l'",
@@ -105,7 +129,17 @@
     "buyerApp": "Teinc Food",
     "businessApp": "Teinc Food Business",
     "buyerTagline": "Commander la livraison de nourriture",
-    "businessTagline": "Développez votre entreprise ou livrez"
+    "businessTagline": "Développez votre entreprise ou livrez",
+    "bannerRegion": "Applications mobiles Teinc Food",
+    "bannerTitle": "Ouvrez ou installez les applications Teinc Food",
+    "bannerBody": "Commandez avec Teinc Food ou gérez votre restaurant avec Teinc Food Business.",
+    "openAction": "Ouvrir l'app",
+    "installAction": "Installer",
+    "dialogTitle": "Choisir une application",
+    "dialogDescription": "Ouvrez l'application que vous avez déjà ou installez-la directement depuis la boutique.",
+    "openLabel": "Ouvrir",
+    "installLabel": "Installer",
+    "fallbackNote": "Si l'application n'est pas installée, vous serez automatiquement redirigé vers la boutique."
   },
   "home": {
     "hero": {
@@ -119,16 +153,20 @@
       "title": "Une plateforme, trois façons de participer",
       "buyer": {
         "title": "Commander",
-        "description": "Découvrez les restaurants locaux, payez en toute sécurité et suivez chaque commande en direct."
+        "description": "Découvrez les restaurants locaux, payez en toute sécurité et suivez chaque commande en direct.",
+        "cta": "Commander"
       },
       "business": {
         "title": "Développer votre commerce",
-        "description": "Atteignez plus de clients, gérez les commandes et boostez vos revenus avec Teinc Food Business."
+        "description": "Atteignez plus de clients, gérez les commandes et boostez vos revenus avec Teinc Food Business.",
+        "cta": "Découvrir les outils pro"
       },
       "rider": {
         "title": "Livrer et gagner",
-        "description": "Travaillez à votre propre et gagnez par livraison avec les outils livreur de Teinc Food Business."
-      }
+        "description": "Travaillez à votre propre et gagnez par livraison avec les outils livreur de Teinc Food Business.",
+        "cta": "Commencer à livrer"
+      },
+      "subtitle": "Choisissez votre façon d’utiliser Teinc Food. Chaque expérience est pensée pour votre quotidien."
     },
     "how": {
       "title": "Comment ça marche",
@@ -143,7 +181,9 @@
       "step3": {
         "title": "Suivez en direct",
         "description": "Suivez votre livreur en temps réel jusqu'à la livraison."
-      }
+      },
+      "subtitle": "Du téléchargement à la livraison en quelques étapes simples.",
+      "stepLabel": "Étape {number}"
     },
     "features": {
       "title": "Conçu pour votre ville",
@@ -162,7 +202,8 @@
       "item4": {
         "title": "De bonnes offres",
         "description": "Promotions de vos restaurants favoris."
-      }
+      },
+      "subtitle": "Des essentiels fiables pour les clients, les cuisines et les livreurs au Ghana."
     },
     "cities": {
       "title": "Nous desservons plus de villes chaque semaine",
@@ -210,6 +251,20 @@
       "item3": {
         "title": "Gestion d'équipe",
         "description": "Invitez du personnel, attribuez des rôles et gérez les permissions."
+      }
+    },
+    "platformStrip": {
+      "title": "Plus de façons d’utiliser Teinc Food",
+      "subtitle": "Commandez par message ou pilotez toute l’activité depuis votre ordinateur.",
+      "whatsapp": {
+        "title": "Commander sur WhatsApp",
+        "body": "Découvrez les restaurants, commandez et obtenez de l’aide dans une simple conversation.",
+        "cta": "Discuter avec l’assistant"
+      },
+      "desktop": {
+        "title": "Passer au bureau",
+        "body": "Gérez commandes, menus, POS, cuisine et livraisons sur un grand écran.",
+        "cta": "Découvrir l’app Bureau"
       }
     }
   },
@@ -297,6 +352,12 @@
     "screens": {
       "eyebrow": "Découvrez l'app",
       "title": "Tout pour gérer votre restaurant"
+    },
+    "fleetCta": {
+      "eyebrow": "Opérations de flotte",
+      "title": "Vous gérez une flotte de livraison ?",
+      "body": "Découvrez les outils de gestion de flotte en préparation pour Teinc Food Business.",
+      "cta": "Découvrir les outils flotte"
     }
   },
   "fleet": {
@@ -304,7 +365,8 @@
       "eyebrow": "Pour les gestionnaires de flotte",
       "title": "Gérez votre flotte depuis une seule app.",
       "subtitle": "Assignez des commandes, suivez les livreurs en temps réel et optimisez chaque livraison — sur mobile ou bureau avec Teinc Food Business.",
-      "cta": "Télécharger Teinc Food Business"
+      "cta": "Télécharger Teinc Food Business",
+      "secondary": "Parler à notre équipe"
     },
     "steps": {
       "title": "Lancez votre flotte en trois étapes",
@@ -352,7 +414,8 @@
       "eyebrow": "Pour les livreurs",
       "title": "Gagnez selon votre emploi du temps.",
       "subtitle": "Livrez avec l'application Teinc Food Business. Des horaires flexibles, des revenus clairs et tout ce qu'il faut pour offrir une excellente expérience.",
-      "cta": "Télécharger Teinc Food Business"
+      "cta": "Télécharger Teinc Food Business",
+      "secondary": "Découvrir l’app"
     },
     "steps": {
       "title": "Commencez à livrer en trois étapes",
@@ -394,7 +457,8 @@
       "eyebrow": "Support IA",
       "title": "Commandez en discutant.",
       "subtitle": "Notre assistant IA est disponible 24/7 sur WhatsApp. Découvrez les restaurants, passez des commandes, suivez les livraisons et obtenez du support instantané — tout en discutant.",
-      "cta": "Discuter sur WhatsApp"
+      "cta": "Discuter sur WhatsApp",
+      "appCta": "Plutôt télécharger l’app"
     },
     "steps": {
       "title": "Comment ça marche",
@@ -429,6 +493,11 @@
         "title": "Support humain",
         "description": "Quand l'IA ne peut pas aider, nous vous connectons instantanément à un agent humain."
       }
+    },
+    "support": {
+      "eyebrow": "Au-delà du chat",
+      "title": "Une personne quand il le faut",
+      "subtitle": "L’assistant WhatsApp traite les demandes courantes. Quand une personne est nécessaire, le support peut prendre le relais depuis l’espace de support du bureau."
     }
   },
   "desktop": {
@@ -436,7 +505,8 @@
       "eyebrow": "Bureau & POS",
       "title": "Gérez votre activité sur tout écran.",
       "subtitle": "Des tablettes aux terminaux POS, gérez les commandes, les menus et votre flotte sur Windows, macOS ou Linux.",
-      "cta": "Télécharger l'app Bureau"
+      "cta": "Télécharger l'app Bureau",
+      "secondary": "Voir ce qui est inclus"
     },
     "platforms": {
       "title": "Disponible pour toutes les plateformes",
@@ -480,12 +550,21 @@
       "requirements": {
         "title": "Configuration requise"
       }
+    },
+    "screens": {
+      "eyebrow": "Aperçu produit",
+      "title": "Toute votre activité sur un seul écran",
+      "subtitle": "Découvrez l’expérience bureau sur l’écran ou le portable que vous utilisez chaque jour.",
+      "posTitle": "Pensé pour le comptoir autant que pour le bureau",
+      "posSubtitle": "Utilisez l’app Bureau comme terminal POS, avec un écran client sur le deuxième écran.",
+      "posNote": "Connectez une imprimante de reçus et un écran client depuis les réglages de l’app Bureau."
     }
   },
   "about": {
     "title": "À propos de Teinc Food",
     "p1": "Teinc Food est une plateforme de livraison de repas qui connecte les clients, les restaurants et les livreurs dans des villes du monde entier.",
-    "p2": "Nous croyons qu'une bonne cuisine doit être facile à trouver, facile à commander et facile à livrer — pour tout le monde."
+    "p2": "Nous croyons qu'une bonne cuisine doit être facile à trouver, facile à commander et facile à livrer — pour tout le monde.",
+    "eyebrow": "À propos de Teinc Food"
   },
   "faq": {
     "title": "Questions fréquentes",
@@ -497,7 +576,10 @@
     "q3": "Comment fonctionne le paiement ?",
     "a3": "Vous pouvez payer par carte, mobile money ou espèces à la livraison — votre choix au moment du paiement.",
     "q4": "Comment associer mon restaurant ?",
-    "a4": "Contactez-nous via la page contact et notre équipe vous aidera à vous configurer rapidement."
+    "a4": "Contactez-nous via la page contact et notre équipe vous aidera à vous configurer rapidement.",
+    "eyebrow": "Centre d’aide",
+    "stillNeedHelp": "Besoin d’aide ?",
+    "stillNeedHelpBody": "Envoyez-nous un message et l’équipe vous répondra."
   },
   "legal": {
     "updated": "Dernière mise à jour",
@@ -518,7 +600,11 @@
       "p2": "Les paiements sont traités de manière sécurisée. Les remboursements suivent la politique affichée dans l'application au moment de votre commande.",
       "section3": "Responsabilité",
       "p3": "Teinc Food connecte les clients, les restaurants et les livreurs. Chaque partie est responsable de ses propres obligations."
-    }
+    },
+    "effectiveDate": "Octobre 2026",
+    "contactPrompt": "Des questions sur cette politique ? Contactez notre équipe.",
+    "eyebrow": "Informations légales",
+    "contactUs": "Nous contacter"
   },
   "contact": {
     "title": "Contactez-nous",
@@ -536,7 +622,12 @@
       "email": "Veuillez saisir votre adresse e-mail.",
       "emailInvalid": "Veuillez saisir une adresse e-mail valide.",
       "message": "Veuillez saisir un message."
-    }
+    },
+    "sending": "Envoi de votre message…",
+    "successTitle": "Message envoyé",
+    "errorTitle": "Message non envoyé",
+    "supportTitle": "Vous préférez l’e-mail ?",
+    "supportBody": "Écrivez-nous et l’équipe vous répondra pendant les heures d’ouverture."
   },
   "cta": {
     "getStarted": "Commencer",
@@ -619,7 +710,11 @@
     "invalidRequest": "Ce lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
     "mismatch": "Les mots de passe ne correspondent pas.",
     "tooShort": "Le mot de passe doit contenir au moins 8 caractères.",
-    "error": "Impossible de réinitialiser votre mot de passe. Le lien peut être invalide ou expiré."
+    "error": "Impossible de réinitialiser votre mot de passe. Le lien peut être invalide ou expiré.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "downloadApp": "Télécharger l’app",
+    "contactSupport": "Contacter le support"
   },
   "invite": {
     "title": "Vous êtes invité(e)",
@@ -648,5 +743,208 @@
     "title": "Une erreur s'est produite",
     "description": "Impossible de charger cette page. Veuillez réessayer.",
     "retry": "Réessayer"
+  },
+  "showcase": {
+    "devices": {
+      "imac": "iMac",
+      "hp-monitor": "Écran HP",
+      "macbook": "MacBook Pro",
+      "windows-laptop": "PC portable Windows",
+      "iphone": "iPhone",
+      "android-phone": "Téléphone Android",
+      "ipad": "iPad",
+      "android-tablet": "Tablette Android"
+    },
+    "screens": {
+      "buyer": {
+        "home": "Découvrir les restaurants",
+        "restaurant": "Parcourir les menus",
+        "cart": "Votre panier",
+        "tracking": "Suivi en direct",
+        "checkout": "Paiement sécurisé",
+        "orders": "Historique des commandes",
+        "dish": "Détails du plat",
+        "help": "Centre d’aide"
+      },
+      "business": {
+        "orders": "Gestion des commandes",
+        "menu": "Gestion du menu",
+        "earnings": "Revenus et rapports",
+        "dashboard": "Tableau de bord",
+        "analytics": "Analyses et rapports",
+        "wallet": "Portefeuille et versements",
+        "menus": "Gestion des menus",
+        "pos-checkout": "Encaissement POS",
+        "support-chat": "Discussion support",
+        "operating-hours": "Horaires d’ouverture",
+        "delivery-settings": "Réglages de livraison",
+        "tax-settings": "Réglages des taxes",
+        "manage-categories": "Gérer les catégories",
+        "edit-menu": "Modifier un plat",
+        "chat": "Messages",
+        "details": "Informations de l’entreprise"
+      },
+      "rider": {
+        "dashboard": "Tableau de bord livreur",
+        "delivery": "Courses proposées",
+        "earnings": "Revenus",
+        "navigate-pickup": "Navigation vers le retrait",
+        "navigate-dropoff": "Navigation vers la livraison",
+        "vehicle": "Détails du véhicule"
+      },
+      "fleet": {
+        "dashboard": "Tableau de bord flotte",
+        "rider-management": "Gestion des livreurs",
+        "delivery-tracking": "Suivi des livraisons",
+        "analytics": "Analyses de la flotte"
+      },
+      "desktop": {
+        "dashboard": "Tableau de bord",
+        "pos": "Terminal POS",
+        "pos-orders": "Flux des commandes POS",
+        "kitchen": "Écran cuisine",
+        "menu": "Gestion du menu",
+        "menu-create": "Créer un plat",
+        "support": "Support IA",
+        "messages": "Messages",
+        "team": "Gestion d’équipe",
+        "delivery": "Réglages de livraison",
+        "orders": "Commandes",
+        "analytics": "Analyses et rapports"
+      },
+      "whatsapp": {
+        "chat": "Assistant WhatsApp"
+      }
+    },
+    "controls": {
+      "title": "Découvrez-le sur votre appareil",
+      "subtitle": "Choisissez un appareil et un écran pour voir Teinc Food en situation réelle.",
+      "deviceLabel": "Choisir un appareil",
+      "screenLabel": "Choisir un écran",
+      "previous": "Écran précédent",
+      "next": "Écran suivant",
+      "viewFullscreen": "Afficher {label} en plein écran",
+      "close": "Fermer l’aperçu",
+      "placeholder": "Aperçu bientôt disponible",
+      "slideStatus": "{label} — {current} sur {total}",
+      "compatibilityNote": "Les écrans s’adaptent à chaque appareil. Certaines vues ne sont disponibles que sur un type d’appareil."
+    },
+    "categories": {
+      "desktop": "Bureau / Macs",
+      "mobile": "Mobile / iPhones",
+      "tablet": "Tablettes / iPads"
+    },
+    "tabs": {
+      "customer": "Client",
+      "merchant": "Commerçant / restaurant",
+      "rider": "Livreur",
+      "fleet": "Gestionnaire de flotte"
+    }
+  },
+  "downloadCta": {
+    "eyebrow": "Obtenir Teinc Food",
+    "title": "La bonne app pour votre façon d’utiliser Teinc Food.",
+    "subtitle": "Commandez en tant que client ou pilotez votre activité avec Teinc Food Business. L’app Bureau est prête pour le POS et les équipes administratives.",
+    "download": "Télécharger",
+    "audiences": {
+      "buyer": {
+        "title": "Teinc Food",
+        "body": "Commandez, payez en toute sécurité et suivez chaque livraison depuis votre téléphone."
+      },
+      "business": {
+        "title": "Teinc Food Business",
+        "body": "Gérez commandes, menus, revenus et livraisons de vos livreurs en déplacement."
+      },
+      "desktop": {
+        "title": "Teinc Food Bureau",
+        "body": "Gérez POS, cuisine, menus et livraisons sur Windows, macOS ou Linux."
+      }
+    }
+  },
+  "download": {
+    "eyebrow": "Centre de téléchargement",
+    "title": "Télécharger Teinc Food",
+    "subtitle": "Choisissez l’app qui correspond à votre façon d’utiliser Teinc Food. Nous mettons en avant la meilleure option pour cet appareil.",
+    "detected": "Détecté : {platform}",
+    "detectedUnknown": "Choisissez votre plateforme ci-dessous.",
+    "appLabel": "Choisir une app",
+    "tabs": {
+      "buyer": "App client",
+      "business": "App Business",
+      "desktop": "App Bureau"
+    },
+    "mobile": {
+      "title": "Teinc Food sur votre téléphone",
+      "subtitle": "Commandez, payez et suivez vos livraisons où que vous soyez.",
+      "buyerTitle": "Teinc Food",
+      "buyerBody": "Découvrez les restaurants, composez votre commande et suivez votre livreur en direct.",
+      "businessTitle": "Teinc Food Business",
+      "businessBody": "Gérez commandes, menus, revenus et livraisons de vos livreurs depuis une seule app.",
+      "appStore": "Télécharger sur l’App Store",
+      "playStore": "Disponible sur Google Play",
+      "noLinks": "Les liens vers les stores sont en cours de finalisation. Contactez le support et nous vous enverrons le bon lien.",
+      "searchHint": "Vous pouvez aussi rechercher Teinc Food dans votre store."
+    },
+    "desktop": {
+      "title": "Teinc Food Bureau",
+      "subtitle": "POS, commandes, écran cuisine, menus, équipe et flotte sur Windows, macOS et Linux.",
+      "version": "Version {version}",
+      "updated": "Mis à jour le {date}",
+      "preview": "Version d’aperçu",
+      "downloadFor": "Télécharger pour {platform}",
+      "choosePlatform": "Choisir votre plateforme",
+      "appleSiliconNote": "La version Apple Silicon est sélectionnée. Les Mac Intel peuvent utiliser le téléchargement Intel ci-dessous.",
+      "noRelease": "Les installateurs sont en cours de publication. Contactez le support si vous avez besoin d’une version aujourd’hui.",
+      "noReleaseTitle": "Les installateurs ne sont pas encore disponibles",
+      "noReleaseBody": "Les liens de téléchargement seront publiés avec la prochaine version. Contactez-nous et nous vous enverrons la version actuelle.",
+      "allPlatforms": "Tous les installateurs",
+      "requirements": "Windows 10 ou ultérieur · macOS 12 Monterey ou ultérieur · Ubuntu 20.04 ou équivalent",
+      "mobileNotice": "L’app Bureau fonctionne sur Windows, macOS et Linux. Ouvrez cette page sur votre ordinateur pour la télécharger.",
+      "installGuide": "Guide d’installation",
+      "autoUpdate": "Teinc Food Bureau se met à jour automatiquement. Les nouvelles versions se téléchargent en arrière-plan et s’appliquent au redémarrage.",
+      "download": "Télécharger",
+      "releaseNotes": "Nouveautés de la version {version}"
+    },
+    "assets": {
+      "windows": "Windows",
+      "macos-arm": "macOS (Apple Silicon)",
+      "macos-intel": "macOS (Intel)",
+      "linux-appimage": "Linux (AppImage)",
+      "linux-deb": "Linux (Debian / Ubuntu)"
+    },
+    "install": {
+      "title": "Installer Teinc Food Bureau",
+      "subtitle": "Installez l’app, connectez une imprimante de reçus et configurez l’écran client.",
+      "windowsTitle": "Windows",
+      "windowsStep1": "Lancez l’installateur .exe téléchargé.",
+      "windowsStep2": "Si SmartScreen apparaît, choisissez Informations complémentaires, puis Exécuter quand même.",
+      "windowsStep3": "Ouvrez Teinc Food Bureau et connectez-vous avec votre compte Teinc Food Business.",
+      "macosTitle": "macOS",
+      "macosStep1": "Ouvrez le .dmg et glissez Teinc Food Bureau dans Applications.",
+      "macosStep2": "La première fois, cliquez droit sur l’app et choisissez Ouvrir.",
+      "macosStep3": "Connectez-vous avec votre compte Teinc Food Business.",
+      "linuxTitle": "Linux",
+      "linuxStep1": "AppImage : rendez le fichier exécutable avec chmod +x, puis lancez-le.",
+      "linuxStep2": "Debian ou Ubuntu : installez le paquet .deb avec apt.",
+      "linuxStep3": "Lancez l’app depuis votre menu d’applications et connectez-vous.",
+      "posTitle": "Terminal POS et écran client",
+      "posStep1": "Utilisez la version Windows ou Linux sur le terminal.",
+      "posStep2": "Ouvrez Réglages, puis Appareils, pour connecter une imprimante de reçus.",
+      "posStep3": "Activez l’écran client sur le deuxième écran."
+    },
+    "help": {
+      "title": "Besoin d’aide pour l’installation ?",
+      "body": "Consultez les guides dans l’app sous Profil, puis Aide, ou contactez l’équipe.",
+      "contact": "Contacter le support",
+      "faq": "Lire la FAQ"
+    },
+    "platforms": {
+      "ios": "iPhone ou iPad",
+      "android": "Android",
+      "windows": "Windows",
+      "macos": "macOS",
+      "linux": "Linux",
+      "unknown": "votre appareil"
+    }
   }
 }

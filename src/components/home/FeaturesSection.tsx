@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { Radar, ShieldCheck, Headphones, BadgePercent } from "lucide-react";
+import { BadgePercent, Headphones, Radar, ShieldCheck } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 
@@ -15,22 +15,24 @@ export function FeaturesSection() {
 
   return (
     <Section className="bg-navy text-white">
-      <SectionHeading title={t("title")} />
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <SectionHeading
+        title={t("title")}
+        subtitle={t("subtitle")}
+        tone="inverse"
+      />
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => {
           const Icon = item.icon;
           return (
             <div
               key={item.key}
-              className="rounded-3xl border border-white/10 bg-white/5 p-7"
+              className="rounded-xl border border-white/10 bg-white/[0.05] p-6"
             >
-              <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-orange text-white">
-                <Icon className="size-6" aria-hidden="true" />
+              <span className="inline-flex size-10 items-center justify-center rounded-lg bg-orange/15 text-orange-300">
+                <Icon className="size-5" aria-hidden="true" />
               </span>
-              <h3 className="mt-5 text-lg font-extrabold">
-                {t(`${item.key}.title`)}
-              </h3>
-              <p className="mt-2 leading-relaxed text-white/60">
+              <h3 className="mt-5 font-bold">{t(`${item.key}.title`)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/65">
                 {t(`${item.key}.description`)}
               </p>
             </div>

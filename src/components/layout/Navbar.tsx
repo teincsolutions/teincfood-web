@@ -1,227 +1,410 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { Logo } from "@/components/brand/Logo";
 import { ButtonLink } from "@/components/ui/Button";
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { cn } from "@/lib/utils";
 
-const productLinks = [
+const customerLinks = [
   { href: "/order", key: "order" },
-  { href: "/business", key: "business" },
-  { href: "/business/fleet", key: "fleet" },
-  { href: "/rider", key: "rider" },
   { href: "/whatsapp", key: "whatsapp" },
-  { href: "/desktop", key: "desktop" },
-  { href: "/download", key: "downloads" },
 ] as const;
 
-const secondaryLinks = [
+const businessLinks = [
+  { href: "/business", key: "merchants" },
+  { href: "/business/fleet", key: "fleetManagement" },
+] as const;
+
+const resourceLinks = [
   { href: "/about", key: "about" },
   { href: "/faq", key: "faq" },
   { href: "/contact", key: "contact" },
+  { href: "/download", key: "downloads" },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
-  // For /business, don't match /business/fleet
   if (href === "/business") return pathname === "/business";
-  return pathname === href || pathname.startsWith(href + "/");
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function Navbar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const [productsOpen, setProductsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<
+    "customers" | "business" | "resources" | null
+  >(null);
+  const navRef = useRef<HTMLDivElement>(null);
 
-  const productsActive = productLinks.some((l) => isActive(pathname, l.href));
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenMenu(null);
+  }, [pathname]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setProductsOpen(false);
+    function closeOnOutside(event: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenMenu(null);
       }
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpenMenu(null);
+        setMobileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", closeOnOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
   }, []);
 
+  const customersActive = customerLinks.some((item) =>
+    isActive(pathname, item.href),
+  );
+  const businessActive = businessLinks.some((item) =>
+    isActive(pathname, item.href),
+  );
+  const resourcesActive = resourceLinks.some((item) =>
+    isActive(pathname, item.href),
+  );
+
   return (
-    <header className="sticky top-0 z-40 border-b border-navy/5 bg-white/90 backdrop-blur-md">
+    <header
+      ref={navRef}
+      className="sticky top-0 z-40 border-b border-navy/5 bg-white/95 backdrop-blur-md"
+    >
       <nav
         aria-label="Main"
-        className="container-site flex h-16 items-center justify-between gap-4"
+        className="container-site flex h-[72px] items-center justify-between gap-4"
       >
-        <Logo />
+        <Logo priority />
 
-        {/* Desktop nav */}
         <ul className="hidden items-center gap-1 lg:flex">
           <li>
-            <Link
-              href="/"
-              className={cn(
-                "rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange",
-                isActive(pathname, "/")
-                  ? "bg-navy text-white"
-                  : "text-navy/70 hover:bg-navy/5 hover:text-navy",
-              )}
+            <Dropdown
+              id="customers-menu"
+              label={t("customers")}
+              open={openMenu === "customers"}
+              active={customersActive}
+              onToggle={() =>
+                setOpenMenu((current) =>
+                  current === "customers" ? null : "customers",
+                )
+              }
             >
-              {t("home")}
-            </Link>
-          </li>
-          {/* Products dropdown */}
-          <li>
-            <div ref={dropdownRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setProductsOpen((v) => !v)}
-              className={cn(
-                "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange",
-                productsActive
-                  ? "bg-navy text-white"
-                  : "text-navy/70 hover:bg-navy/5 hover:text-navy",
-              )}
-            >
-              {t("products")}
-              <ChevronDown className={cn("size-3 transition-transform", productsOpen && "rotate-180")} />
-            </button>
-            {productsOpen && (
-              <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-xl border border-navy/10 bg-white p-2 shadow-lg">
-                {productLinks.map((item) => (
-                  <Link
-                    key={item.key}
-                    href={item.href}
-                    onClick={() => setProductsOpen(false)}
-                    className={cn(
-                      "block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-navy/5 hover:text-navy",
-                      isActive(pathname, item.href)
-                        ? "bg-navy/10 text-navy"
-                        : "text-navy/70",
-                    )}
-                  >
-                    {t(item.key)}
-                  </Link>
-                ))}
-              </div>
-            )}
-            </div>
+              {customerLinks.map((item) => (
+                <DropdownLink
+                  key={item.key}
+                  href={item.href}
+                  label={t(item.key)}
+                  active={isActive(pathname, item.href)}
+                  onSelect={() => setOpenMenu(null)}
+                />
+              ))}
+            </Dropdown>
           </li>
 
-          {secondaryLinks.map((item) => (
-            <li key={item.key}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange",
-                  isActive(pathname, item.href)
-                    ? "bg-navy text-white"
-                    : "text-navy/70 hover:bg-navy/5 hover:text-navy",
-                )}
-              >
-                {t(item.key)}
-              </Link>
-            </li>
-          ))}
+          <li>
+            <Dropdown
+              id="business-menu"
+              label={t("business")}
+              open={openMenu === "business"}
+              active={businessActive}
+              onToggle={() =>
+                setOpenMenu((current) =>
+                  current === "business" ? null : "business",
+                )
+              }
+            >
+              {businessLinks.map((item) => (
+                <DropdownLink
+                  key={item.key}
+                  href={item.href}
+                  label={t(item.key)}
+                  active={isActive(pathname, item.href)}
+                  onSelect={() => setOpenMenu(null)}
+                />
+              ))}
+            </Dropdown>
+          </li>
+
+          <li>
+            <Link
+              href="/rider"
+              className={cn(
+                "inline-flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+                isActive(pathname, "/rider")
+                  ? "bg-navy/[0.06] text-navy"
+                  : "text-navy/70 hover:bg-navy/5 hover:text-navy",
+              )}
+            >
+              {t("rider")}
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/apps"
+              className={cn(
+                "inline-flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+                isActive(pathname, "/apps")
+                  ? "bg-navy/[0.06] text-navy"
+                  : "text-navy/70 hover:bg-navy/5 hover:text-navy",
+              )}
+            >
+              {t("apps")}
+            </Link>
+          </li>
+
+          <li>
+            <Dropdown
+              id="resources-menu"
+              label={t("resources")}
+              open={openMenu === "resources"}
+              active={resourcesActive}
+              onToggle={() =>
+                setOpenMenu((current) =>
+                  current === "resources" ? null : "resources",
+                )
+              }
+            >
+              {resourceLinks.map((item) => (
+                <DropdownLink
+                  key={item.key}
+                  href={item.href}
+                  label={t(item.key)}
+                  active={isActive(pathname, item.href)}
+                  onSelect={() => setOpenMenu(null)}
+                />
+              ))}
+            </Dropdown>
+          </li>
         </ul>
 
         <div className="flex items-center gap-2">
-          <ButtonLink
-            href="/download"
-            variant="primary"
-            size="sm"
-            className="hidden min-h-0 px-5 py-2.5 sm:inline-flex"
-          >
-            {t("download")}
-          </ButtonLink>
+          <ThemeToggle />
+          <div className="hidden sm:block">
+            <LocaleSwitcher />
+          </div>
+          <div className="hidden lg:block">
+            <ButtonLink href="/download" variant="primary" size="md">
+              {t("download")}
+            </ButtonLink>
+          </div>
           <button
             type="button"
-            aria-label={t("menu")}
-            aria-expanded={open}
+            aria-label={mobileOpen ? t("closeMenu") : t("menu")}
+            aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
-            onClick={() => setOpen((v) => !v)}
-            className="inline-flex size-10 items-center justify-center rounded-lg text-navy transition-colors hover:bg-navy/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange lg:hidden"
+            onClick={() => setMobileOpen((current) => !current)}
+            className="inline-flex size-12 items-center justify-center rounded-lg text-navy transition-colors hover:bg-navy/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800 lg:hidden"
           >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+            {mobileOpen ? (
+              <X className="size-6" aria-hidden="true" />
+            ) : (
+              <Menu className="size-6" aria-hidden="true" />
+            )}
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div
-        id="mobile-menu"
+      {mobileOpen && (
+        <div
+          id="mobile-menu"
+          className="border-t border-navy/5 bg-white lg:hidden"
+        >
+          <div className="container-site max-h-[calc(100dvh-72px)] space-y-6 overflow-y-auto py-5">
+            <div>
+              <p className="px-3 text-xs font-bold uppercase tracking-[0.16em] text-navy/45">
+                {t("customers")}
+              </p>
+              <ul className="mt-2 space-y-1">
+                {customerLinks.map((item) => (
+                  <MobileLink
+                    key={item.key}
+                    href={item.href}
+                    label={t(item.key)}
+                    active={isActive(pathname, item.href)}
+                  />
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="px-3 text-xs font-bold uppercase tracking-[0.16em] text-navy/45">
+                {t("business")}
+              </p>
+              <ul className="mt-2 space-y-1">
+                {businessLinks.map((item) => (
+                  <MobileLink
+                    key={item.key}
+                    href={item.href}
+                    label={t(item.key)}
+                    active={isActive(pathname, item.href)}
+                  />
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="px-3 text-xs font-bold uppercase tracking-[0.16em] text-navy/45">
+                {t("apps")}
+              </p>
+              <ul className="mt-2 space-y-1">
+                <MobileLink
+                  href="/apps"
+                  label={t("apps")}
+                  active={isActive(pathname, "/apps")}
+                />
+              </ul>
+            </div>
+
+            <div>
+              <p className="px-3 text-xs font-bold uppercase tracking-[0.16em] text-navy/45">
+                {t("riders")}
+              </p>
+              <ul className="mt-2 space-y-1">
+                <MobileLink
+                  href="/rider"
+                  label={t("rider")}
+                  active={isActive(pathname, "/rider")}
+                />
+              </ul>
+            </div>
+
+            <div>
+              <p className="px-3 text-xs font-bold uppercase tracking-[0.16em] text-navy/45">
+                {t("company")}
+              </p>
+              <ul className="mt-2 space-y-1">
+                {resourceLinks.map((item) => (
+                  <MobileLink
+                    key={item.key}
+                    href={item.href}
+                    label={t(item.key)}
+                    active={isActive(pathname, item.href)}
+                  />
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-3 border-t border-navy/5 pt-5">
+              <LocaleSwitcher />
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Dropdown({
+  id,
+  label,
+  open,
+  active,
+  onToggle,
+  children,
+}: {
+  id: string;
+  label: string;
+  open: boolean;
+  active: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={onToggle}
         className={cn(
-          "overflow-hidden border-t border-navy/5 bg-white transition-[max-height,opacity] duration-200 lg:hidden",
-          open ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0",
+          "inline-flex min-h-11 items-center gap-1 rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+          active || open
+            ? "bg-navy/[0.06] text-navy"
+            : "text-navy/70 hover:bg-navy/5 hover:text-navy",
         )}
       >
-        <ul className="container-site flex flex-col gap-1 py-4">
-          <li>
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              className={cn(
-                "block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-navy/5",
-                isActive(pathname, "/") ? "bg-navy/10 text-navy" : "text-navy/80",
-              )}
-            >
-              {t("home")}
-            </Link>
-          </li>
-          {/* Products group */}
-          <li>
-            <span className="block px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-widest text-navy/40">
-              {t("products")}
-            </span>
-          </li>
-          {productLinks.map((item) => (
-            <li key={item.key}>
-              <Link
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-navy/5",
-                  isActive(pathname, item.href) ? "bg-navy/10 text-navy" : "text-navy/80",
-                )}
-              >
-                {t(item.key)}
-              </Link>
-            </li>
-          ))}
-          {/* Company group */}
-          <li>
-            <span className="block px-3 pb-1 pt-4 text-xs font-bold uppercase tracking-widest text-navy/40">
-              {t("company")}
-            </span>
-          </li>
-          {secondaryLinks.map((item) => (
-            <li key={item.key}>
-              <Link
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-navy/5",
-                  isActive(pathname, item.href) ? "bg-navy/10 text-navy" : "text-navy/80",
-                )}
-              >
-                {t(item.key)}
-              </Link>
-            </li>
-          ))}
-          <li className="pt-3">
-            <ButtonLink
-              href="/download"
-              onClick={() => setOpen(false)}
-              className="w-full"
-            >
-              {t("download")}
-            </ButtonLink>
-          </li>
-        </ul>
-      </div>
-    </header>
+        {label}
+        <ChevronDown
+          aria-hidden="true"
+          className={cn("size-3.5 transition-transform", open && "rotate-180")}
+        />
+      </button>
+      {open && (
+        <div
+          id={id}
+          role="menu"
+          className="absolute left-0 top-full z-50 mt-2 w-64 rounded-xl border border-navy/10 bg-white p-2 shadow-xl shadow-navy/10"
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DropdownLink({
+  href,
+  label,
+  active,
+  onSelect,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      role="menuitem"
+      onClick={onSelect}
+      className={cn(
+        "flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition-colors hover:bg-navy/5 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+        active ? "bg-navy/[0.06] text-navy" : "text-navy/70",
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function MobileLink({
+  href,
+  label,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className={cn(
+          "flex min-h-12 items-center rounded-lg px-3 text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+          active ? "bg-navy/[0.06] text-navy" : "text-navy/70 hover:bg-navy/5",
+        )}
+      >
+        {label}
+      </Link>
+    </li>
   );
 }

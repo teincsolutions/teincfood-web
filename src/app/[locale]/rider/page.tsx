@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { CalendarClock, Wallet, Navigation } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { CalendarClock, Navigation, Wallet } from "lucide-react";
 import { Hero } from "@/components/sections/Hero";
 import { StepsSection } from "@/components/sections/StepsSection";
 import { FeatureCards } from "@/components/sections/FeatureCards";
-import { InstallCta } from "@/components/home/InstallCta";
+import { RoleDownloadCta } from "@/components/home/RoleDownloadCta";
+import { ProductShowcase } from "@/components/showcase/ProductShowcase";
 import { Section } from "@/components/ui/Section";
-import { SectionHeading } from "@/components/sections/SectionHeading";
-import { DeviceFrame } from "@/components/showcase/DeviceFrame";
-import { storeLinks } from "@/config/site";
 import { localizeMetadata } from "@/lib/seo";
 
 const riderScreens = [
@@ -44,7 +42,6 @@ export default async function RiderPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "rider.hero" });
-  const tScreens = await getTranslations({ locale, namespace: "rider.screens" });
 
   return (
     <>
@@ -52,30 +49,20 @@ export default async function RiderPage({
         eyebrow={t("eyebrow")}
         title={t("title")}
         subtitle={t("subtitle")}
-        storeLinks={storeLinks.business}
+        primaryAction={{ href: "/download?app=business", label: t("cta") }}
+        secondaryAction={{ href: "#screens", label: t("secondary") }}
         screenKey="rider:dashboard"
-        reverse
+        device="iphone"
       />
       <StepsSection ns="rider.steps" />
       <FeatureCards
         ns="rider.features"
         icons={[CalendarClock, Wallet, Navigation]}
       />
-
-      {/* Screenshots Showcase */}
-      <Section className="bg-white">
-        <SectionHeading
-          eyebrow={tScreens("eyebrow")}
-          title={tScreens("title")}
-        />
-        <div className="mt-10 flex gap-4 overflow-x-auto pb-4 scrollbar-thin sm:gap-6 lg:justify-center">
-          {riderScreens.map((key) => (
-            <DeviceFrame key={key} screenKey={key} className="w-56 shrink-0 sm:w-64" />
-          ))}
-        </div>
+      <Section id="screens" className="bg-white">
+        <ProductShowcase screenKeys={riderScreens} />
       </Section>
-
-      <InstallCta />
+      <RoleDownloadCta audience="business" />
     </>
   );
 }

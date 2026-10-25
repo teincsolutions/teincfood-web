@@ -1,7 +1,8 @@
 import { useTranslations } from "next-intl";
-import { Download, Search, MapPin } from "lucide-react";
+import { Download, MapPin, Search } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/sections/SectionHeading";
+import { cn } from "@/lib/utils";
 
 export function HowItWorks() {
   const t = useTranslations("home.how");
@@ -13,24 +14,31 @@ export function HowItWorks() {
   ];
 
   return (
-    <Section>
-      <SectionHeading title={t("title")} />
-      <ol className="mt-12 grid gap-10 md:grid-cols-3">
-        {steps.map((step, i) => {
+    <Section className="bg-surface">
+      <SectionHeading title={t("title")} subtitle={t("subtitle")} />
+      <ol className="mt-10 grid gap-4 md:grid-cols-3">
+        {steps.map((step, index) => {
           const Icon = step.icon;
           return (
-            <li key={step.key} className="relative text-center md:text-left">
-              <span className="absolute left-1/2 top-6 h-px w-full -translate-y-1/2 bg-navy/10 max-md:hidden" />
-              <div className="relative mx-auto flex size-12 items-center justify-center rounded-full bg-navy text-white md:mx-0">
-                <Icon className="size-5" aria-hidden="true" />
+            <li
+              key={step.key}
+              className={cn(
+                "rounded-xl border border-navy/10 bg-white p-6",
+                index === 1 && "md:mt-6",
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <span className="inline-flex size-10 items-center justify-center rounded-lg bg-navy text-white">
+                  <Icon aria-hidden="true" className="size-4" />
+                </span>
+                <span className="text-xs font-bold uppercase tracking-[0.14em] text-orange-800">
+                  {t("stepLabel", { number: index + 1 })}
+                </span>
               </div>
-              <p className="mt-5 text-xs font-bold uppercase tracking-widest text-orange-700">
-                Step {i + 1}
-              </p>
-              <h3 className="mt-1 text-xl font-extrabold text-navy">
+              <h3 className="mt-5 text-lg font-bold text-navy">
                 {t(`${step.key}.title`)}
               </h3>
-              <p className="mt-2 leading-relaxed text-navy/70">
+              <p className="mt-2 text-sm leading-relaxed text-navy/70">
                 {t(`${step.key}.description`)}
               </p>
             </li>

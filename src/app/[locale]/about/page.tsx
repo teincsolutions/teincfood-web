@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Section } from "@/components/ui/Section";
-import { SectionHeading } from "@/components/sections/SectionHeading";
+import { PageHeader } from "@/components/sections/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { localizeMetadata } from "@/lib/seo";
 import { getPage } from "@/lib/content";
@@ -23,14 +23,12 @@ export async function generateMetadata({
     });
   }
 
-  const t = await import("next-intl/server").then((m) =>
-    m.getTranslations({ locale, namespace: "meta.about" })
-  );
+  const t = await getTranslations({ locale, namespace: "meta.about" });
   return localizeMetadata({
     locale,
     path: "/about",
-    title: (await t)("title"),
-    description: (await t)("description"),
+    title: t("title"),
+    description: t("description"),
   });
 }
 
@@ -43,37 +41,34 @@ export default async function AboutPage({
   setRequestLocale(locale);
 
   const page = await getPage("about", locale);
+  const t = await getTranslations({ locale, namespace: "about" });
 
-  if (page) {
-    return (
+  return (
+    <>
+      <PageHeader
+        eyebrow={t("eyebrow")}
+        title={page?.title ?? t("title")}
+        intro={page?.meta_description ?? t("p1")}
+      />
       <Section>
         <Container className="max-w-3xl">
-          <SectionHeading align="left" title={page.title} />
-          <div className="mt-8 space-y-5 text-lg leading-relaxed text-navy/75">
-            {page.sections.map((s, i) => (
-              <div key={i}>
-                <h2 className="text-xl font-extrabold text-navy">{s.heading}</h2>
-                <p className="mt-2">{s.body}</p>
-              </div>
+          <div className="space-y-10">
+            {(page?.sections ?? [
+              { heading: t("title"), body: t("p1") },
+              { heading: t("eyebrow"), body: t("p2") },
+            ]).map((section, index) => (
+              <article key={index}>
+                <h2 className="text-xl font-extrabold text-navy">
+                  {section.heading}
+                </h2>
+                <p className="mt-3 text-lg leading-relaxed text-navy/75">
+                  {section.body}
+                </p>
+              </article>
             ))}
           </div>
         </Container>
       </Section>
-    );
-  }
-
-  const { getTranslations } = await import("next-intl/server");
-  const t = await getTranslations({ locale, namespace: "about" });
-
-  return (
-    <Section>
-      <Container className="max-w-3xl">
-        <SectionHeading align="left" title={t("title")} />
-        <div className="mt-8 space-y-5 text-lg leading-relaxed text-navy/75">
-          <p>{t("p1")}</p>
-          <p>{t("p2")}</p>
-        </div>
-      </Container>
-    </Section>
+    </>
   );
 }

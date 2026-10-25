@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import { useTranslations } from "next-intl";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "./SectionHeading";
+import { cn } from "@/lib/utils";
 
 export function FeatureCards({
   ns,
@@ -15,20 +16,27 @@ export function FeatureCards({
   return (
     <Section className="bg-surface">
       <SectionHeading title={t("title")} />
-      <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {icons.map((Icon, i) => (
+      <div
+        className={cn(
+          "mt-10 grid gap-4",
+          icons.length === 4
+            ? "sm:grid-cols-2 lg:grid-cols-4"
+            : "md:grid-cols-3",
+        )}
+      >
+        {icons.map((Icon, index) => (
           <div
-            key={i}
-            className="rounded-3xl border border-navy/5 bg-white p-8 shadow-sm"
+            key={index}
+            className="rounded-xl border border-navy/10 bg-white p-6"
           >
-            <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-navy text-white">
-              <Icon className="size-6" aria-hidden="true" />
+            <span className="inline-flex size-10 items-center justify-center rounded-lg bg-navy text-white">
+              <Icon className="size-4" aria-hidden="true" />
             </span>
-            <h3 className="mt-5 text-lg font-extrabold text-navy">
-              {t(`item${i + 1}.title`)}
+            <h3 className="mt-5 text-lg font-bold text-navy">
+              {t(`item${index + 1}.title`)}
             </h3>
-            <p className="mt-2 leading-relaxed text-navy/70">
-              {t(`item${i + 1}.description`)}
+            <p className="mt-2 text-sm leading-relaxed text-navy/70">
+              {t(`item${index + 1}.description`)}
             </p>
           </div>
         ))}

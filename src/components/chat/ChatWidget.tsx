@@ -218,8 +218,7 @@ export function ChatWidget() {
           }
           client.flushPending(convId);
           sync();
-        } catch (e) {
-          console.error("guest chat start failed", e);
+        } catch {
           sessionStartedRef.current = false;
           setSessionReady(false);
           setStatus("verifying");

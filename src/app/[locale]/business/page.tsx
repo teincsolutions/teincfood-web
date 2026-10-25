@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { ClipboardList, TrendingUp, Truck, Monitor, ArrowRight } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ClipboardList, Monitor, TrendingUp, Truck } from "lucide-react";
 import { Hero } from "@/components/sections/Hero";
 import { StepsSection } from "@/components/sections/StepsSection";
 import { FeatureCards } from "@/components/sections/FeatureCards";
-import { InstallCta } from "@/components/home/InstallCta";
+import { RoleDownloadCta } from "@/components/home/RoleDownloadCta";
+import { ProductShowcase } from "@/components/showcase/ProductShowcase";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/sections/SectionHeading";
-import { DesktopFrame } from "@/components/showcase/DesktopFrame";
-import { DeviceFrame } from "@/components/showcase/DeviceFrame";
-import { Container } from "@/components/ui/Container";
-import { Link } from "@/i18n/routing";
-import { storeLinks } from "@/config/site";
+import { ButtonLink } from "@/components/ui/Button";
 import { localizeMetadata } from "@/lib/seo";
 
 const sellerScreens = [
@@ -20,6 +17,9 @@ const sellerScreens = [
   "business:analytics",
   "business:menus",
   "business:pos-checkout",
+  "desktop:dashboard",
+  "desktop:pos",
+  "desktop:kitchen",
 ] as const;
 
 export async function generateMetadata({
@@ -46,8 +46,14 @@ export default async function BusinessPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "business.hero" });
-  const tScreens = await getTranslations({ locale, namespace: "business.screens" });
-  const tDesktop = await getTranslations({ locale, namespace: "business.desktop" });
+  const tDesktop = await getTranslations({
+    locale,
+    namespace: "business.desktop",
+  });
+  const tFleet = await getTranslations({
+    locale,
+    namespace: "business.fleetCta",
+  });
 
   return (
     <>
@@ -55,89 +61,66 @@ export default async function BusinessPage({
         eyebrow={t("eyebrow")}
         title={t("title")}
         subtitle={t("subtitle")}
-        storeLinks={storeLinks.business}
+        primaryAction={{ href: "/download?app=business", label: t("cta") }}
+        secondaryAction={{ href: "#screens", label: t("secondary") }}
         screenKey="business:dashboard"
+        device="iphone"
       />
       <StepsSection ns="business.steps" />
       <FeatureCards
         ns="business.features"
         icons={[ClipboardList, TrendingUp, Truck]}
       />
-
-      {/* Mobile Screenshots Showcase */}
-      <Section className="bg-white">
-        <SectionHeading
-          eyebrow={tScreens("eyebrow")}
-          title={tScreens("title")}
-        />
-        <div className="mt-10 flex gap-4 overflow-x-auto pb-4 scrollbar-thin sm:gap-6 lg:justify-center">
-          {sellerScreens.map((key) => (
-            <DeviceFrame key={key} screenKey={key} className="w-56 shrink-0 sm:w-64" />
-          ))}
+      <Section id="screens" className="bg-white">
+        <ProductShowcase screenKeys={sellerScreens} />
+      </Section>
+      <Section className="bg-surface">
+        <div className="grid items-center gap-8 rounded-2xl border border-navy/10 bg-white p-6 sm:p-10 lg:grid-cols-2">
+          <div>
+            <SectionHeading
+              title={tDesktop("title")}
+              subtitle={tDesktop("subtitle")}
+              align="left"
+            />
+            <ButtonLink href="/download?app=desktop" variant="secondary" className="mt-6">
+              <Monitor aria-hidden="true" className="size-4" />
+              {tDesktop("cta")}
+            </ButtonLink>
+          </div>
+          <div className="rounded-xl bg-navy/[0.03] p-3">
+            <ProductShowcase
+              screenKeys={["desktop:dashboard", "desktop:pos"]}
+              initialDevice="macbook"
+              deviceIds={["imac", "hp-monitor", "macbook", "windows-laptop"]}
+            />
+          </div>
         </div>
       </Section>
-
-      {/* Desktop App Section */}
-      <Section className="bg-surface">
-        <Container>
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            <div className="order-2 lg:order-1">
-              <DesktopFrame screenKey="desktop:dashboard" priority className="w-full" />
+      <Section className="bg-white pb-0 sm:pb-0">
+        <div className="rounded-2xl bg-navy px-6 py-10 text-white sm:px-10">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-300">
+                {tFleet("eyebrow")}
+              </p>
+              <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
+                {tFleet("title")}
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70">
+                {tFleet("body")}
+              </p>
             </div>
-            <div className="order-1 lg:order-2">
-              <SectionHeading
-                title={tDesktop("title")}
-                subtitle={tDesktop("subtitle")}
-                align="left"
-              />
-              <div className="mt-6 space-y-4">
-                <div className="flex gap-3">
-                  <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-navy text-white">
-                    <Monitor className="size-4" />
-                  </span>
-                  <div>
-                    <h3 className="font-semibold text-navy">{tDesktop("feature1.title")}</h3>
-                    <p className="text-sm text-navy/60">{tDesktop("feature1.description")}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-8">
-                <Link
-                  href="/desktop"
-                  className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy/90"
-                >
-                  <Monitor className="size-4" />
-                  {tDesktop("cta")}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      {/* Fleet Managers CTA */}
-      <Section className="bg-white">
-        <Container>
-          <div className="rounded-3xl bg-navy px-8 py-10 text-center sm:px-12 sm:py-12">
-            <p className="text-xs font-bold uppercase tracking-widest text-white/60">For fleet managers</p>
-            <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
-              Manage a delivery fleet?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-              The same Teinc Food Business app — with tools to assign orders, track riders, and optimize every delivery.
-            </p>
-            <Link
+            <ButtonLink
               href="/business/fleet"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-navy transition-colors hover:bg-white/90"
+              variant="inverse"
+              className="shrink-0"
             >
-              Explore Fleet Management
-              <ArrowRight className="size-4" />
-            </Link>
+              {tFleet("cta")}
+            </ButtonLink>
           </div>
-        </Container>
+        </div>
       </Section>
-
-      <InstallCta />
+      <RoleDownloadCta audience="business" />
     </>
   );
 }

@@ -1,14 +1,19 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --color-navy: #1e1e2e;
+  --color-white: #ffffff;
   --color-navy-deep: #14141f;
   --color-orange: #ff7622;
   --color-orange-600: #ff6210;
   --color-orange-700: #e6540a;
+  --color-orange-800: #b83c08;
   --color-surface: #fff9f5;
+  --color-surface-muted: #f6f7f9;
+  --color-line: #e5e7ec;
 
   --animate-fade-up: fade-up 0.7s ease-out both;
 
@@ -44,10 +49,50 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-orange);
+  background-color: var(--color-orange-800);
   color: #fff;
 }
 
+:focus-visible {
+  scroll-margin-block: 6rem;
+}
+
 .container-site {
-  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+}
+
+/* Keep native form controls and long-form content predictable across locales. */
+.prose-site :where(p, li) {
+  @apply leading-relaxed text-navy/75;
+}
+
+.dark {
+  --color-navy: #f2f2f5;
+  --color-navy-deep: #0a0a12;
+  --color-surface: #1c1c24;
+  --color-surface-muted: #23232d;
+  --color-line: #2a2a36;
+  --color-orange-800: #ff8a3d;
+}
+
+.dark .bg-white {
+  background-color: #15151c;
+}
+
+.dark .bg-white\/80,
+.dark .bg-white\/95 {
+  background-color: rgb(21 21 28 / 0.8);
+}
+
+.dark .bg-navy {
+  background-color: #1e1e2e;
+}
+
+.dark .bg-navy-deep {
+  background-color: #14141f;
+}
+
+.dark body {
+  background-color: #0f0f14;
+  color: #f2f2f5;
 }

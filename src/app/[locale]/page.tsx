@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/sections/Hero";
 import { RolesSection } from "@/components/home/RolesSection";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { CitiesSection } from "@/components/home/CitiesSection";
-import { InstallCta } from "@/components/home/InstallCta";
-import { WhatsAppSection } from "@/components/home/WhatsAppSection";
-import { DesktopSection } from "@/components/home/DesktopSection";
+import { RoleDownloadCta } from "@/components/home/RoleDownloadCta";
+import { PlatformStrip } from "@/components/home/PlatformStrip";
+import { ProductShowcase } from "@/components/showcase/ProductShowcase";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { storeLinks, siteConfig } from "@/config/site";
+import { Section } from "@/components/ui/Section";
+import { siteConfig } from "@/config/site";
 import { localizeMetadata } from "@/lib/seo";
+
+const homeScreens = [
+  "buyer:home",
+  "business:dashboard",
+  "rider:dashboard",
+  "desktop:dashboard",
+  "desktop:pos",
+  "whatsapp:chat",
+] as const;
 
 export async function generateMetadata({
   params,
@@ -54,16 +63,19 @@ export default async function HomePage({
         eyebrow={t("eyebrow")}
         title={t("title")}
         subtitle={t("subtitle")}
-        storeLinks={storeLinks.buyer}
+        primaryAction={{ href: "/download?app=buyer", label: t("cta") }}
+        secondaryAction={{ href: "/business", label: t("secondary") }}
         screenKey="buyer:home"
       />
       <RolesSection />
+      <Section className="bg-surface pt-0 sm:pt-0">
+        <ProductShowcase screenKeys={homeScreens} priority />
+      </Section>
       <HowItWorks />
       <FeaturesSection />
-      <WhatsAppSection />
-      <DesktopSection />
+      <PlatformStrip />
       <CitiesSection />
-      <InstallCta />
+      <RoleDownloadCta audience="all" />
     </>
   );
 }

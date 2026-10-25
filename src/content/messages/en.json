@@ -64,6 +64,14 @@
     "fleet": {
       "title": "Fleet Management — Teinc Food Business",
       "description": "Manage your delivery fleet with Teinc Food Business. Assign orders, track riders, and optimize deliveries from mobile or desktop."
+    },
+    "download": {
+      "title": "Download Teinc Food — app, business and desktop",
+      "description": "Download the Teinc Food customer or Business app for iOS and Android, or get Teinc Food Desktop for Windows, macOS and Linux."
+    },
+    "apps": {
+      "title": "App showcase — Teinc Food",
+      "description": "Preview Teinc Food on desktop, mobile and tablet devices."
     }
   },
   "nav": {
@@ -81,7 +89,17 @@
     "desktop": "Desktop App",
     "products": "Products",
     "company": "Company",
-    "downloads": "Downloads"
+    "downloads": "Downloads",
+    "language": "Language",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to main content",
+    "resources": "Resources",
+    "businessApp": "Business app",
+    "merchants": "Restaurants & merchants",
+    "fleetManagement": "Fleet management",
+    "customers": "For customers",
+    "riders": "Riders",
+    "apps": "Apps"
   },
   "footer": {
     "tagline": "Order it. Partner it. Deliver it. Teinc Food connects your city's food.",
@@ -92,7 +110,13 @@
     "rights": "All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "deleteAccount": "Delete account"
+    "deleteAccount": "Delete account",
+    "apps": {
+      "customer": "Teinc Food app",
+      "business": "Teinc Food Business",
+      "desktop": "Teinc Food Desktop",
+      "whatsapp": "WhatsApp"
+    }
   },
   "install": {
     "ios": "Download on the",
@@ -105,7 +129,17 @@
     "buyerApp": "Teinc Food",
     "businessApp": "Teinc Food Business",
     "buyerTagline": "Order food delivery",
-    "businessTagline": "Grow your business or deliver"
+    "businessTagline": "Grow your business or deliver",
+    "bannerRegion": "Teinc Food mobile apps",
+    "bannerTitle": "Open or install the Teinc Food apps",
+    "bannerBody": "Order with Teinc Food or manage your restaurant with Teinc Food Business.",
+    "openAction": "Open app",
+    "installAction": "Install",
+    "dialogTitle": "Choose an app",
+    "dialogDescription": "Open the app you already have, or install it directly from the store.",
+    "openLabel": "Open",
+    "installLabel": "Install",
+    "fallbackNote": "If the app is not installed, you will be taken to the store automatically."
   },
   "home": {
     "hero": {
@@ -119,16 +153,20 @@
       "title": "One platform, three ways to take part",
       "buyer": {
         "title": "Order food",
-        "description": "Discover local restaurants, pay securely, and track every order live."
+        "description": "Discover local restaurants, pay securely, and track every order live.",
+        "cta": "Order food"
       },
       "business": {
         "title": "Grow your business",
-        "description": "Reach more customers, manage orders, and boost revenue with Teinc Food Business."
+        "description": "Reach more customers, manage orders, and boost revenue with Teinc Food Business.",
+        "cta": "Explore business tools"
       },
       "rider": {
         "title": "Deliver & earn",
-        "description": "Work on your own schedule and earn per delivery with the rider tools in Teinc Food Business."
-      }
+        "description": "Work on your own schedule and earn per delivery with the rider tools in Teinc Food Business.",
+        "cta": "Start delivering"
+      },
+      "subtitle": "Choose how you want to use Teinc Food. Every experience is built for the way you work."
     },
     "how": {
       "title": "How it works",
@@ -143,7 +181,9 @@
       "step3": {
         "title": "Track it live",
         "description": "Follow your rider in real time until it arrives."
-      }
+      },
+      "subtitle": "From download to delivery in a few simple steps.",
+      "stepLabel": "Step {number}"
     },
     "features": {
       "title": "Built for your city",
@@ -162,7 +202,8 @@
       "item4": {
         "title": "Great deals",
         "description": "Offers and promotions from your favorite restaurants."
-      }
+      },
+      "subtitle": "Reliable essentials for customers, kitchens and riders across Ghana."
     },
     "cities": {
       "title": "Serving more places every week",
@@ -210,6 +251,20 @@
       "item3": {
         "title": "Team management",
         "description": "Invite staff, assign roles, and manage permissions."
+      }
+    },
+    "platformStrip": {
+      "title": "More ways to use Teinc Food",
+      "subtitle": "Order from chat or run the full operation from your computer.",
+      "whatsapp": {
+        "title": "Order on WhatsApp",
+        "body": "Browse restaurants, place an order and get support through a simple conversation.",
+        "cta": "Chat with the assistant"
+      },
+      "desktop": {
+        "title": "Run it on desktop",
+        "body": "Manage orders, menus, POS, kitchen and delivery from a larger screen.",
+        "cta": "Explore the desktop app"
       }
     }
   },
@@ -297,6 +352,12 @@
     "screens": {
       "eyebrow": "See the app",
       "title": "Everything you need to run your restaurant"
+    },
+    "fleetCta": {
+      "eyebrow": "Fleet operations",
+      "title": "Running a delivery fleet?",
+      "body": "See the fleet management tools being prepared for Teinc Food Business.",
+      "cta": "Explore fleet tools"
     }
   },
   "fleet": {
@@ -304,7 +365,8 @@
       "eyebrow": "For fleet managers",
       "title": "Run your delivery fleet from one app.",
       "subtitle": "Assign orders, track riders in real time, and optimize every delivery — on mobile or desktop with Teinc Food Business.",
-      "cta": "Download Teinc Food Business"
+      "cta": "Download Teinc Food Business",
+      "secondary": "Talk to our team"
     },
     "steps": {
       "title": "Get your fleet moving in three steps",
@@ -352,7 +414,8 @@
       "eyebrow": "For riders & drivers",
       "title": "Earn on your own time.",
       "subtitle": "Deliver with the Teinc Food Business app. Flexible hours, clear earnings, and everything you need to deliver great experiences.",
-      "cta": "Download Teinc Food Business"
+      "cta": "Download Teinc Food Business",
+      "secondary": "See the app"
     },
     "steps": {
       "title": "Start delivering in three steps",
@@ -394,7 +457,8 @@
       "eyebrow": "AI-Powered Support",
       "title": "Order food, just by chatting.",
       "subtitle": "Our AI assistant is available 24/7 on WhatsApp. Browse restaurants, place orders, track deliveries, and get instant support — all through chat.",
-      "cta": "Chat on WhatsApp"
+      "cta": "Chat on WhatsApp",
+      "appCta": "Get the app instead"
     },
     "steps": {
       "title": "How it works",
@@ -429,6 +493,11 @@
         "title": "Human support",
         "description": "When AI can't help, we connect you with a human agent instantly."
       }
+    },
+    "support": {
+      "eyebrow": "Beyond chat",
+      "title": "A human hand when you need one",
+      "subtitle": "The WhatsApp assistant handles routine questions. When a person is needed, support can step in from the desktop support workspace."
     }
   },
   "desktop": {
@@ -436,7 +505,8 @@
       "eyebrow": "Desktop & POS",
       "title": "Manage your business on any screen.",
       "subtitle": "From tablets to POS terminals, manage orders, menus, and your fleet on Windows, macOS, or Linux.",
-      "cta": "Download Desktop App"
+      "cta": "Download Desktop App",
+      "secondary": "See what is included"
     },
     "platforms": {
       "title": "Available for every platform",
@@ -480,12 +550,21 @@
       "requirements": {
         "title": "System Requirements"
       }
+    },
+    "screens": {
+      "eyebrow": "Product preview",
+      "title": "Your whole operation, on one screen",
+      "subtitle": "Preview the desktop experience on the monitor or laptop you use every day.",
+      "posTitle": "Built for the counter as well as the office",
+      "posSubtitle": "Use the desktop app as a POS terminal, with a customer display for the second screen.",
+      "posNote": "Connect a receipt printer and a customer-facing screen from desktop settings."
     }
   },
   "about": {
     "title": "About Teinc Food",
     "p1": "Teinc Food is a food delivery platform that connects buyers, restaurants, and riders in cities around the world.",
-    "p2": "We believe great food should be easy to find, easy to order, and easy to deliver — for everyone involved."
+    "p2": "We believe great food should be easy to find, easy to order, and easy to deliver — for everyone involved.",
+    "eyebrow": "About Teinc Food"
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -497,7 +576,10 @@
     "q3": "How does payment work?",
     "a3": "You can pay by card, mobile money, or cash on delivery — your choice at checkout.",
     "q4": "How do I partner my restaurant?",
-    "a4": "Reach out through the contact page and our team will help you get set up quickly."
+    "a4": "Reach out through the contact page and our team will help you get set up quickly.",
+    "eyebrow": "Help centre",
+    "stillNeedHelp": "Still need help?",
+    "stillNeedHelpBody": "Send us a message and the team will get back to you."
   },
   "legal": {
     "updated": "Last updated",
@@ -518,7 +600,11 @@
       "p2": "Payments are processed securely. Refunds follow the policy displayed in the app at the time of your order.",
       "section3": "Liability",
       "p3": "Teinc Food connects buyers, restaurants, and riders. Each party is responsible for their own obligations."
-    }
+    },
+    "effectiveDate": "October 2026",
+    "contactPrompt": "Questions about this policy? Contact our team.",
+    "eyebrow": "Legal",
+    "contactUs": "Contact us"
   },
   "contact": {
     "title": "Contact us",
@@ -536,7 +622,12 @@
       "email": "Please enter your email address.",
       "emailInvalid": "Please enter a valid email address.",
       "message": "Please enter a message."
-    }
+    },
+    "sending": "Sending your message…",
+    "successTitle": "Message sent",
+    "errorTitle": "Message not sent",
+    "supportTitle": "Prefer email?",
+    "supportBody": "Send us a note and the team will reply during business hours."
   },
   "cta": {
     "getStarted": "Get started",
@@ -619,7 +710,11 @@
     "invalidRequest": "This password reset link is invalid or has expired. Please request a new one.",
     "mismatch": "Passwords do not match.",
     "tooShort": "Password must be at least 8 characters.",
-    "error": "We couldn't reset your password. The link may be invalid or expired."
+    "error": "We couldn't reset your password. The link may be invalid or expired.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "downloadApp": "Download the app",
+    "contactSupport": "Contact support"
   },
   "invite": {
     "title": "You've been invited",
@@ -648,5 +743,208 @@
     "title": "Something went wrong",
     "description": "We couldn't load this page. Please try again.",
     "retry": "Try again"
+  },
+  "showcase": {
+    "devices": {
+      "imac": "iMac",
+      "hp-monitor": "HP monitor",
+      "macbook": "MacBook Pro",
+      "windows-laptop": "Windows laptop",
+      "iphone": "iPhone",
+      "android-phone": "Android phone",
+      "ipad": "iPad",
+      "android-tablet": "Android tablet"
+    },
+    "screens": {
+      "buyer": {
+        "home": "Discover restaurants",
+        "restaurant": "Browse menus",
+        "cart": "Your cart",
+        "tracking": "Live tracking",
+        "checkout": "Secure checkout",
+        "orders": "Order history",
+        "dish": "Dish details",
+        "help": "Help centre"
+      },
+      "business": {
+        "orders": "Order manager",
+        "menu": "Menu control",
+        "earnings": "Earnings and reports",
+        "dashboard": "Business dashboard",
+        "analytics": "Analytics and reports",
+        "wallet": "Wallet and payouts",
+        "menus": "Menu management",
+        "pos-checkout": "POS checkout",
+        "support-chat": "Support chat",
+        "operating-hours": "Operating hours",
+        "delivery-settings": "Delivery settings",
+        "tax-settings": "Tax settings",
+        "manage-categories": "Manage categories",
+        "edit-menu": "Edit a menu item",
+        "chat": "Messages",
+        "details": "Business details"
+      },
+      "rider": {
+        "dashboard": "Rider dashboard",
+        "delivery": "Delivery offers",
+        "earnings": "Earnings",
+        "navigate-pickup": "Navigate to pickup",
+        "navigate-dropoff": "Navigate to drop-off",
+        "vehicle": "Vehicle details"
+      },
+      "fleet": {
+        "dashboard": "Fleet dashboard",
+        "rider-management": "Rider management",
+        "delivery-tracking": "Delivery tracking",
+        "analytics": "Fleet analytics"
+      },
+      "desktop": {
+        "dashboard": "Business dashboard",
+        "pos": "POS terminal",
+        "pos-orders": "POS order flow",
+        "kitchen": "Kitchen display",
+        "menu": "Menu management",
+        "menu-create": "Create a menu item",
+        "support": "AI support",
+        "messages": "Messages",
+        "team": "Team management",
+        "delivery": "Delivery settings",
+        "orders": "Orders",
+        "analytics": "Analytics and reports"
+      },
+      "whatsapp": {
+        "chat": "WhatsApp assistant"
+      }
+    },
+    "controls": {
+      "title": "See it on your device",
+      "subtitle": "Choose a device and a screen to preview how Teinc Food looks in real use.",
+      "deviceLabel": "Choose a device",
+      "screenLabel": "Choose a screen",
+      "previous": "Previous screen",
+      "next": "Next screen",
+      "viewFullscreen": "View {label} full screen",
+      "close": "Close preview",
+      "placeholder": "Preview coming soon",
+      "slideStatus": "{label} — {current} of {total}",
+      "compatibilityNote": "Screens adapt to each device. Some views are available on a single device type."
+    },
+    "categories": {
+      "desktop": "Desktop / Macs",
+      "mobile": "Mobile / iPhones",
+      "tablet": "Tablets / iPads"
+    },
+    "tabs": {
+      "customer": "Customer",
+      "merchant": "Merchant / restaurant",
+      "rider": "Rider",
+      "fleet": "Fleet manager"
+    }
+  },
+  "downloadCta": {
+    "eyebrow": "Get Teinc Food",
+    "title": "The right app for the way you use Teinc Food.",
+    "subtitle": "Order as a customer or run your business from the Teinc Food Business app. Desktop is ready for POS and back-office teams.",
+    "download": "Download",
+    "audiences": {
+      "buyer": {
+        "title": "Teinc Food",
+        "body": "Order meals, pay securely and track every delivery from your phone."
+      },
+      "business": {
+        "title": "Teinc Food Business",
+        "body": "Manage orders, menus, earnings and rider deliveries on the go."
+      },
+      "desktop": {
+        "title": "Teinc Food Desktop",
+        "body": "Run POS, kitchen, menus and delivery from Windows, macOS or Linux."
+      }
+    }
+  },
+  "download": {
+    "eyebrow": "Download centre",
+    "title": "Download Teinc Food",
+    "subtitle": "Choose the app that matches how you use Teinc Food. We will highlight the best option for this device.",
+    "detected": "Detected: {platform}",
+    "detectedUnknown": "Choose your platform below.",
+    "appLabel": "Choose an app",
+    "tabs": {
+      "buyer": "Customer app",
+      "business": "Business app",
+      "desktop": "Desktop app"
+    },
+    "mobile": {
+      "title": "Teinc Food on your phone",
+      "subtitle": "Order food, pay and track delivery wherever you are.",
+      "buyerTitle": "Teinc Food",
+      "buyerBody": "Discover restaurants, build your order and follow your rider live.",
+      "businessTitle": "Teinc Food Business",
+      "businessBody": "Run orders, menus, earnings and rider deliveries from one app.",
+      "appStore": "Download on the App Store",
+      "playStore": "Get it on Google Play",
+      "noLinks": "Store links are being finalised. Contact support and we will send you the correct link.",
+      "searchHint": "You can also search for Teinc Food in your app store."
+    },
+    "desktop": {
+      "title": "Teinc Food Desktop",
+      "subtitle": "POS, orders, kitchen display, menus, team and fleet management for Windows, macOS and Linux.",
+      "version": "Version {version}",
+      "updated": "Updated {date}",
+      "preview": "Preview build",
+      "downloadFor": "Download for {platform}",
+      "choosePlatform": "Choose your platform",
+      "appleSiliconNote": "This selects the Apple Silicon build. Intel Macs can use the Intel download below.",
+      "noRelease": "Installers are being published. Contact support if you need a build today.",
+      "noReleaseTitle": "Installers are not available yet",
+      "noReleaseBody": "The desktop download links go live with the next release. Contact us and we will send you the current build.",
+      "allPlatforms": "All installers",
+      "requirements": "Windows 10 or later · macOS 12 Monterey or later · Ubuntu 20.04 or equivalent",
+      "mobileNotice": "The desktop app runs on Windows, macOS and Linux. Open this page on your computer to download it.",
+      "installGuide": "Installation guide",
+      "autoUpdate": "Teinc Food Desktop updates itself automatically. New versions download in the background and apply when the app restarts.",
+      "download": "Download",
+      "releaseNotes": "What is new in {version}"
+    },
+    "assets": {
+      "windows": "Windows",
+      "macos-arm": "macOS (Apple Silicon)",
+      "macos-intel": "macOS (Intel)",
+      "linux-appimage": "Linux (AppImage)",
+      "linux-deb": "Linux (Debian / Ubuntu)"
+    },
+    "install": {
+      "title": "Set up Teinc Food Desktop",
+      "subtitle": "Install the app, connect a receipt printer and configure the customer display.",
+      "windowsTitle": "Windows",
+      "windowsStep1": "Run the downloaded .exe installer.",
+      "windowsStep2": "If SmartScreen appears, choose More info, then Run anyway.",
+      "windowsStep3": "Open Teinc Food Desktop and sign in with your Teinc Food Business account.",
+      "macosTitle": "macOS",
+      "macosStep1": "Open the .dmg and drag Teinc Food Desktop into Applications.",
+      "macosStep2": "The first time, right-click the app and choose Open.",
+      "macosStep3": "Sign in with your Teinc Food Business account.",
+      "linuxTitle": "Linux",
+      "linuxStep1": "AppImage: make it executable with chmod +x, then run it.",
+      "linuxStep2": "Debian or Ubuntu: install the .deb package with apt.",
+      "linuxStep3": "Start it from your applications menu and sign in.",
+      "posTitle": "POS terminal and customer display",
+      "posStep1": "Use the Windows or Linux build on the terminal.",
+      "posStep2": "Open Settings, then Devices, to connect a receipt printer.",
+      "posStep3": "Enable the customer display on the second screen."
+    },
+    "help": {
+      "title": "Need help getting set up?",
+      "body": "Read the guides inside the app under Profile, then Help, or contact the team.",
+      "contact": "Contact support",
+      "faq": "Read the FAQ"
+    },
+    "platforms": {
+      "ios": "iPhone or iPad",
+      "android": "Android",
+      "windows": "Windows",
+      "macos": "macOS",
+      "linux": "Linux",
+      "unknown": "your device"
+    }
   }
 }

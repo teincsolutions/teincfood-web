@@ -5,14 +5,20 @@ export function SectionHeading({
   title,
   subtitle,
   align = "center",
+  tone = "default",
+  as: Heading = "h2",
   className,
 }: {
   eyebrow?: string;
   title: string;
   subtitle?: string;
   align?: "center" | "left";
+  tone?: "default" | "inverse";
+  as?: "h1" | "h2";
   className?: string;
 }) {
+  const inverse = tone === "inverse";
+
   return (
     <div
       className={cn(
@@ -22,15 +28,32 @@ export function SectionHeading({
       )}
     >
       {eyebrow && (
-        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-orange-700">
+        <p
+          className={cn(
+            "mb-3 text-xs font-bold uppercase tracking-[0.16em]",
+            inverse ? "text-orange-300" : "text-orange-800",
+          )}
+        >
           {eyebrow}
         </p>
       )}
-      <h2 className="text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">
+      <Heading
+        className={cn(
+          "text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-[2.65rem] lg:leading-[1.12]",
+          inverse ? "text-white" : "text-navy",
+        )}
+      >
         {title}
-      </h2>
+      </Heading>
       {subtitle && (
-        <p className="mt-4 text-lg leading-relaxed text-navy/70">{subtitle}</p>
+        <p
+          className={cn(
+            "mt-4 text-base leading-relaxed sm:text-lg",
+            inverse ? "text-white/70" : "text-navy/70",
+          )}
+        >
+          {subtitle}
+        </p>
       )}
     </div>
   );

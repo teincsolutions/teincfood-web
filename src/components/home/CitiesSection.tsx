@@ -10,19 +10,24 @@ export function CitiesSection() {
 
   return (
     <Section className="bg-surface">
-      <SectionHeading title={t("title")} />
-      <ul className="mt-10 flex flex-wrap justify-center gap-3">
-        {cities.map((city) => (
-          <li
-            key={city}
-            className="flex items-center gap-2 rounded-full border border-navy/10 bg-white px-5 py-2.5 text-sm font-semibold text-navy/80"
-          >
-            <MapPin className="size-4 text-orange-700" aria-hidden="true" />
-            {city}
-          </li>
-        ))}
-      </ul>
-      <p className="mt-8 text-center text-sm text-navy/50">{t("coming")}</p>
+      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <SectionHeading
+          title={t("title")}
+          subtitle={t("coming")}
+          align="left"
+        />
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {cities.map((city) => (
+            <li
+              key={city}
+              className="flex min-h-16 items-center gap-2 rounded-xl border border-navy/10 bg-white px-4 text-sm font-semibold text-navy"
+            >
+              <MapPin className="size-4 text-orange-800" aria-hidden="true" />
+              {city}
+            </li>
+          ))}
+        </ul>
+      </div>
     </Section>
   );
 }

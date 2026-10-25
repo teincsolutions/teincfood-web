@@ -27,6 +27,64 @@ export const storeLinks: StoreLinks = {
   },
 };
 
+export type MobileAppId = "buyer" | "business";
+
+export interface MobileAppConfig {
+  id: MobileAppId;
+  /** iOS bundle identifier (also used in the Apple association file). */
+  bundleId: string;
+  /** Android application id / package name. */
+  packageName: string;
+  /** Custom URL scheme declared by the native app. */
+  scheme: string;
+  appStore: string;
+  playStore: string;
+}
+
+const defaultBundleIds: Record<MobileAppId, string> = {
+  buyer: "com.teincfood.app",
+  business: "com.teincfood.business",
+};
+
+const defaultSchemes: Record<MobileAppId, string> = {
+  buyer: "teincfood",
+  business: "teincfoodbusiness",
+};
+
+function publicEnv(name: string): string {
+  return process.env[name] ?? "";
+}
+
+/**
+ * Deep-link metadata for the two native apps.
+ *
+ * Bundle ids, package names and URL schemes are public, so they are safe to
+ * ship in the browser bundle. Override them per environment when the native
+ * apps use different values.
+ */
+export const mobileApps: Record<MobileAppId, MobileAppConfig> = {
+  buyer: {
+    id: "buyer",
+    bundleId:
+      publicEnv("NEXT_PUBLIC_BUYER_BUNDLE_ID") || defaultBundleIds.buyer,
+    packageName:
+      publicEnv("NEXT_PUBLIC_BUYER_PACKAGE") || defaultBundleIds.buyer,
+    scheme:
+      publicEnv("NEXT_PUBLIC_BUYER_APP_SCHEME") || defaultSchemes.buyer,
+    ...storeLinks.buyer,
+  },
+  business: {
+    id: "business",
+    bundleId:
+      publicEnv("NEXT_PUBLIC_BUSINESS_BUNDLE_ID") || defaultBundleIds.business,
+    packageName:
+      publicEnv("NEXT_PUBLIC_BUSINESS_PACKAGE") || defaultBundleIds.business,
+    scheme:
+      publicEnv("NEXT_PUBLIC_BUSINESS_APP_SCHEME") || defaultSchemes.business,
+    ...storeLinks.business,
+  },
+};
+
 export const siteConfig = {
   name: "Teinc Food",
   tagline: "Food delivery, reimagined",
@@ -35,6 +93,8 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@teincfood.com",
   analyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",
+  whatsappUrl:
+    process.env.NEXT_PUBLIC_WHATSAPP_URL || "https://wa.me/233503981913",
   deleteAccountPath: "/delete-account",
   logoVersion: process.env.NEXT_PUBLIC_LOGO_VERSION ?? "2",
 };

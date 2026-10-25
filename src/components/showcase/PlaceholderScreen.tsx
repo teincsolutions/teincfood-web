@@ -1,62 +1,40 @@
+import { useTranslations } from "next-intl";
 import type { ScreenDef } from "@/config/screens";
+import { cn } from "@/lib/utils";
 
-export function PlaceholderScreen({ screen }: { screen: ScreenDef }) {
+export function PlaceholderScreen({
+  screen,
+  className,
+}: {
+  screen: ScreenDef;
+  className?: string;
+}) {
+  const t = useTranslations("showcase");
+
   return (
-    <div className="relative flex h-full flex-col overflow-hidden">
-      {/* Faux status bar */}
-      <div className="flex items-center justify-between px-5 pt-3 text-[10px] font-semibold text-navy/60">
-        <span>AM 9:41</span>
-        <svg
-          className="size-3"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          aria-hidden="true"
-        >
-          <path d="M5 2v14M12 2v20M19 2v10" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      {/* App header */}
-      <div className="flex items-baseline gap-2 px-4 pt-4">
-        <span className="text-sm font-extrabold text-navy">Teinc Food</span>
-        <span className="h-1.5 w-1.5 rounded-full bg-orange" />
-      </div>
-
-      {/* Search skeleton */}
-      <div className="mx-4 mt-3 flex items-center gap-2 rounded-full bg-navy/5 px-3 py-2">
-        <span className="h-3 w-3 rounded-full bg-navy/10" />
-        <span className="h-2 flex-1 rounded bg-navy/10" />
-      </div>
-
-      {/* Section label chip */}
-      <div className="mt-3 px-4">
-        <span className="inline-block rounded-full bg-orange px-3 py-1 text-[9px] font-bold text-white">
-          {screen.label}
-        </span>
-      </div>
-
-      {/* Card skeletons */}
-      <div className="mt-4 flex flex-col gap-3 px-4 pb-6">
-        <div className="rounded-2xl bg-navy/5 p-3">
-          <div className="h-16 rounded-xl bg-gradient-to-br from-orange/70 to-orange" />
-          <div className="mt-3 h-2 w-3/4 rounded bg-navy/15" />
-          <div className="mt-2 h-2 w-1/2 rounded bg-navy/10" />
-        </div>
-        <div className="rounded-2xl bg-navy/5 p-3">
-          <div className="h-16 rounded-xl bg-gradient-to-br from-navy/60 to-navy" />
-          <div className="mt-3 h-2 w-2/3 rounded bg-navy/15" />
-          <div className="mt-2 h-2 w-1/3 rounded bg-navy/10" />
-        </div>
-      </div>
-
-      {/* Watermark label */}
-      <div className="pointer-events-none absolute inset-0 flex items-end justify-center pb-8">
-        <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-navy/50 shadow-sm">
-          {screen.label}
-        </span>
-      </div>
+    <div
+      className={cn(
+        "relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-[linear-gradient(145deg,#fff9f4_0%,#f5f7fb_55%,#fff1e7_100%)] p-4 text-center",
+        className,
+      )}
+    >
+      <div className="absolute -right-10 -top-10 size-32 rounded-full bg-orange/10" aria-hidden="true" />
+      <div className="absolute -bottom-12 -left-12 size-40 rounded-full bg-navy/5" aria-hidden="true" />
+      <svg
+        viewBox="0 0 48 48"
+        className="relative mb-3 size-10 text-orange sm:size-12"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect x="3" y="3" width="42" height="42" rx="14" fill="currentColor" />
+        <path d="M14 17h20M18 17v15m12-15v15M15 32h18" stroke="white" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+      <p className="relative max-w-full text-xs font-bold text-navy sm:text-sm">
+        {t(`screens.${screen.labelKey}`)}
+      </p>
+      <p className="relative mt-1 text-[10px] font-medium text-navy/50 sm:text-xs">
+        {t("controls.placeholder")}
+      </p>
     </div>
   );
 }
