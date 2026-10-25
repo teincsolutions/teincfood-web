@@ -27,7 +27,7 @@ export function MarkdownText({ text, className }: { text: string; className?: st
           case "strikethrough":
             return <s key={i}>{t.text}</s>;
           case "code":
-            return <code key={i} className="rounded bg-black/10 px-1 py-0.5 font-mono text-[0.85em]">{t.text}</code>;
+            return <code key={i} className="rounded bg-navy/10 px-1 py-0.5 font-mono text-[0.85em]">{t.text}</code>;
           default:
             return <span key={i}>{t.text}</span>;
         }

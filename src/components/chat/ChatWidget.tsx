@@ -99,7 +99,9 @@ export function ChatWidget() {
                   "The security check didn't load. Please reload the page, or tap Retry.",
               });
             },
-            theme: "light",
+            theme: document.documentElement.classList.contains("dark")
+              ? "dark"
+              : "light",
           });
           turnstileWidgetIdRef.current = widgetId ?? null;
         } catch (e) {
@@ -304,7 +306,7 @@ export function ChatWidget() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#ff7622] text-white shadow-lg hover:scale-105 transition-transform"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-800 text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800"
         aria-label="Open chat"
       >
         <MessageCircle size={26} />
@@ -316,11 +318,11 @@ export function ChatWidget() {
     <div
       className={
         expanded
-          ? "fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:inset-6"
-          : "fixed bottom-4 right-4 z-50 flex h-[min(560px,calc(100dvh-5rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:bottom-6 sm:right-6"
+          ? "fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-line bg-white text-navy shadow-2xl sm:inset-6"
+          : "fixed bottom-4 right-4 z-50 flex h-[min(560px,calc(100dvh-5rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-white text-navy shadow-2xl sm:bottom-6 sm:right-6"
       }
     >
-      <div className="flex items-center justify-between bg-[#ff7622] px-4 py-3 text-white">
+      <div className="flex items-center justify-between bg-orange-800 px-4 py-3 text-white">
         <div>
           <p className="font-semibold">TeincFood Support</p>
           <p className="text-xs opacity-80">
@@ -355,14 +357,26 @@ export function ChatWidget() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50">
+      <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface-muted px-4 py-3">
         {messages.map((m) => {
           const isOut = !!userId && m.sender_id === userId;
           return (
             <div key={m.id ?? (m as any)._clientId} className={`flex ${isOut ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${isOut ? "bg-[#ff7622] text-white" : "bg-white text-gray-900 shadow"}`}>
+              <div
+                className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${
+                  isOut
+                    ? "bg-orange-800 text-white"
+                    : "bg-surface text-navy shadow-sm ring-1 ring-navy/5 dark:shadow-none dark:ring-white/10"
+                }`}
+              >
                 <MarkdownText text={m.content} />
-                <div className={`mt-1 text-[10px] ${isOut ? "text-white/70" : "text-gray-400"}`}>
+                <div
+                  className={`mt-1 text-[10px] ${
+                    isOut
+                      ? "text-white/70"
+                      : "text-navy/50"
+                  }`}
+                >
                   {"_clientId" in m
                     ? (m as any).status === "failed"
                       ? "Failed — tap to retry"
@@ -378,7 +392,7 @@ export function ChatWidget() {
                       // recognises it and does not create a duplicate.
                       c.retryPendingMessage((m as any)._clientId);
                     }}
-                    className="mt-1 text-[10px] underline text-white/90"
+                    className="mt-1 text-[10px] text-white/90 underline"
                   >
                     Retry
                   </button>
@@ -390,7 +404,7 @@ export function ChatWidget() {
         {/* pending merged into messages list above */}
       </div>
 
-      <div className="flex flex-wrap gap-2 border-t border-gray-100 px-3 py-2">
+      <div className="flex flex-wrap gap-2 border-t border-line px-3 py-2">
         <button
           onClick={async () => {
             if (!navigator.geolocation) { alert("Geolocation not supported"); return; }
@@ -408,7 +422,7 @@ export function ChatWidget() {
               (err) => alert("Could not get location: " + err.message),
             );
           }}
-          className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
+          className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
         >
           <MapPin size={13} className="mr-1 inline" aria-hidden />
           Share my location
@@ -418,7 +432,7 @@ export function ChatWidget() {
               <button
                 key={q.label}
                 onClick={() => { setInput(q.text); }}
-                className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
               >
                 {q.label}
               </button>
@@ -427,7 +441,7 @@ export function ChatWidget() {
               <button
                 key={s}
                 onClick={() => sendText(s)}
-                className="rounded-full border border-[#ff7622]/40 bg-[#ff7622]/10 px-3 py-1 text-xs font-medium text-[#c85a12] transition-colors hover:bg-[#ff7622]/20"
+                className="rounded-full border border-orange-800/40 bg-orange-800/10 px-3 py-1 text-xs font-medium text-orange-800 transition-colors hover:bg-orange-800/20"
               >
                 {s}
               </button>
@@ -443,11 +457,11 @@ export function ChatWidget() {
       />
 
       {notice && (
-        <div className="flex items-start gap-2 border-t border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+        <div className="flex items-start gap-2 border-t border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100">
           <p className="flex-1">{notice.text}</p>
           <button
             onClick={() => void retry()}
-            className="flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-white px-2 py-1 font-medium text-amber-900 hover:bg-amber-100"
+            className="flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-amber-100/70 px-2 py-1 font-medium text-amber-950 hover:bg-amber-100 dark:border-amber-300/40 dark:bg-white/10 dark:text-amber-100 dark:hover:bg-white/15"
           >
             <RefreshCw size={12} aria-hidden />
             Retry
@@ -455,14 +469,14 @@ export function ChatWidget() {
           <button
             onClick={() => setNotice(null)}
             aria-label="Dismiss notice"
-            className="shrink-0 rounded-md p-1 text-amber-700 hover:bg-amber-100"
+            className="shrink-0 rounded-md p-1 text-amber-700 hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-white/10"
           >
             <X size={14} />
           </button>
         </div>
       )}
 
-      <div className="flex items-center gap-2 border-t border-gray-200 p-3">
+      <div className="flex items-center gap-2 border-t border-line p-3">
         <input
           value={input}
           disabled={!sessionReady}
@@ -475,13 +489,13 @@ export function ChatWidget() {
                 ? "Complete the security check above"
                 : "Starting chat…"
           }
-          className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#ff7622] disabled:bg-gray-50 disabled:text-gray-400"
+          className="flex-1 rounded-full border border-line bg-surface px-4 py-2 text-sm text-navy outline-none placeholder:text-navy/40 focus:border-orange-800 focus:ring-2 focus:ring-orange-800/20 disabled:bg-surface-muted disabled:text-navy/40"
         />
         <button
           onClick={send}
           disabled={sending || !input.trim() || !sessionReady}
           aria-label="Send message"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff7622] text-white disabled:opacity-50"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-800 text-white transition-colors hover:bg-orange-700 disabled:opacity-50"
         >
           {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
         </button>
