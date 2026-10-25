@@ -159,6 +159,14 @@ jobs:
           NEXT_PUBLIC_TELEMETRY_ENV: ${{ vars.NEXT_PUBLIC_TELEMETRY_ENV || 'production' }}
           TEINCFOOD_API_BASE_URL: ${{ secrets.TEINCFOOD_API_BASE_URL }}
           TEINCFOOD_API_VERSION: ${{ vars.TEINCFOOD_API_VERSION || 'v1' }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          IOS_BUYER_BUNDLE_ID: ${{ vars.IOS_BUYER_BUNDLE_ID || 'com.teincfood.app' }}
+          IOS_BUSINESS_BUNDLE_ID: ${{ vars.IOS_BUSINESS_BUNDLE_ID || 'com.teincfood.business' }}
+          ANDROID_BUYER_PACKAGE: ${{ vars.ANDROID_BUYER_PACKAGE || 'com.teincfood.app' }}
+          ANDROID_BUSINESS_PACKAGE: ${{ vars.ANDROID_BUSINESS_PACKAGE || 'com.teincfood.business' }}
+          ANDROID_BUYER_SHA256_FINGERPRINTS: ${{ vars.ANDROID_BUYER_SHA256_FINGERPRINTS }}
+          ANDROID_BUSINESS_SHA256_FINGERPRINTS: ${{ vars.ANDROID_BUSINESS_SHA256_FINGERPRINTS }}
+          ANDROID_SHA256_FINGERPRINTS: ${{ vars.ANDROID_SHA256_FINGERPRINTS }}
 
       - name: Health check
         run: |
