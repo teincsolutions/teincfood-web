@@ -26,6 +26,13 @@ jobs:
     # resolved to empty and got baked out of the build.
     environment: test
     steps:
+      - name: Free disk space on runner
+        run: |
+          docker container prune -f || true
+          docker image prune -f || true
+          docker builder prune -f || true
+          df -h
+
       - name: Checkout
         run: |
           # Self-hosted workspace persists; previous docker run (as root) may leave
@@ -61,6 +68,13 @@ jobs:
       packages: write
       contents: read
     steps:
+      - name: Free disk space on runner
+        run: |
+          docker container prune -f || true
+          docker image prune -f || true
+          docker builder prune -f || true
+          df -h
+
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
@@ -130,6 +144,13 @@ jobs:
     env:
       IMAGE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
     steps:
+      - name: Free disk space on runner
+        run: |
+          docker container prune -f || true
+          docker image prune -f || true
+          docker builder prune -f || true
+          df -h
+
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
