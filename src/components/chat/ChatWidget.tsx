@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { createLocalStorageAdapter, type Message, type ChatClient } from "@teincfood/chat-client";
 import { MessageCircle, X, Send, Loader2, Maximize2, Minimize2, MapPin, RefreshCw } from "lucide-react";
 import { usePathname } from "@/i18n/routing";
@@ -34,6 +40,12 @@ export function ChatWidget() {
   const [status, setStatus] = useState<string>("disconnected");
   const [sessionReady, setSessionReady] = useState(false);
   const [sending, setSending] = useState(false);
+  // Tracks the visible viewport so the panel can stay above the mobile
+  // keyboard. `100dvh` alone does not shrink when the keyboard opens on iOS.
+  const [visualViewport, setVisualViewport] = useState<{
+    height: number;
+    offsetTop: number;
+  } | null>(null);
   // Notice shown above the composer instead of a chat bubble: a failed
   // security check is not something the customer said, and repeating it in
   // the transcript made the chat look broken.
@@ -249,8 +261,28 @@ export function ChatWidget() {
   }, []);
 
   useEffect(() => {
+    if (!open || typeof window === "undefined") return;
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const update = () =>
+      setVisualViewport({
+        height: viewport.height,
+        offsetTop: viewport.offsetTop,
+      });
+
+    update();
+    viewport.addEventListener("resize", update);
+    viewport.addEventListener("scroll", update);
+    return () => {
+      viewport.removeEventListener("resize", update);
+      viewport.removeEventListener("scroll", update);
+    };
+  }, [open]);
+
+  useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, pending]);
+  }, [messages, pending, visualViewport?.height]);
 
   const sendText = useCallback((raw: string) => {
     const client = clientRef.current;
@@ -312,7 +344,15 @@ export function ChatWidget() {
   if (!open) {
     return (
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          if (typeof window !== "undefined" && window.visualViewport) {
+            setVisualViewport({
+              height: window.visualViewport.height,
+              offsetTop: window.visualViewport.offsetTop,
+            });
+          }
+        }}
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-800 text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800"
         aria-label="Open chat"
       >
@@ -321,15 +361,49 @@ export function ChatWidget() {
     );
   }
 
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 639px)").matches;
+  const keyboardOpen =
+    visualViewport !== null &&
+    visualViewport.height < window.innerHeight - 100;
+  const useViewportPanel = Boolean(
+    visualViewport && (isMobile || keyboardOpen),
+  );
+  const floatingHeight = visualViewport
+    ? Math.min(560, Math.max(0, visualViewport.height - 32))
+    : 0;
+  const panelStyle: CSSProperties | undefined =
+    useViewportPanel && visualViewport
+      ? expanded
+        ? {
+            top: visualViewport.offsetTop + 12,
+            left: 12,
+            right: 12,
+            bottom: "auto",
+            height: Math.max(0, visualViewport.height - 24),
+          }
+        : {
+            top:
+              visualViewport.offsetTop +
+              visualViewport.height -
+              floatingHeight -
+              16,
+            bottom: "auto",
+            height: floatingHeight,
+          }
+      : undefined;
+
   return (
     <div
+      style={panelStyle}
       className={
         expanded
           ? "fixed inset-3 z-50 flex flex-col overflow-hidden rounded-2xl border border-line bg-white text-navy shadow-2xl sm:inset-6"
           : "fixed bottom-4 right-4 z-50 flex h-[min(560px,calc(100dvh-5rem))] w-[min(380px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-line bg-white text-navy shadow-2xl sm:bottom-6 sm:right-6"
       }
     >
-      <div className="flex items-center justify-between bg-orange-800 px-4 py-3 text-white">
+      <div className="flex shrink-0 items-center justify-between bg-orange-800 px-4 py-3 text-white">
         <div>
           <p className="font-semibold">TeincFood Support</p>
           <p className="text-xs opacity-80">
@@ -364,7 +438,7 @@ export function ChatWidget() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface-muted px-4 py-3">
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-surface-muted px-4 py-3">
         {messages.map((m) => {
           const isOut = !!userId && m.sender_id === userId;
           return (
@@ -411,7 +485,7 @@ export function ChatWidget() {
         {/* pending merged into messages list above */}
       </div>
 
-      <div className="flex flex-wrap gap-2 border-t border-line px-3 py-2">
+      <div className="flex shrink-0 gap-2 overflow-x-auto border-t border-line px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-wrap lg:overflow-visible">
         <button
           onClick={async () => {
             if (!navigator.geolocation) { alert("Geolocation not supported"); return; }
@@ -429,7 +503,7 @@ export function ChatWidget() {
               (err) => alert("Could not get location: " + err.message),
             );
           }}
-          className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
+          className="shrink-0 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
         >
           <MapPin size={13} className="mr-1 inline" aria-hidden />
           Share my location
@@ -439,7 +513,7 @@ export function ChatWidget() {
               <button
                 key={q.label}
                 onClick={() => { setInput(q.text); }}
-                className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
+                className="shrink-0 whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1 text-xs text-navy/75 hover:bg-navy/5"
               >
                 {q.label}
               </button>
@@ -448,7 +522,7 @@ export function ChatWidget() {
               <button
                 key={s}
                 onClick={() => sendText(s)}
-                className="rounded-full border border-orange-800/40 bg-orange-800/10 px-3 py-1 text-xs font-medium text-orange-800 transition-colors hover:bg-orange-800/20"
+                className="shrink-0 whitespace-nowrap rounded-full border border-orange-800/40 bg-orange-800/10 px-3 py-1 text-xs font-medium text-orange-800 transition-colors hover:bg-orange-800/20"
               >
                 {s}
               </button>
@@ -459,12 +533,12 @@ export function ChatWidget() {
           collapsed out of the layout once it has done its job. */}
       <div
         ref={turnstileRef}
-        className={showCaptcha ? "flex justify-center px-3 pt-2" : "h-0 overflow-hidden"}
+        className={showCaptcha ? "flex shrink-0 justify-center px-3 pt-2" : "h-0 shrink-0 overflow-hidden"}
         aria-hidden={!showCaptcha}
       />
 
       {notice && (
-        <div className="flex items-start gap-2 border-t border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100">
+        <div className="flex shrink-0 items-start gap-2 border-t border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100">
           <p className="flex-1">{notice.text}</p>
           <button
             onClick={() => void retry()}
@@ -483,12 +557,13 @@ export function ChatWidget() {
         </div>
       )}
 
-      <div className="flex items-center gap-2 border-t border-line p-3">
+      <div className="flex shrink-0 items-center gap-2 border-t border-line p-3">
         <input
           value={input}
           disabled={!sessionReady}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+          enterKeyHint="send"
           placeholder={
             sessionReady
               ? "Type a message…"
@@ -496,13 +571,13 @@ export function ChatWidget() {
                 ? "Complete the security check above"
                 : "Starting chat…"
           }
-          className="flex-1 rounded-full border border-line bg-surface px-4 py-2 text-sm text-navy outline-none placeholder:text-navy/40 focus:border-orange-800 focus:ring-2 focus:ring-orange-800/20 disabled:bg-surface-muted disabled:text-navy/40"
+          className="min-w-0 flex-1 rounded-full border border-line bg-surface px-4 py-2 text-base text-navy outline-none placeholder:text-navy/40 focus:border-orange-800 focus:ring-2 focus:ring-orange-800/20 disabled:bg-surface-muted disabled:text-navy/40"
         />
         <button
           onClick={send}
           disabled={sending || !input.trim() || !sessionReady}
           aria-label="Send message"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-800 text-white transition-colors hover:bg-orange-700 disabled:opacity-50"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-800 text-white transition-colors hover:bg-orange-700 disabled:opacity-50"
         >
           {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
         </button>
