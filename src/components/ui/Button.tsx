@@ -6,7 +6,13 @@ import type {
 } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "outline" | "ghost" | "inverse";
+type Variant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "inverse"
+  | "danger";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
@@ -18,7 +24,9 @@ const variants: Record<Variant, string> = {
     "border border-navy/20 bg-white text-navy hover:border-navy/40 hover:bg-navy/[0.03] focus-visible:outline-navy",
   ghost: "text-navy hover:bg-navy/5 focus-visible:outline-navy",
   inverse:
-    "bg-white text-navy hover:bg-surface focus-visible:outline-white",
+    "bg-[#ffffff] text-[#1e1e2e] hover:bg-[#f2f2f2] focus-visible:outline-white",
+  danger:
+    "bg-red-600 text-white hover:bg-red-700 focus-visible:outline-red-600",
 };
 
 const sizes: Record<Size, string> = {

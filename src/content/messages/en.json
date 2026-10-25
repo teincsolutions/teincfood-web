@@ -71,7 +71,7 @@
     },
     "apps": {
       "title": "App showcase — Teinc Food",
-      "description": "Preview Teinc Food on desktop, mobile and tablet devices."
+      "description": "Preview Teinc Food on desktop, mobile and tablet devices, and download the customer or business app for iOS and Android."
     }
   },
   "nav": {
@@ -634,8 +634,18 @@
     "learnMore": "Learn more"
   },
   "deleteAccount": {
+    "eyebrow": "Account security",
     "title": "Delete your Teinc Food account",
     "intro": "We're sorry to see you go. Verify your identity to request deletion of your account. We deactivate it right away and remove your personal data within 30 days — you can still restore it before then.",
+    "aside": {
+      "title": "Before you continue",
+      "deactivate": "Your account is deactivated immediately.",
+      "data": "Personal data is removed within 30 days.",
+      "restore": "You can restore your account during that period.",
+      "help": "Need help with your account?",
+      "helpBody": "Our support team can help if you cannot access your account.",
+      "contact": "Contact support"
+    },
     "step": {
       "identify": "Identify",
       "verify": "Verify",
@@ -658,6 +668,7 @@
       "email": "Email",
       "password": "Password",
       "continue": "Continue",
+      "orContinueWith": "Or continue with",
       "google": "Continue with Google",
       "apple": "Continue with Apple",
       "back": "Back",
@@ -868,6 +879,10 @@
     "detected": "Detected: {platform}",
     "detectedUnknown": "Choose your platform below.",
     "appLabel": "Choose an app",
+    "appsEyebrow": "Mobile apps",
+    "appsTitle": "Get the Teinc Food apps",
+    "appsSubtitle": "Scan the QR code or download directly from the App Store or Google Play.",
+    "scan": "Scan to download",
     "tabs": {
       "buyer": "Customer app",
       "business": "Business app",
@@ -882,7 +897,9 @@
       "businessBody": "Run orders, menus, earnings and rider deliveries from one app.",
       "appStore": "Download on the App Store",
       "playStore": "Get it on Google Play",
-      "noLinks": "Store links are being finalised. Contact support and we will send you the correct link.",
+      "appStoreSoon": "App Store — coming soon",
+      "playStoreSoon": "Google Play — coming soon",
+      "noLinks": "Store links are being finalised. Search for Teinc Food in your app store in the meantime.",
       "searchHint": "You can also search for Teinc Food in your app store."
     },
     "desktop": {
@@ -894,9 +911,9 @@
       "downloadFor": "Download for {platform}",
       "choosePlatform": "Choose your platform",
       "appleSiliconNote": "This selects the Apple Silicon build. Intel Macs can use the Intel download below.",
-      "noRelease": "Installers are being published. Contact support if you need a build today.",
+      "noRelease": "Installers are being published. Check back soon.",
       "noReleaseTitle": "Installers are not available yet",
-      "noReleaseBody": "The desktop download links go live with the next release. Contact us and we will send you the current build.",
+      "noReleaseBody": "The desktop download links go live with the next release. Check back soon.",
       "allPlatforms": "All installers",
       "requirements": "Windows 10 or later · macOS 12 Monterey or later · Ubuntu 20.04 or equivalent",
       "mobileNotice": "The desktop app runs on Windows, macOS and Linux. Open this page on your computer to download it.",
@@ -934,8 +951,8 @@
     },
     "help": {
       "title": "Need help getting set up?",
-      "body": "Read the guides inside the app under Profile, then Help, or contact the team.",
-      "contact": "Contact support",
+      "body": "Read the guides inside the app under Profile, then Help, or chat with us on WhatsApp.",
+      "whatsapp": "Chat on WhatsApp",
       "faq": "Read the FAQ"
     },
     "platforms": {

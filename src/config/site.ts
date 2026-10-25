@@ -16,18 +16,39 @@ function env(name: string): string {
   return process.env[name] ?? "";
 }
 
+export type MobileAppId = "buyer" | "business";
+
+const defaultBundleIds: Record<MobileAppId, string> = {
+  buyer: "com.teincfood.app",
+  business: "com.teincfood.business",
+};
+
+function playStoreUrl(packageName: string): string {
+  return `https://play.google.com/store/apps/details?id=${packageName}`;
+}
+
+/**
+ * Public store links.
+ *
+ * Play Store URLs fall back to the known package names so the download page
+ * still works when the CI variables are not configured. App Store URLs have
+ * no safe fallback: set the real listing URLs before launch, otherwise the
+ * UI shows an "App Store — coming soon" state.
+ */
 export const storeLinks: StoreLinks = {
   buyer: {
     appStore: env("NEXT_PUBLIC_BUYER_APP_STORE"),
-    playStore: env("NEXT_PUBLIC_BUYER_PLAY_STORE"),
+    playStore:
+      env("NEXT_PUBLIC_BUYER_PLAY_STORE") ||
+      playStoreUrl(defaultBundleIds.buyer),
   },
   business: {
     appStore: env("NEXT_PUBLIC_BUSINESS_APP_STORE"),
-    playStore: env("NEXT_PUBLIC_BUSINESS_PLAY_STORE"),
+    playStore:
+      env("NEXT_PUBLIC_BUSINESS_PLAY_STORE") ||
+      playStoreUrl(defaultBundleIds.business),
   },
 };
-
-export type MobileAppId = "buyer" | "business";
 
 export interface MobileAppConfig {
   id: MobileAppId;
@@ -40,11 +61,6 @@ export interface MobileAppConfig {
   appStore: string;
   playStore: string;
 }
-
-const defaultBundleIds: Record<MobileAppId, string> = {
-  buyer: "com.teincfood.app",
-  business: "com.teincfood.business",
-};
 
 const defaultSchemes: Record<MobileAppId, string> = {
   buyer: "teincfood",

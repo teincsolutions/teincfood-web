@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Apple,
-  ArrowRight,
   Check,
   Download,
   HardDrive,
+  MessageCircle,
   Monitor,
   RefreshCw,
   ShieldCheck,
@@ -17,6 +17,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
+import { QrCode } from "@/components/install/QrCode";
+import { StoreButton } from "@/components/download/StoreButton";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import {
   formatBytes,
@@ -226,8 +229,11 @@ const MobileDownloads = ({
   stores: { appStore: string; playStore: string };
 }) => {
   const t = useTranslations("download");
+  const locale = useLocale();
   const key = app;
   const hasStoreLinks = Boolean(stores.appStore || stores.playStore);
+  const baseUrl = siteConfig.url.replace(/\/+$/, "");
+  const qrUrl = `${baseUrl}/api/apps/${key}?locale=${locale}`;
 
   return (
     <Section className="bg-white">
@@ -250,45 +256,40 @@ const MobileDownloads = ({
             {t(`mobile.${key}Body`)}
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            {stores.appStore ? (
-              <a
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-1 flex-col gap-3">
+              <StoreButton
+                kind="apple"
                 href={stores.appStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 flex-1 items-center justify-center gap-2.5 rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
-              >
-                <Apple aria-hidden="true" className="size-5" />
-                {t("mobile.appStore")}
-              </a>
-            ) : null}
-            {stores.playStore ? (
-              <a
+                label={t("mobile.appStore")}
+                soonLabel={t("mobile.appStoreSoon")}
+                className="w-full"
+              />
+              <StoreButton
+                kind="play"
                 href={stores.playStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 flex-1 items-center justify-center gap-2.5 rounded-xl bg-navy px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
-              >
-                <Smartphone aria-hidden="true" className="size-5" />
-                {t("mobile.playStore")}
-              </a>
-            ) : null}
+                label={t("mobile.playStore")}
+                soonLabel={t("mobile.playStoreSoon")}
+                className="w-full"
+              />
+            </div>
+            <div className="flex shrink-0 flex-col items-center gap-2">
+              <QrCode
+                value={qrUrl}
+                size={112}
+                label={t("scan")}
+                className="border border-navy/10"
+              />
+              <p className="max-w-[8rem] text-center text-[11px] leading-tight text-navy/50">
+                {t("scan")}
+              </p>
+            </div>
           </div>
 
           {!hasStoreLinks ? (
-            <div className="mt-5 rounded-xl border border-navy/10 bg-white p-4">
-              <p className="text-sm leading-relaxed text-navy/65">
-                {t("mobile.noLinks")}
-              </p>
-              <ButtonLink
-                href="/contact"
-                variant="outline"
-                size="sm"
-                className="mt-3"
-              >
-                {t("help.contact")}
-              </ButtonLink>
-            </div>
+            <p className="mt-4 text-sm leading-relaxed text-navy/55">
+              {t("mobile.noLinks")}
+            </p>
           ) : (
             <p className="mt-4 text-xs text-navy/45">{t("mobile.searchHint")}</p>
           )}
@@ -384,8 +385,13 @@ function DesktopDownloads({
               <p className="mt-2 text-sm leading-relaxed text-navy/65">
                 {t("desktop.noReleaseBody")}
               </p>
-              <ButtonLink href="/contact" className="mt-4" size="md">
-                {t("help.contact")}
+              <ButtonLink
+                href="/faq"
+                variant="outline"
+                className="mt-4"
+                size="md"
+              >
+                {t("help.faq")}
               </ButtonLink>
             </div>
           ) : platform === "unknown" ? (
@@ -536,9 +542,15 @@ function DesktopDownloads({
             {t("help.body")}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <ButtonLink href="/contact" variant="primary" size="lg">
-              {t("help.contact")}
-              <ArrowRight aria-hidden="true" className="size-4" />
+            <ButtonLink
+              href={siteConfig.whatsappUrl}
+              variant="primary"
+              size="lg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle aria-hidden="true" className="size-5" />
+              {t("help.whatsapp")}
             </ButtonLink>
             <ButtonLink href="/faq" variant="inverse" size="lg">
               {t("help.faq")}

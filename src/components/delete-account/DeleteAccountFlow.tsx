@@ -13,13 +13,14 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { FormField, Input } from "@/components/forms";
 import { authConfig } from "@/config/site";
 import { toast } from "@/components/ui/Toaster";
 import { trackEvent } from "@/utils/observability";
 import { appleAuthHelpers } from "react-apple-signin-auth";
 import { cn } from "@/lib/utils";
 
-type Method = "phone" | "email" | "oidc";
+type Method = "phone" | "email";
 type OidcProvider = "google" | "apple";
 type Step = "method" | "verify" | "confirm" | "done";
 type Status = "idle" | "loading";
@@ -213,18 +214,27 @@ export function DeleteAccountFlow() {
   const confirmEnabled = confirm.trim().toUpperCase() === "DELETE" && !busy;
 
   return (
-    <div className="rounded-3xl border border-border bg-white p-6 shadow-sm sm:p-8">
+    <div
+      id="delete-account-form"
+      className="scroll-mt-24 rounded-2xl border border-line bg-white p-5 text-navy shadow-sm sm:p-6"
+    >
       <StepIndicator step={step} />
 
       {step === "method" && (
-        <div className="mt-8">
+        <div className="mt-6">
           <MethodTabs method={method} onChange={setMethod} />
 
           {method === "phone" && (
-            <form onSubmit={handleSendOtp} className="mt-6 space-y-4" noValidate>
-              <Field label={t("form.phone")} error={fieldErrors.phone}>
-                <input
+            <form
+              onSubmit={handleSendOtp}
+              className="mt-5 space-y-4"
+              noValidate
+              aria-busy={busy}
+            >
+              <FormField label={t("form.phone")} error={fieldErrors.phone} required>
+                <Input
                   type="tel"
+                  name="phone"
                   inputMode="tel"
                   autoComplete="tel"
                   value={phone}
@@ -233,15 +243,15 @@ export function DeleteAccountFlow() {
                     setFieldError("phone");
                   }}
                   placeholder="+233…"
-                  aria-invalid={!!fieldErrors.phone}
-                  className={cn(inputClass, fieldErrors.phone && inputErrorClass)}
+                  disabled={busy}
                 />
-              </Field>
+              </FormField>
 
               {otpSent && (
-                <Field label={t("form.code")} error={fieldErrors.code}>
-                  <input
+                <FormField label={t("form.code")} error={fieldErrors.code} required>
+                  <Input
                     type="text"
+                    name="code"
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     value={code}
@@ -249,37 +259,56 @@ export function DeleteAccountFlow() {
                       setCode(e.target.value);
                       setFieldError("code");
                     }}
-                    aria-invalid={!!fieldErrors.code}
-                    className={cn(inputClass, fieldErrors.code && inputErrorClass)}
+                    disabled={busy}
                   />
-                </Field>
+                </FormField>
               )}
 
               {!otpSent ? (
-                <Button type="submit" variant="primary" size="lg" disabled={busy} className="w-full sm:w-auto">
-                  {busy ? <Spinner /> : <Smartphone className="size-5" aria-hidden="true" />}
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="md"
+                  disabled={busy}
+                  className="w-full sm:w-auto"
+                >
+                  {busy ? (
+                    <Spinner />
+                  ) : (
+                    <Smartphone className="size-5" aria-hidden="true" />
+                  )}
                   {t("form.sendCode")}
                 </Button>
               ) : (
                 <Button
                   type="button"
                   variant="primary"
-                  size="lg"
+                  size="md"
                   disabled={busy || !code.trim()}
                   className="w-full sm:w-auto"
                   onClick={() => setStep("verify")}
                 >
-                  {busy ? <Spinner /> : <ShieldCheck className="size-5" aria-hidden="true" />}
-                  {`${t("form.verify")} →`}
+                  {busy ? (
+                    <Spinner />
+                  ) : (
+                    <ShieldCheck className="size-5" aria-hidden="true" />
+                  )}
+                  {t("form.verify")}
                 </Button>
               )}
 
               {otpSent && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm">
                   {resendIn > 0 ? (
-                    <p className="text-sm text-navy/50">{t("form.resendIn", { seconds: resendIn })}</p>
+                    <p className="text-navy/50">
+                      {t("form.resendIn", { seconds: resendIn })}
+                    </p>
                   ) : (
-                    <button type="button" onClick={() => submitOtp()} className="text-sm font-semibold text-orange hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => submitOtp()}
+                      className="font-semibold text-orange-800 underline-offset-4 hover:underline"
+                    >
                       {t("form.resend")}
                     </button>
                   )}
@@ -289,77 +318,124 @@ export function DeleteAccountFlow() {
           )}
 
           {method === "email" && (
-            <form onSubmit={handleEmailLogin} className="mt-6 space-y-4" noValidate>
-              <Field label={t("form.email")} error={fieldErrors.email}>
-                <input
+            <form
+              onSubmit={handleEmailLogin}
+              className="mt-5 space-y-4"
+              noValidate
+              aria-busy={busy}
+            >
+              <FormField label={t("form.email")} error={fieldErrors.email} required>
+                <Input
                   type="email"
+                  name="email"
                   autoComplete="email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     setFieldError("email");
                   }}
-                  aria-invalid={!!fieldErrors.email}
-                  className={cn(inputClass, fieldErrors.email && inputErrorClass)}
+                  disabled={busy}
                 />
-              </Field>
-              <Field label={t("form.password")} error={fieldErrors.password}>
-                <input
+              </FormField>
+              <FormField
+                label={t("form.password")}
+                error={fieldErrors.password}
+                required
+              >
+                <Input
                   type="password"
+                  name="password"
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setFieldError("password");
                   }}
-                  aria-invalid={!!fieldErrors.password}
-                  className={cn(inputClass, fieldErrors.password && inputErrorClass)}
+                  disabled={busy}
                 />
-              </Field>
-              <Button type="submit" variant="primary" size="lg" disabled={busy} className="w-full sm:w-auto">
-                {busy ? <Spinner /> : <KeyRound className="size-5" aria-hidden="true" />}
+              </FormField>
+              <Button
+                type="submit"
+                variant="primary"
+                size="md"
+                disabled={busy}
+                className="w-full sm:w-auto"
+              >
+                {busy ? (
+                  <Spinner />
+                ) : (
+                  <KeyRound className="size-5" aria-hidden="true" />
+                )}
                 {t("form.continue")}
               </Button>
             </form>
           )}
 
-          {method === "oidc" && (
-            <div className="mt-6 space-y-3">
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <SocialButton
-                  variant="google"
-                  onClick={() => handleOidc("google")}
-                  disabled={busy || !authConfig.googleClientId}
-                  spinner={busy}
-                  title={!authConfig.googleClientId ? t("errors.oidcGoogle") : undefined}
-                >
-                  {t("form.google")}
-                </SocialButton>
-                <SocialButton
-                  variant="apple"
-                  onClick={() => handleOidc("apple")}
-                  disabled={busy || !authConfig.appleClientId}
-                  spinner={busy}
-                  title={!authConfig.appleClientId ? t("errors.oidcApple") : undefined}
-                >
-                  {t("form.apple")}
-                </SocialButton>
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <span className="w-full border-t border-line" />
               </div>
-              {(!authConfig.googleClientId || !authConfig.appleClientId) && (
-                <p className="text-sm text-navy/50">{t("errors.oidcConfig")}</p>
-              )}
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-xs font-semibold uppercase tracking-[0.12em] text-navy/45">
+                  {t("form.orContinueWith")}
+                </span>
+              </div>
             </div>
-          )}
+
+            <div className="mt-4 grid grid-cols-1 gap-2.5">
+              <SocialButton
+                variant="google"
+                onClick={() => handleOidc("google")}
+                disabled={busy || !authConfig.googleClientId}
+                spinner={busy}
+                title={
+                  !authConfig.googleClientId
+                    ? t("errors.oidcGoogle")
+                    : undefined
+                }
+              >
+                {t("form.google")}
+              </SocialButton>
+              <SocialButton
+                variant="apple"
+                onClick={() => handleOidc("apple")}
+                disabled={busy || !authConfig.appleClientId}
+                spinner={busy}
+                title={
+                  !authConfig.appleClientId
+                    ? t("errors.oidcApple")
+                    : undefined
+                }
+              >
+                {t("form.apple")}
+              </SocialButton>
+            </div>
+
+            {(!authConfig.googleClientId || !authConfig.appleClientId) && (
+              <p className="mt-3 text-sm text-navy/50">
+                {t("errors.oidcConfig")}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
       {step === "verify" && (
-        <div className="mt-8">
-          <p className="text-navy/70">{t("form.verifyIntro", { phone })}</p>
-          <form onSubmit={handleVerifyOtp} className="mt-4 space-y-4" noValidate>
-            <Field label={t("form.code")} error={fieldErrors.code}>
-              <input
+        <div className="mt-6">
+          <p className="text-sm text-navy/70">
+            {t("form.verifyIntro", { phone })}
+          </p>
+          <form
+            onSubmit={handleVerifyOtp}
+            className="mt-4 space-y-4"
+            noValidate
+            aria-busy={busy}
+          >
+            <FormField label={t("form.code")} error={fieldErrors.code} required>
+              <Input
                 type="text"
+                name="code"
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 value={code}
@@ -367,21 +443,41 @@ export function DeleteAccountFlow() {
                   setCode(e.target.value);
                   setFieldError("code");
                 }}
-                aria-invalid={!!fieldErrors.code}
-                className={cn(inputClass, fieldErrors.code && inputErrorClass)}
+                disabled={busy}
               />
-            </Field>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <BackButton onClick={() => setStep("method")} />
-              <Button type="submit" variant="primary" size="lg" disabled={busy || !code}>
-                {busy ? <Spinner /> : <ShieldCheck className="size-5" aria-hidden="true" />}
+            </FormField>
+
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+              <BackButton
+                onClick={() => setStep("method")}
+                className="w-full sm:w-auto"
+              />
+              <Button
+                type="submit"
+                variant="primary"
+                size="md"
+                disabled={busy || !code}
+                className="w-full sm:w-auto"
+              >
+                {busy ? (
+                  <Spinner />
+                ) : (
+                  <ShieldCheck className="size-5" aria-hidden="true" />
+                )}
                 {t("form.verify")}
               </Button>
             </div>
+
             {resendIn > 0 ? (
-              <p className="text-sm text-navy/50">{t("form.resendIn", { seconds: resendIn })}</p>
+              <p className="text-sm text-navy/50">
+                {t("form.resendIn", { seconds: resendIn })}
+              </p>
             ) : (
-              <button type="button" onClick={() => submitOtp()} className="mx-auto block text-sm font-semibold text-orange hover:underline">
+              <button
+                type="button"
+                onClick={() => submitOtp()}
+                className="text-sm font-semibold text-orange-800 underline-offset-4 hover:underline"
+              >
                 {t("form.resend")}
               </button>
             )}
@@ -390,27 +486,42 @@ export function DeleteAccountFlow() {
       )}
 
       {step === "confirm" && account && (
-        <div className="mt-8 space-y-5">
-          <div className="rounded-2xl border border-orange/25 bg-orange-50/50 p-5">
+        <div className="mt-6 space-y-4">
+          <div className="rounded-xl border border-orange-800/20 bg-orange-800/5 p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="mt-0.5 size-5 shrink-0 text-orange-700" aria-hidden="true" />
+              <AlertTriangle
+                className="mt-0.5 size-5 shrink-0 text-orange-800"
+                aria-hidden="true"
+              />
               <div>
                 <p className="font-bold text-navy">{t("confirm.warning")}</p>
-                <p className="mt-1 text-sm text-navy/70">{t("confirm.deleted")}</p>
+                <p className="mt-1 text-sm leading-relaxed text-navy/70">
+                  {t("confirm.deleted")}
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-2 rounded-2xl border border-border bg-surface p-5">
+          <div className="space-y-2 rounded-xl border border-line bg-surface p-4">
             <Row label={t("confirm.email")} value={account.email ?? "—"} />
             <Row label={t("confirm.phone")} value={account.phone ?? "—"} />
             <Row label={t("confirm.id")} value={account.id} />
           </div>
 
-          <form onSubmit={handleDelete} className="space-y-4" noValidate>
-            <Field label={t("confirm.typeDelete")} error={fieldErrors.confirm}>
-              <input
+          <form
+            onSubmit={handleDelete}
+            className="space-y-4"
+            noValidate
+            aria-busy={busy}
+          >
+            <FormField
+              label={t("confirm.typeDelete")}
+              error={fieldErrors.confirm}
+              required
+            >
+              <Input
                 type="text"
+                name="confirm"
                 value={confirm}
                 onChange={(e) => {
                   setConfirm(e.target.value);
@@ -419,20 +530,28 @@ export function DeleteAccountFlow() {
                 autoCapitalize="characters"
                 autoCorrect="off"
                 spellCheck={false}
-                aria-invalid={!!fieldErrors.confirm}
-                className={cn(inputClass, "uppercase tracking-widest", fieldErrors.confirm && inputErrorClass)}
+                className="uppercase tracking-widest"
+                disabled={busy}
               />
-            </Field>
-            <div className="flex items-center gap-4 sm:gap-3">
-              <BackButton onClick={() => setStep("method")} />
+            </FormField>
+
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+              <BackButton
+                onClick={() => setStep("method")}
+                className="w-full sm:w-auto"
+              />
               <Button
                 type="submit"
-                variant="outline"
-                size="lg"
+                variant="danger"
+                size="md"
                 disabled={!confirmEnabled}
-                className="border-red-600 text-red-600 hover:border-red-700 hover:bg-red-600"
+                className="w-full sm:w-auto"
               >
-                {busy ? <Spinner /> : <ShieldCheck className="size-5" aria-hidden="true" />}
+                {busy ? (
+                  <Spinner />
+                ) : (
+                  <ShieldCheck className="size-5" aria-hidden="true" />
+                )}
                 {t("form.delete")}
               </Button>
             </div>
@@ -441,50 +560,70 @@ export function DeleteAccountFlow() {
       )}
 
       {step === "done" && (
-        <div className="mt-10 text-center">
-          <CheckCircle2 className="mx-auto size-14 text-green-600" aria-hidden="true" />
-          <h3 className="mt-5 text-2xl font-extrabold text-navy">{t("done.title")}</h3>
-          <p className="mx-auto mt-3 max-w-md text-navy/70">{t("done.body")}</p>
+        <div
+          className="mt-6 rounded-xl border border-green-600/20 bg-green-50/70 p-5 text-center dark:bg-green-400/10"
+          role="status"
+          aria-live="polite"
+        >
+          <CheckCircle2
+            className="mx-auto size-12 text-green-600 dark:text-green-400"
+            aria-hidden="true"
+          />
+          <h3 className="mt-4 text-xl font-extrabold text-navy">
+            {t("done.title")}
+          </h3>
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-navy/70">
+            {t("done.body")}
+          </p>
         </div>
       )}
     </div>
   );
 }
 
-const inputClass =
-  "w-full rounded-xl border border-navy/15 bg-surface px-4 py-3 text-navy outline-none transition-colors focus:border-orange focus:outline focus:outline-2 focus:outline-orange/30";
-const inputErrorClass = "border-red-500 focus:border-red-500 focus:outline-red-500/30";
-
 // --- sub-components ---
 
 function StepIndicator({ step }: { step: Step }) {
   const t = useTranslations("deleteAccount");
   const order: Step[] = ["method", "verify", "confirm", "done"];
-  const index = order.indexOf(step);
-  const labels = [t("step.identify"), t("step.verify"), t("step.confirm"), t("step.done")];
+  const index = Math.max(0, order.indexOf(step));
+  const labels = [
+    t("step.identify"),
+    t("step.verify"),
+    t("step.confirm"),
+    t("step.done"),
+  ];
+
   return (
-    <ol className="flex flex-wrap items-center gap-2">
-      {order.map((s, i) => {
-        const active = i === index;
-        const done = i < index;
-        return (
-          <li key={s} className="flex items-center gap-2">
-            <span
-              className={cn(
-                "grid size-8 place-items-center rounded-full text-center text-sm font-bold",
-                done || active ? "bg-orange text-white" : "bg-surface text-navy/40",
-              )}
-            >
-              {done ? <CheckCircle2 className="size-4" aria-hidden="true" /> : i + 1}
-            </span>
-            <span className={cn("hidden text-sm font-semibold sm:inline", active ? "text-navy" : "text-navy/40")}>
-              {labels[i]}
-            </span>
-            {i < order.length - 1 && <span className="h-px w-4 bg-border" />}
-          </li>
-        );
-      })}
-    </ol>
+    <div>
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-800">
+          {labels[index]}
+        </p>
+        <p className="text-xs font-semibold text-navy/45">
+          {index + 1} / {order.length}
+        </p>
+      </div>
+      <div
+        className="mt-2 flex gap-1.5"
+        role="progressbar"
+        aria-valuemin={1}
+        aria-valuemax={order.length}
+        aria-valuenow={index + 1}
+        aria-valuetext={labels[index]}
+        aria-label={labels[index]}
+      >
+        {order.map((stepName, i) => (
+          <span
+            key={stepName}
+            className={cn(
+              "h-1.5 flex-1 rounded-full transition-colors",
+              i <= index ? "bg-orange-800" : "bg-navy/10",
+            )}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -493,48 +632,40 @@ function MethodTabs({ method, onChange }: { method: Method; onChange: (_m: Metho
   const tabs: { key: Method; label: string }[] = [
     { key: "phone", label: t("method.phone") },
     { key: "email", label: t("method.email") },
-    { key: "oidc", label: t("method.oidc") },
   ];
+
   return (
     <div className="flex flex-wrap gap-2">
-      {tabs.map((tab) => (
-        <button
-          key={tab.key}
-          type="button"
-          onClick={() => onChange(tab.key)}
-          className={cn(
-            "rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
-            method === tab.key
-              ? "border-orange bg-orange/10 text-orange-700"
-              : "border-border text-navy/60 hover:border-navy/30",
-          )}
-        >
-          {tab.label}
-        </button>
-      ))}
+      {tabs.map((tab) => {
+        const active = method === tab.key;
+        return (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => onChange(tab.key)}
+            aria-pressed={active}
+            className={cn(
+              "min-h-10 rounded-full border px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+              active
+                ? "border-orange-800/30 bg-orange-800/10 text-orange-800"
+                : "border-line bg-white text-navy/60 hover:border-navy/25 hover:text-navy",
+            )}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
     </div>
-  );
-}
-
-function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-sm font-bold text-navy">{label}</span>
-      {children}
-      {error && (
-        <span className="mt-1.5 block text-sm font-semibold text-red-600" role="alert">
-          {error}
-        </span>
-      )}
-    </label>
   );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 text-sm">
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3 text-sm">
       <span className="text-navy/50">{label}</span>
-      <span className="font-semibold text-navy">{value}</span>
+      <span className="break-all text-right font-semibold text-navy">
+        {value}
+      </span>
     </div>
   );
 }
@@ -592,37 +723,46 @@ function SocialButton({
   title?: string;
   children: ReactNode;
 }) {
-  const styles =
-    variant === "google"
-      ? "border-navy/10 bg-white text-navy hover:border-navy/25"
-      : "border-black bg-black text-white hover:bg-navy";
+  const isApple = variant === "apple";
 
   return (
     <Button
       type="button"
-      variant="outline"
-      size="md"
+      variant={isApple ? "secondary" : "outline"}
+      size="sm"
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className={cn("w-full", styles, disabled && !spinner && "opacity-60")}
+      className="w-full"
     >
       {spinner ? (
         <Spinner />
-      ) : variant === "google" ? (
-        <GoogleIcon />
-      ) : (
+      ) : isApple ? (
         <AppleIcon />
+      ) : (
+        <GoogleIcon />
       )}
       {children}
     </Button>
   );
 }
 
-function BackButton({ onClick }: { onClick: () => void }) {
+function BackButton({
+  onClick,
+  className,
+}: {
+  onClick: () => void;
+  className?: string;
+}) {
   const t = useTranslations("deleteAccount");
   return (
-    <Button type="button" variant="ghost" size="md" onClick={onClick}>
+    <Button
+      type="button"
+      variant="ghost"
+      size="md"
+      onClick={onClick}
+      className={className}
+    >
       <ArrowLeft className="size-4" aria-hidden="true" />
       {t("form.back")}
     </Button>

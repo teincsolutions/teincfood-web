@@ -87,11 +87,11 @@ export function Navbar() {
     >
       <nav
         aria-label="Main"
-        className="container-site flex h-[72px] items-center justify-between gap-4"
+        className="container-site flex h-[72px] items-center justify-between gap-3"
       >
-        <Logo priority />
+        <Logo priority className="shrink-0" />
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-0.5 whitespace-nowrap xl:flex">
           <li>
             <Dropdown
               id="customers-menu"
@@ -144,7 +144,7 @@ export function Navbar() {
             <Link
               href="/rider"
               className={cn(
-                "inline-flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+                "inline-flex min-h-11 items-center rounded-lg px-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
                 isActive(pathname, "/rider")
                   ? "bg-navy/[0.06] text-navy"
                   : "text-navy/70 hover:bg-navy/5 hover:text-navy",
@@ -158,7 +158,7 @@ export function Navbar() {
             <Link
               href="/apps"
               className={cn(
-                "inline-flex min-h-11 items-center rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+                "inline-flex min-h-11 items-center rounded-lg px-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
                 isActive(pathname, "/apps")
                   ? "bg-navy/[0.06] text-navy"
                   : "text-navy/70 hover:bg-navy/5 hover:text-navy",
@@ -199,7 +199,12 @@ export function Navbar() {
             <LocaleSwitcher />
           </div>
           <div className="hidden lg:block">
-            <ButtonLink href="/download" variant="primary" size="md">
+            <ButtonLink
+              href="/download"
+              variant="primary"
+              size="md"
+              className="min-w-44 shrink-0 whitespace-nowrap"
+            >
               {t("download")}
             </ButtonLink>
           </div>
@@ -209,7 +214,7 @@ export function Navbar() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             onClick={() => setMobileOpen((current) => !current)}
-            className="inline-flex size-12 items-center justify-center rounded-lg text-navy transition-colors hover:bg-navy/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800 lg:hidden"
+            className="inline-flex size-12 items-center justify-center rounded-lg text-navy transition-colors hover:bg-navy/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800 xl:hidden"
           >
             {mobileOpen ? (
               <X className="size-6" aria-hidden="true" />
@@ -223,7 +228,7 @@ export function Navbar() {
       {mobileOpen && (
         <div
           id="mobile-menu"
-          className="border-t border-navy/5 bg-white lg:hidden"
+          className="border-t border-navy/5 bg-white xl:hidden"
         >
           <div className="container-site max-h-[calc(100dvh-72px)] space-y-6 overflow-y-auto py-5">
             <div>
@@ -334,7 +339,7 @@ function Dropdown({
         aria-controls={id}
         onClick={onToggle}
         className={cn(
-          "inline-flex min-h-11 items-center gap-1 rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
+          "inline-flex min-h-11 items-center gap-1 rounded-lg px-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-800",
           active || open
             ? "bg-navy/[0.06] text-navy"
             : "text-navy/70 hover:bg-navy/5 hover:text-navy",

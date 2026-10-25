@@ -71,7 +71,7 @@
     },
     "apps": {
       "title": "Aperçu des apps — Teinc Food",
-      "description": "Découvrez Teinc Food sur ordinateur, mobile et tablette."
+      "description": "Découvrez Teinc Food sur ordinateur, mobile et tablette, et téléchargez l’app client ou Business pour iOS et Android."
     }
   },
   "nav": {
@@ -634,8 +634,18 @@
     "learnMore": "En savoir plus"
   },
   "deleteAccount": {
+    "eyebrow": "Sécurité du compte",
     "title": "Supprimer votre compte Teinc Food",
     "intro": "Nous sommes désolés de vous voir partir. Vérifiez votre identité pour demander la suppression de votre compte. Il est désactivé immédiatement et vos données personnelles sont supprimées dans les 30 jours — vous pouvez encore le restaurer d'ici là.",
+    "aside": {
+      "title": "Avant de continuer",
+      "deactivate": "Votre compte est désactivé immédiatement.",
+      "data": "Vos données personnelles sont supprimées dans les 30 jours.",
+      "restore": "Vous pouvez restaurer votre compte pendant cette période.",
+      "help": "Besoin d'aide avec votre compte ?",
+      "helpBody": "Notre équipe peut vous aider si vous ne pouvez pas accéder à votre compte.",
+      "contact": "Contacter le support"
+    },
     "step": {
       "identify": "Identifier",
       "verify": "Vérifier",
@@ -658,6 +668,7 @@
       "email": "E-mail",
       "password": "Mot de passe",
       "continue": "Continuer",
+      "orContinueWith": "Ou continuer avec",
       "google": "Continuer avec Google",
       "apple": "Continuer avec Apple",
       "back": "Retour",
@@ -868,6 +879,10 @@
     "detected": "Détecté : {platform}",
     "detectedUnknown": "Choisissez votre plateforme ci-dessous.",
     "appLabel": "Choisir une app",
+    "appsEyebrow": "Applications mobiles",
+    "appsTitle": "Téléchargez les apps Teinc Food",
+    "appsSubtitle": "Scannez le code QR ou téléchargez directement depuis l’App Store ou Google Play.",
+    "scan": "Scannez pour télécharger",
     "tabs": {
       "buyer": "App client",
       "business": "App Business",
@@ -882,7 +897,9 @@
       "businessBody": "Gérez commandes, menus, revenus et livraisons de vos livreurs depuis une seule app.",
       "appStore": "Télécharger sur l’App Store",
       "playStore": "Disponible sur Google Play",
-      "noLinks": "Les liens vers les stores sont en cours de finalisation. Contactez le support et nous vous enverrons le bon lien.",
+      "appStoreSoon": "App Store — bientôt disponible",
+      "playStoreSoon": "Google Play — bientôt disponible",
+      "noLinks": "Les liens vers les stores sont en cours de finalisation. Recherchez Teinc Food dans votre store en attendant.",
       "searchHint": "Vous pouvez aussi rechercher Teinc Food dans votre store."
     },
     "desktop": {
@@ -894,9 +911,9 @@
       "downloadFor": "Télécharger pour {platform}",
       "choosePlatform": "Choisir votre plateforme",
       "appleSiliconNote": "La version Apple Silicon est sélectionnée. Les Mac Intel peuvent utiliser le téléchargement Intel ci-dessous.",
-      "noRelease": "Les installateurs sont en cours de publication. Contactez le support si vous avez besoin d’une version aujourd’hui.",
+      "noRelease": "Les installateurs sont en cours de publication. Revenez bientôt.",
       "noReleaseTitle": "Les installateurs ne sont pas encore disponibles",
-      "noReleaseBody": "Les liens de téléchargement seront publiés avec la prochaine version. Contactez-nous et nous vous enverrons la version actuelle.",
+      "noReleaseBody": "Les liens de téléchargement seront publiés avec la prochaine version. Revenez bientôt.",
       "allPlatforms": "Tous les installateurs",
       "requirements": "Windows 10 ou ultérieur · macOS 12 Monterey ou ultérieur · Ubuntu 20.04 ou équivalent",
       "mobileNotice": "L’app Bureau fonctionne sur Windows, macOS et Linux. Ouvrez cette page sur votre ordinateur pour la télécharger.",
@@ -934,8 +951,8 @@
     },
     "help": {
       "title": "Besoin d’aide pour l’installation ?",
-      "body": "Consultez les guides dans l’app sous Profil, puis Aide, ou contactez l’équipe.",
-      "contact": "Contacter le support",
+      "body": "Consultez les guides dans l’app sous Profil, puis Aide, ou discutez avec nous sur WhatsApp.",
+      "whatsapp": "Discuter sur WhatsApp",
       "faq": "Lire la FAQ"
     },
     "platforms": {

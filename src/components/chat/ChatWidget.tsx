@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createLocalStorageAdapter, type Message, type ChatClient } from "@teincfood/chat-client";
 import { MessageCircle, X, Send, Loader2, Maximize2, Minimize2, MapPin, RefreshCw } from "lucide-react";
+import { usePathname } from "@/i18n/routing";
 import { MarkdownText } from "./MarkdownText";
 import { chatConfig } from "@/config/site";
 
@@ -21,6 +22,7 @@ function getDeviceId(): string {
 }
 
 export function ChatWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const turnstileRef = useRef<HTMLDivElement>(null);
@@ -301,6 +303,11 @@ export function ChatWidget() {
   // The security check is only needed until the guest session exists. Once
   // Turnstile succeeds its card collapses so the transcript gets the space.
   const showCaptcha = !!TURNSTILE_SITE_KEY && !sessionReady && !captchaSolved;
+
+  // Account deletion is a focused, destructive flow. The floating chat
+  // launcher can cover the primary action on small viewports, and the page
+  // already offers a direct support link.
+  if (pathname.startsWith("/delete-account")) return null;
 
   if (!open) {
     return (

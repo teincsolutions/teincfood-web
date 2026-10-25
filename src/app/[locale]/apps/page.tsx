@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/sections/PageHeader";
 import { Section } from "@/components/ui/Section";
 import { AppsShowcase } from "@/components/showcase/AppsShowcase";
+import { AppsDownloadSection } from "@/components/download/AppsDownloadSection";
 import { localizeMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -37,6 +38,7 @@ export default async function AppsPage({
       <Section className="bg-white">
         <AppsShowcase />
       </Section>
+      <AppsDownloadSection />
     </>
   );
 }
