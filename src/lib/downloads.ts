@@ -9,6 +9,7 @@
 
 export type DownloadKind =
   | "windows"
+  | "macos-universal"
   | "macos-arm"
   | "macos-intel"
   | "linux-appimage"
@@ -36,6 +37,7 @@ export const DESKTOP_RELEASES_REPO =
 
 const LABELS: Record<DownloadKind, string> = {
   windows: "Windows",
+  "macos-universal": "macOS (Apple Silicon + Intel)",
   "macos-arm": "macOS (Apple Silicon)",
   "macos-intel": "macOS (Intel)",
   "linux-appimage": "Linux (AppImage)",
@@ -57,6 +59,10 @@ function classify(name: string): DownloadKind | null {
   const lower = name.toLowerCase();
   if (lower.endsWith(".exe") || lower.endsWith(".msi")) return "windows";
   if (lower.endsWith(".dmg")) {
+    // The desktop build is a universal binary (aarch64 + x86_64) and Tauri
+    // names the bundle `..._universal.dmg`. It must not be mistaken for an
+    // Intel-only build just because the filename lacks an arch suffix.
+    if (lower.includes("universal")) return "macos-universal";
     return lower.includes("aarch64") || lower.includes("arm64")
       ? "macos-arm"
       : "macos-intel";

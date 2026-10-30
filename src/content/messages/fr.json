@@ -910,7 +910,9 @@
       "preview": "Version d’aperçu",
       "downloadFor": "Télécharger pour {platform}",
       "choosePlatform": "Choisir votre plateforme",
+      "macosUniversalNote": "Cette version universelle fonctionne nativement sur les Mac Apple Silicon et Intel.",
       "appleSiliconNote": "La version Apple Silicon est sélectionnée. Les Mac Intel peuvent utiliser le téléchargement Intel ci-dessous.",
+      "macosIntelNote": "La version Intel est sélectionnée pour les Mac plus anciens.",
       "noRelease": "Les installateurs sont en cours de publication. Revenez bientôt.",
       "noReleaseTitle": "Les installateurs ne sont pas encore disponibles",
       "noReleaseBody": "Les liens de téléchargement seront publiés avec la prochaine version. Revenez bientôt.",
@@ -924,6 +926,7 @@
     },
     "assets": {
       "windows": "Windows",
+      "macos-universal": "macOS (Apple Silicon + Intel)",
       "macos-arm": "macOS (Apple Silicon)",
       "macos-intel": "macOS (Intel)",
       "linux-appimage": "Linux (AppImage)",

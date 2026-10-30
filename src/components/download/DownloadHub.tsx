@@ -51,6 +51,7 @@ interface DownloadHubProps {
 
 const ORDER: DownloadKind[] = [
   "windows",
+  "macos-universal",
   "macos-arm",
   "macos-intel",
   "linux-appimage",
@@ -87,9 +88,28 @@ function isDesktopPlatform(platform: Platform): boolean {
 
 function primaryKindFor(platform: Platform): DownloadKind | null {
   if (platform === "windows") return "windows";
-  if (platform === "macos") return "macos-arm";
+  if (platform === "macos") return "macos-universal";
   if (platform === "linux") return "linux-appimage";
   return null;
+}
+
+/**
+ * Prefer the universal macOS build and fall back to a standalone Apple
+ * Silicon or Intel build when a release only ships one architecture.
+ */
+function primaryAssetFor(
+  platform: Platform,
+  assets: DownloadAsset[],
+): DownloadAsset | undefined {
+  if (platform === "macos") {
+    return (
+      assets.find((asset) => asset.kind === "macos-universal") ??
+      assets.find((asset) => asset.kind === "macos-arm") ??
+      assets.find((asset) => asset.kind === "macos-intel")
+    );
+  }
+  const kind = primaryKindFor(platform);
+  return kind ? assets.find((asset) => asset.kind === kind) : undefined;
 }
 
 function PlatformIcon({ kind }: { kind: DownloadKind }) {
@@ -140,10 +160,10 @@ export function DownloadHub({
     );
   }, [release]);
 
-  const primaryKind = primaryKindFor(platform);
-  const primary = primaryKind
-    ? assets.find((asset) => asset.kind === primaryKind)
-    : undefined;
+  const primary = useMemo(
+    () => primaryAssetFor(platform, assets),
+    [assets, platform],
+  );
   const otherAssets = primary
     ? assets.filter((asset) => asset.kind !== primary.kind)
     : assets;
@@ -415,7 +435,11 @@ function DesktopDownloads({
               ) : null}
               <p className="mt-3 text-xs leading-relaxed text-navy/50">
                 {platform === "macos"
-                  ? t("desktop.appleSiliconNote")
+                  ? primary?.kind === "macos-universal"
+                    ? t("desktop.macosUniversalNote")
+                    : primary?.kind === "macos-intel"
+                      ? t("desktop.macosIntelNote")
+                      : t("desktop.appleSiliconNote")
                   : t("desktop.requirements")}
               </p>
             </div>

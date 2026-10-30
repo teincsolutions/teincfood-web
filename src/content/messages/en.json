@@ -910,7 +910,9 @@
       "preview": "Preview build",
       "downloadFor": "Download for {platform}",
       "choosePlatform": "Choose your platform",
+      "macosUniversalNote": "This universal build runs natively on both Apple Silicon and Intel Macs.",
       "appleSiliconNote": "This selects the Apple Silicon build. Intel Macs can use the Intel download below.",
+      "macosIntelNote": "This selects the Intel build for older Macs.",
       "noRelease": "Installers are being published. Check back soon.",
       "noReleaseTitle": "Installers are not available yet",
       "noReleaseBody": "The desktop download links go live with the next release. Check back soon.",
@@ -924,6 +926,7 @@
     },
     "assets": {
       "windows": "Windows",
+      "macos-universal": "macOS (Apple Silicon + Intel)",
       "macos-arm": "macOS (Apple Silicon)",
       "macos-intel": "macOS (Intel)",
       "linux-appimage": "Linux (AppImage)",
