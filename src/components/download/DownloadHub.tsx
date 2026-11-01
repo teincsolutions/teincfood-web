@@ -433,6 +433,11 @@ function DesktopDownloads({
                   {t("desktop.downloadFor", { platform: t(`platforms.${platform}`) })}
                 </a>
               ) : null}
+              {primary && primary.version !== release?.version ? (
+                <p className="mt-2 text-xs text-navy/50">
+                  {t("desktop.installerVersion", { version: primary.version })}
+                </p>
+              ) : null}
               <p className="mt-3 text-xs leading-relaxed text-navy/50">
                 {platform === "macos"
                   ? primary?.kind === "macos-universal"
@@ -615,6 +620,7 @@ function AssetCard({
         <span className="min-w-0">
           <span className="block truncate font-bold text-navy">{label}</span>
           <span className="block truncate text-xs text-navy/50">
+            {asset.version ? `v${asset.version} · ` : ""}
             {asset.name}
           </span>
           {asset.size > 0 ? (

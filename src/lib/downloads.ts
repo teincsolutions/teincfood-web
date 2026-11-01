@@ -20,6 +20,10 @@ export interface DownloadAsset {
   name: string;
   url: string;
   size: number;
+  /** Release tag/version the installer came from. */
+  tag: string;
+  version: string;
+  publishedAt: string | null;
 }
 
 export interface DesktopRelease {
@@ -101,27 +105,55 @@ export async function getLatestDesktopRelease(): Promise<DesktopRelease | null> 
 
     if (!Array.isArray(releases) || releases.length === 0) return null;
 
+    // Ignore feed-only releases (they contain just latest.json) and drafts.
+    const installable = releases.filter(
+      (item) =>
+        !item.draft &&
+        (item.assets ?? []).some(
+          (asset) => asset.name && classify(asset.name) !== null,
+        ),
+    );
+
+    if (installable.length === 0) return null;
+
     // Prefer a stable release; fall back to the newest pre-release while the
     // desktop app is still in testing, so the page is never empty.
     const release =
-      releases.find((item) => !item.draft && !item.prerelease) ??
-      releases.find((item) => !item.draft);
+      installable.find((item) => !item.prerelease) ?? installable[0];
 
-    if (!release) return null;
+    // Platforms can ship on different schedules (for example a macOS-only
+    // local build followed by a full cross-platform release). Keep the primary
+    // button for the detected platform, but fill the "All installers" list
+    // with the latest available asset for every platform across recent
+    // releases instead of hiding platforms missing from the newest one.
+    const ordered = [
+      release,
+      ...installable.filter((item) => item !== release),
+    ];
+    const seen = new Set<DownloadKind>();
+    const assets: DownloadAsset[] = [];
 
-    const assets = (release.assets ?? [])
-      .map((asset) => {
-        if (!asset.name || !asset.browser_download_url) return null;
+    for (const item of ordered) {
+      const tag = item.tag_name ?? "";
+      const version = tag.replace(/^v/, "");
+      const publishedAt = item.published_at ?? item.created_at ?? null;
+
+      for (const asset of item.assets ?? []) {
+        if (!asset.name || !asset.browser_download_url) continue;
         const kind = classify(asset.name);
-        if (!kind) return null;
-        return {
+        if (!kind || seen.has(kind)) continue;
+        seen.add(kind);
+        assets.push({
           kind,
           name: asset.name,
           url: asset.browser_download_url,
           size: asset.size ?? 0,
-        };
-      })
-      .filter((asset): asset is DownloadAsset => asset !== null);
+          tag,
+          version,
+          publishedAt,
+        });
+      }
+    }
 
     if (assets.length === 0) return null;
 

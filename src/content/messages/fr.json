@@ -909,6 +909,7 @@
       "updated": "Mis à jour le {date}",
       "preview": "Version d’aperçu",
       "downloadFor": "Télécharger pour {platform}",
+      "installerVersion": "Cet installateur correspond à la version {version}.",
       "choosePlatform": "Choisir votre plateforme",
       "macosUniversalNote": "Cette version universelle fonctionne nativement sur les Mac Apple Silicon et Intel.",
       "appleSiliconNote": "La version Apple Silicon est sélectionnée. Les Mac Intel peuvent utiliser le téléchargement Intel ci-dessous.",
