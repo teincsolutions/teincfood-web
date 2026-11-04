@@ -3,33 +3,68 @@ name: CI/CD
 on:
   push:
     branches: ["main", "test"]
-  pull_request:
-    branches: ["main", "test"]
-  release:
-    types: [published]
   workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name != 'release' }}
+  cancel-in-progress: true
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: teincsolutions/teincfoodweb
 
 jobs:
+  prepare:
+    name: Prepare deployment target
+    runs-on: ubuntu-latest
+    outputs:
+      target: ${{ steps.target.outputs.target }}
+      environment: ${{ steps.target.outputs.environment }}
+      runner: ${{ steps.target.outputs.runner }}
+      platform: ${{ steps.target.outputs.platform }}
+      compose_files: ${{ steps.target.outputs.compose_files }}
+      shared_network: ${{ steps.target.outputs.shared_network }}
+      web_port: ${{ steps.target.outputs.web_port }}
+    steps:
+      - name: Select target
+        id: target
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo 'target=production' >> "$GITHUB_OUTPUT"
+            echo 'environment=production' >> "$GITHUB_OUTPUT"
+            echo 'runner=["self-hosted","willfind8"]' >> "$GITHUB_OUTPUT"
+            echo 'platform=linux/amd64' >> "$GITHUB_OUTPUT"
+            echo 'compose_files=-f docker-compose.yml -f docker-compose.production.yml' >> "$GITHUB_OUTPUT"
+            echo 'shared_network=wf8-internal-net' >> "$GITHUB_OUTPUT"
+            echo 'web_port=' >> "$GITHUB_OUTPUT"
+          else
+            echo 'target=test' >> "$GITHUB_OUTPUT"
+            echo 'environment=test' >> "$GITHUB_OUTPUT"
+            echo 'runner=["self-hosted","teinc-run-1"]' >> "$GITHUB_OUTPUT"
+            echo 'platform=linux/arm64' >> "$GITHUB_OUTPUT"
+            echo 'compose_files=-f docker-compose.yml' >> "$GITHUB_OUTPUT"
+            echo 'shared_network=teinc-internal-net' >> "$GITHUB_OUTPUT"
+            echo 'web_port=3001' >> "$GITHUB_OUTPUT"
+          fi
+
   lint-build:
     name: Lint, typecheck & build
-    runs-on: [self-hosted, teinc-run-1]
-    # Without an `environment:` GitHub never exposes the environment's
-    # variables/secrets to the job, so every NEXT_PUBLIC_* value silently
-    # resolved to empty and got baked out of the build.
-    environment: test
+    needs: prepare
+    runs-on: ${{ fromJSON(needs.prepare.outputs.runner) }}
+    environment: ${{ needs.prepare.outputs.environment }}
     steps:
       - name: Free disk space on runner
+        env:
+          TARGET: ${{ needs.prepare.outputs.target }}
         run: |
-          docker system prune -af || true
-          docker builder prune -af || true
+          if [[ "$TARGET" == "test" ]]; then
+            docker system prune -af || true
+          else
+            # willfind8 hosts production workloads. Only remove build cache and
+            # dangling images, never unused tagged images or stopped containers.
+            docker builder prune -af || true
+            docker image prune -f || true
+          fi
           df -h
 
       - name: Checkout
@@ -43,7 +78,7 @@ jobs:
 
       - name: Lint, typecheck & build (in Docker — no host Node needed)
         run: |
-          docker run --rm \
+          docker run --rm --network host \
             -v "$PWD:/app" \
             -w /app \
             --user "$(id -u):$(id -g)" \
@@ -53,24 +88,28 @@ jobs:
             -e NEXT_PUBLIC_WS_URL="${{ vars.NEXT_PUBLIC_WS_URL }}" \
             node:22 \
             sh -c "yarn install --frozen-lockfile && npx tsc --noEmit && npx eslint . && npx next build"
-          # --rm removes the build container and its anonymous volumes only;
-          # --user avoids root-owned files in the host workspace;
-          # host bind-mount ($PWD) and deploy compose volumes/networks are untouched.
+          # --network host lets the build container resolve and reach registries on
+          # willfind8, where newly created Docker bridges have no working NAT.
 
   build-image:
     name: Build & push Docker image
-    runs-on: [self-hosted, teinc-run-1]
-    needs: lint-build
-    # The build args below come from this environment's variables.
-    environment: test
+    needs: [prepare, lint-build]
+    runs-on: ${{ fromJSON(needs.prepare.outputs.runner) }}
+    environment: ${{ needs.prepare.outputs.environment }}
     permissions:
       packages: write
       contents: read
     steps:
       - name: Free disk space on runner
+        env:
+          TARGET: ${{ needs.prepare.outputs.target }}
         run: |
-          docker system prune -af || true
-          docker builder prune -af || true
+          if [[ "$TARGET" == "test" ]]; then
+            docker system prune -af || true
+          else
+            docker builder prune -af || true
+            docker image prune -f || true
+          fi
           df -h
 
       - name: Checkout
@@ -80,13 +119,14 @@ jobs:
           git fetch --depth 1 origin "${{ github.sha }}"
           git checkout "${{ github.sha }}"
 
-      - name: Set up QEMU
-        run: |
-          docker run --rm --privileged tonistiigi/binfmt:latest --install arm64
-
       - name: Set up Docker Buildx
+        env:
+          TARGET: ${{ needs.prepare.outputs.target }}
         run: |
-          docker buildx create --use --name multiarch || docker buildx use multiarch
+          docker buildx create --use --name "teincfoodweb-${TARGET}" \
+            --driver docker-container --driver-opt network=host \
+            || docker buildx use "teincfoodweb-${TARGET}"
+          docker buildx inspect --bootstrap
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
@@ -97,22 +137,19 @@ jobs:
           SHA_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}"
           REF_SLUG="$(echo "${{ github.ref_name }}" | tr '/' '-')"
           BRANCH_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${REF_SLUG}"
-          TAGS="$SHA_TAG,$BRANCH_TAG"
-          if [ "${{ github.event_name }}" = "release" ]; then
-            TAG_TAG="ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name }}"
-            TAGS="$TAGS,$TAG_TAG"
-          fi
-          echo "tags=$TAGS" >> $GITHUB_OUTPUT
-          echo "first_tag=$SHA_TAG" >> $GITHUB_OUTPUT
+          echo "tags=${SHA_TAG},${BRANCH_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push
+        env:
+          TARGET: ${{ needs.prepare.outputs.target }}
+          PLATFORM: ${{ needs.prepare.outputs.platform }}
         run: |
           docker buildx build \
-            --platform linux/arm64 \
-            ${{ github.event_name != 'pull_request' && '--push' || '' }} \
+            --platform "$PLATFORM" \
+            --push \
             $(echo "${{ steps.tags.outputs.tags }}" | tr ',' '\n' | sed 's/^/-t /' | tr '\n' ' ') \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
+            --cache-from type=gha,scope=teincfoodweb-${TARGET} \
+            --cache-to type=gha,mode=max,scope=teincfoodweb-${TARGET} \
             --build-arg NEXT_PUBLIC_SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}" \
             --build-arg NEXT_PUBLIC_BUYER_APP_STORE="${{ vars.NEXT_PUBLIC_BUYER_APP_STORE }}" \
             --build-arg NEXT_PUBLIC_BUYER_PLAY_STORE="${{ vars.NEXT_PUBLIC_BUYER_PLAY_STORE }}" \
@@ -131,23 +168,14 @@ jobs:
             .
 
   deploy:
-    name: Deploy to server
-    runs-on: [self-hosted, teinc-run-1]
-    needs: build-image
-    if: github.event_name != 'pull_request'
-    environment: test
+    name: Deploy to ${{ needs.prepare.outputs.target }}
+    needs: [prepare, build-image]
+    runs-on: ${{ fromJSON(needs.prepare.outputs.runner) }}
+    environment: ${{ needs.prepare.outputs.environment }}
     permissions:
       packages: read
       contents: read
-    env:
-      IMAGE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
     steps:
-      - name: Free disk space on runner
-        run: |
-          docker system prune -af || true
-          docker builder prune -af || true
-          df -h
-
       - name: Checkout
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/ws" node:22 sh -c "rm -rf /ws/* /ws/.* 2>/dev/null || true" 2>/dev/null || rm -rf ./* ./.??* 2>/dev/null || true
@@ -158,14 +186,25 @@ jobs:
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-      - name: Deploy
-        run: |
-          docker pull "ghcr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
-          docker compose up -d --pull always
+      - name: Verify Docker network
         env:
-          APP_IMAGE: ghcr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          WEB_PORT: 3001
+          SHARED_NETWORK: ${{ needs.prepare.outputs.shared_network }}
+        run: |
+          docker network inspect "$SHARED_NETWORK" >/dev/null
+          echo "$SHARED_NETWORK is available"
+
+      - name: Deploy
+        env:
+          APP_IMAGE: ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          COMPOSE_FILES: ${{ needs.prepare.outputs.compose_files }}
+          SHARED_NETWORK: ${{ needs.prepare.outputs.shared_network }}
+          WEB_PORT: ${{ needs.prepare.outputs.web_port }}
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_WS_URL: ${{ vars.NEXT_PUBLIC_WS_URL }}
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          NEXT_PUBLIC_APPLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}
           NEXT_PUBLIC_BUYER_APP_STORE: ${{ vars.NEXT_PUBLIC_BUYER_APP_STORE }}
           NEXT_PUBLIC_BUYER_PLAY_STORE: ${{ vars.NEXT_PUBLIC_BUYER_PLAY_STORE }}
           NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ vars.NEXT_PUBLIC_BUSINESS_APP_STORE }}
@@ -185,18 +224,29 @@ jobs:
           ANDROID_BUYER_SHA256_FINGERPRINTS: ${{ vars.ANDROID_BUYER_SHA256_FINGERPRINTS }}
           ANDROID_BUSINESS_SHA256_FINGERPRINTS: ${{ vars.ANDROID_BUSINESS_SHA256_FINGERPRINTS }}
           ANDROID_SHA256_FINGERPRINTS: ${{ vars.ANDROID_SHA256_FINGERPRINTS }}
+        run: |
+          docker pull "$APP_IMAGE"
+          docker compose $COMPOSE_FILES up -d --pull always
 
       - name: Health check
+        env:
+          TARGET: ${{ needs.prepare.outputs.target }}
         run: |
           SITE_URL="${{ vars.NEXT_PUBLIC_SITE_URL }}"
-          if [ -z "$SITE_URL" ]; then SITE_URL="https://food.teincsolutions.com"; fi
+          if [ -z "$SITE_URL" ]; then
+            if [ "$TARGET" = "production" ]; then
+              SITE_URL="https://teincfood.com"
+            else
+              SITE_URL="https://food.teincsolutions.com"
+            fi
+          fi
           for i in $(seq 1 30); do
             if curl -sf "$SITE_URL/en" > /dev/null 2>&1; then
-              echo "Site is healthy"
+              echo "Site is healthy at $SITE_URL"
               exit 0
             fi
             echo "Waiting for site... ($i/30)"
             sleep 2
           done
-          echo "Health check failed"
+          echo "Health check failed for $SITE_URL"
           exit 1

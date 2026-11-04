@@ -1,0 +1,8 @@
+# Production-only overrides.
+#
+# The production website is reached by nginx over the shared wf8-internal-net
+# bridge, so it does not publish a host port. Keeping it on the same network as
+# the existing nginx container also avoids the generic "web" DNS alias.
+services:
+  teincfood-web:
+    ports: !reset []
