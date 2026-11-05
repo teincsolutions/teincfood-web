@@ -87,7 +87,7 @@ export async function getLatestDesktopRelease(): Promise<DesktopRelease | null> 
 
   try {
     const response = await fetch(
-      `https://api.github.com/repos/${DESKTOP_RELEASES_REPO}/releases?per_page=10`,
+      `https://api.github.com/repos/${DESKTOP_RELEASES_REPO}/releases?per_page=100`,
       { headers, next: { revalidate: 300 } },
     );
     if (!response.ok) return null;
@@ -105,10 +105,23 @@ export async function getLatestDesktopRelease(): Promise<DesktopRelease | null> 
 
     if (!Array.isArray(releases) || releases.length === 0) return null;
 
-    // Ignore feed-only releases (they contain just latest.json) and drafts.
-    const installable = releases.filter(
+    // GitHub orders this endpoint by creation date. A production release can
+    // be drafted days before it is published, so it may sit behind newer test
+    // builds. Sort by publish time to always pick the newest stable release.
+    const sorted = [...releases].sort((a, b) => {
+      const aPublished = Date.parse(a.published_at ?? a.created_at ?? "") || 0;
+      const bPublished = Date.parse(b.published_at ?? b.created_at ?? "") || 0;
+      return bPublished - aPublished;
+    });
+
+    // The public download page is production-only: ignore drafts, GitHub
+    // prereleases, and any tag explicitly marked as a test build. Feed-only
+    // releases (updater-test/latest.json) are excluded by the asset check.
+    const installable = sorted.filter(
       (item) =>
         !item.draft &&
+        !item.prerelease &&
+        !(item.tag_name ?? "").toLowerCase().includes("-test") &&
         (item.assets ?? []).some(
           (asset) => asset.name && classify(asset.name) !== null,
         ),
@@ -116,20 +129,14 @@ export async function getLatestDesktopRelease(): Promise<DesktopRelease | null> 
 
     if (installable.length === 0) return null;
 
-    // Prefer a stable release; fall back to the newest pre-release while the
-    // desktop app is still in testing, so the page is never empty.
-    const release =
-      installable.find((item) => !item.prerelease) ?? installable[0];
+    const release = installable[0];
 
     // Platforms can ship on different schedules (for example a macOS-only
     // local build followed by a full cross-platform release). Keep the primary
     // button for the detected platform, but fill the "All installers" list
     // with the latest available asset for every platform across recent
-    // releases instead of hiding platforms missing from the newest one.
-    const ordered = [
-      release,
-      ...installable.filter((item) => item !== release),
-    ];
+    // stable releases instead of hiding platforms missing from the newest one.
+    const ordered = installable;
     const seen = new Set<DownloadKind>();
     const assets: DownloadAsset[] = [];
 
