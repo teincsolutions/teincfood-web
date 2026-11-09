@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 /**
  * Android App Links association. Must be served from the link domain
- * (food.teincsolutions.com) so deep links open the matching native app:
+ * (teincfood.com) so deep links open the matching native app:
  *   - Teinc Food          -> com.teincfood.app
  *   - Teinc Food Business -> com.teincfood.business
  *

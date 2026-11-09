@@ -2,7 +2,7 @@
  * Server-side resolution of the Teinc Food backend URL.
  *
  * `TEINCFOOD_API_BASE_URL` is deliberately **version-less** — e.g.
- * "https://food.teincsolutions.com/api" — and the API version is appended
+ * "https://api.teincfood.com/api" — and the API version is appended
  * separately from `TEINCFOOD_API_VERSION`. That keeps the URL valid when a
  * v2 API is introduced: point the base at the same host and flip the version,
  * without touching a single call site.
