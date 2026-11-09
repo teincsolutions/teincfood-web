@@ -16,7 +16,10 @@ env:
 jobs:
   prepare:
     name: Prepare deployment target
-    runs-on: ubuntu-latest
+    # GitHub-hosted minutes are currently unavailable (billing limit), so this
+    # lightweight job runs on any available self-hosted runner. Later jobs use
+    # the explicit runner label emitted below.
+    runs-on: self-hosted
     outputs:
       target: ${{ steps.target.outputs.target }}
       environment: ${{ steps.target.outputs.environment }}
