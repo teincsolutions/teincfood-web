@@ -190,6 +190,12 @@ export function DeleteAccountFlow() {
     oidcTokenHandlerRef.current = handleOidcToken;
   });
 
+  const handleGoogleClick = () => {
+    if (!googleReady) {
+      toast.error(t("errors.oidcGoogleLoading"));
+    }
+  };
+
   const handleOidc = async (provider: OidcProvider) => {
     setStatus("loading");
     const idToken = await obtainIdToken(provider);
@@ -214,7 +220,6 @@ export function DeleteAccountFlow() {
 
       gsi.initialize({
         client_id: authConfig.googleClientId,
-        ux_mode: "popup",
         callback: (response) => {
           if (response.credential) {
             oidcTokenHandlerRef.current("google", response.credential);
@@ -437,7 +442,7 @@ export function DeleteAccountFlow() {
               <div className="relative">
                 <SocialButton
                   variant="google"
-                  onClick={() => handleOidc("google")}
+                  onClick={handleGoogleClick}
                   disabled={busy || !authConfig.googleClientId}
                   spinner={busy}
                   title={

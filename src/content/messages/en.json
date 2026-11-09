@@ -700,6 +700,7 @@
       "oidc": "Could not verify with that provider. Try another method.",
       "oidcConfig": "Social sign-in is not configured yet. Use phone or email instead.",
       "oidcGoogle": "Google sign-in is not configured yet.",
+      "oidcGoogleLoading": "Google sign-in is still loading. Try again in a moment.",
       "oidcApple": "Apple sign-in is not configured yet.",
       "delete": "We could not delete your account right now. Please contact support."
     },

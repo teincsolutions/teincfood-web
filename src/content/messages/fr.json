@@ -700,6 +700,7 @@
       "oidc": "Impossible de vérifier avec ce fournisseur. Essayez une autre méthode.",
       "oidcConfig": "La connexion sociale n'est pas encore configurée. Utilisez le téléphone ou l'e-mail.",
       "oidcGoogle": "La connexion Google n'est pas encore configurée.",
+      "oidcGoogleLoading": "La connexion Google est encore en cours de chargement. Réessayez dans un instant.",
       "oidcApple": "La connexion Apple n'est pas encore configurée.",
       "delete": "Impossible de supprimer votre compte pour le moment. Veuillez contacter le support."
     },

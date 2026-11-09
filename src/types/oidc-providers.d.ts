@@ -14,7 +14,7 @@ interface GooglePromptMomentNotification {
 interface GoogleAccountsId {
   initialize(opts: {
     client_id: string;
-    ux_mode: "popup";
+    ux_mode?: "popup" | "redirect";
     callback: (response: GoogleCredentialResponse) => void;
   }): void;
   prompt(callback?: (notification: GooglePromptMomentNotification) => void): void;
