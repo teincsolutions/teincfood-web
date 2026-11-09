@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import {
@@ -51,8 +51,11 @@ export function DeleteAccountFlow() {
   const [status, setStatus] = useState<Status>("idle");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [confirm, setConfirm] = useState("");
-
-  
+  const [googleReady, setGoogleReady] = useState(false);
+  const googleButtonRef = useRef<HTMLDivElement | null>(null);
+  const oidcTokenHandlerRef = useRef<(_provider: OidcProvider, _idToken: string) => void>(
+    (_provider, _idToken) => {},
+  );
 
   useEffect(() => {
     if (resendIn <= 0) return;
@@ -166,15 +169,8 @@ export function DeleteAccountFlow() {
     nextAfterAuth(data.user ?? {});
   };
 
-  const handleOidc = async (provider: OidcProvider) => {
+  const handleOidcToken = async (provider: OidcProvider, idToken: string) => {
     setStatus("loading");
-    const idToken = await obtainIdToken(provider);
-    if (!idToken) {
-      setStatus("idle");
-      trackEvent("account.delete.verify_failed", { method: "oidc", provider, status: 0 });
-      toast.error(t("errors.oidc"));
-      return;
-    }
     const { ok, status, data } = await callApi("oidc", {
       provider,
       id_token: idToken,
@@ -189,6 +185,60 @@ export function DeleteAccountFlow() {
     toast.success(t("toast.signedIn"));
     nextAfterAuth(data.user ?? {});
   };
+
+  useEffect(() => {
+    oidcTokenHandlerRef.current = handleOidcToken;
+  });
+
+  const handleOidc = async (provider: OidcProvider) => {
+    setStatus("loading");
+    const idToken = await obtainIdToken(provider);
+    if (!idToken) {
+      setStatus("idle");
+      trackEvent("account.delete.verify_failed", { method: "oidc", provider, status: 0 });
+      toast.error(t("errors.oidc"));
+      return;
+    }
+    await handleOidcToken(provider, idToken);
+  };
+
+  useEffect(() => {
+    if (step !== "method" || !authConfig.googleClientId) return;
+
+    let cancelled = false;
+
+    void loadScript("https://accounts.google.com/gsi/client", "teinc-gsi").then((loaded) => {
+      if (!loaded || cancelled || !googleButtonRef.current) return;
+      const gsi = window.google?.accounts?.id;
+      if (!gsi) return;
+
+      gsi.initialize({
+        client_id: authConfig.googleClientId,
+        ux_mode: "popup",
+        callback: (response) => {
+          if (response.credential) {
+            oidcTokenHandlerRef.current("google", response.credential);
+          }
+        },
+      });
+
+      // GIS renders an iframe; overlay it invisibly on the custom button so
+      // the click uses the official flow while keeping our own styling.
+      gsi.renderButton(googleButtonRef.current, {
+        type: "standard",
+        theme: "outline",
+        size: "large",
+        text: "continue_with",
+        shape: "rectangular",
+        width: 400,
+      });
+      setGoogleReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [step]);
 
   const handleDelete = async (e: FormEvent) => {
     e.preventDefault();
@@ -384,19 +434,29 @@ export function DeleteAccountFlow() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-2.5">
-              <SocialButton
-                variant="google"
-                onClick={() => handleOidc("google")}
-                disabled={busy || !authConfig.googleClientId}
-                spinner={busy}
-                title={
-                  !authConfig.googleClientId
-                    ? t("errors.oidcGoogle")
-                    : undefined
-                }
-              >
-                {t("form.google")}
-              </SocialButton>
+              <div className="relative">
+                <SocialButton
+                  variant="google"
+                  onClick={() => handleOidc("google")}
+                  disabled={busy || !authConfig.googleClientId}
+                  spinner={busy}
+                  title={
+                    !authConfig.googleClientId
+                      ? t("errors.oidcGoogle")
+                      : undefined
+                  }
+                >
+                  {t("form.google")}
+                </SocialButton>
+                <div
+                  ref={googleButtonRef}
+                  aria-hidden="true"
+                  className={[
+                    "absolute inset-0 z-10 overflow-hidden rounded-xl opacity-0 [&_iframe]:!h-full [&_iframe]:!w-full",
+                    googleReady && !busy ? "pointer-events-auto" : "pointer-events-none",
+                  ].join(" ")}
+                />
+              </div>
               <SocialButton
                 variant="apple"
                 onClick={() => handleOidc("apple")}
@@ -828,7 +888,7 @@ async function obtainIdToken(provider: OidcProvider): Promise<string | null> {
     const response = await appleAuthHelpers.signIn({
       authOptions: {
         clientId,
-        redirectURI: window.location.origin,
+        redirectURI: `${window.location.origin}/signin/apple`,
         scope: "name email",
         usePopup: true,
       },
