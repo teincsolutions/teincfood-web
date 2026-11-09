@@ -116,8 +116,13 @@ export const siteConfig = {
 };
 
 export const authConfig = {
-  googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
-  appleClientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "",
+  // Public OAuth client identifiers. Fallbacks keep social verification
+  // visible when the deployment forgets to pass the CI variable.
+  googleClientId:
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+    "924722353782-m4e5l45sn24i3cfv7r4dhggaojkqhr4u.apps.googleusercontent.com",
+  appleClientId:
+    process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "com.teincfood.app.services",
 };
 
 /**

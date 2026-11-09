@@ -1,22 +1,15 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  ArrowUpRight,
-  Download,
-  ShoppingBag,
-  Smartphone,
-  Store,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, Download, X } from "lucide-react";
 import {
   mobileApps,
   type MobileAppConfig,
 } from "@/config/site";
 import { trackEvent } from "@/utils/observability";
-import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "teincfood-install-dismissed";
 
@@ -107,8 +100,21 @@ export function AppInstallBanner() {
         className="relative z-40 border-b border-white/10 bg-navy text-white"
       >
         <div className="container-site flex items-start gap-3 py-3">
-          <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
-            <Smartphone className="size-5" aria-hidden="true" />
+          <span className="mt-0.5 flex shrink-0 -space-x-2">
+            <Image
+              src="/apps/buyer-icon.png"
+              alt=""
+              width={36}
+              height={36}
+              className="size-9 rounded-xl border border-white/20 shadow-sm"
+            />
+            <Image
+              src="/apps/business-icon.png"
+              alt=""
+              width={36}
+              height={36}
+              className="size-9 rounded-xl border border-white/20 shadow-sm"
+            />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-bold leading-tight">{t("bannerTitle")}</p>
@@ -170,7 +176,10 @@ export function AppInstallBanner() {
 
             <div className="mt-4 space-y-3">
               {apps.map((app) => {
-                const Icon = app.id === "buyer" ? ShoppingBag : Store;
+                const iconSrc =
+                  app.id === "buyer"
+                    ? "/apps/buyer-icon.png"
+                    : "/apps/business-icon.png";
                 const installUrl =
                   platform === "ios" ? app.appStore : app.playStore;
                 const appName =
@@ -186,14 +195,13 @@ export function AppInstallBanner() {
                     className="rounded-xl border border-navy/10 p-3"
                   >
                     <div className="flex items-start gap-3">
-                      <span
-                        className={cn(
-                          "flex size-10 shrink-0 items-center justify-center rounded-xl text-white",
-                          app.id === "buyer" ? "bg-orange-800" : "bg-navy",
-                        )}
-                      >
-                        <Icon className="size-5" aria-hidden="true" />
-                      </span>
+                      <Image
+                        src={iconSrc}
+                        alt={`${appName} icon`}
+                        width={40}
+                        height={40}
+                        className="size-10 shrink-0 rounded-xl border border-navy/10"
+                      />
                       <div className="min-w-0 flex-1">
                         <p className="font-bold text-navy">{appName}</p>
                         <p className="text-xs leading-relaxed text-navy/60">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { Link } from "@/i18n/routing";
@@ -41,6 +42,7 @@ export function InstallCta() {
                 title={t("forCustomers")}
                 appName={t("buyerApp")}
                 tagline={t("buyerTagline")}
+                iconSrc="/apps/buyer-icon.png"
                 appStore={buyer.appStore}
                 playStore={buyer.playStore}
                 qrUrl={siteConfig.url}
@@ -49,9 +51,10 @@ export function InstallCta() {
                 title={t("forRidersSellers")}
                 appName={t("businessApp")}
                 tagline={t("businessTagline")}
+                iconSrc="/apps/business-icon.png"
                 appStore={business.appStore}
                 playStore={business.playStore}
-                qrUrl={siteConfig.url}
+                qrUrl={`${siteConfig.url.replace(/\/$/, "")}/business`}
               />
             </div>
           ) : (
@@ -74,6 +77,7 @@ function DownloadApp({
   title,
   appName,
   tagline,
+  iconSrc,
   appStore,
   playStore,
   qrUrl,
@@ -81,6 +85,7 @@ function DownloadApp({
   title: string;
   appName: string;
   tagline: string;
+  iconSrc: string;
   appStore?: string;
   playStore?: string;
   qrUrl: string;
@@ -92,9 +97,18 @@ function DownloadApp({
       <p className="text-xs font-bold uppercase tracking-widest text-orange-300">
         {title}
       </p>
-      <div className="mt-3">
-        <p className="text-2xl font-extrabold text-white">{appName}</p>
-        <p className="mt-1 text-sm text-white/60">{tagline}</p>
+      <div className="mt-3 flex items-center gap-3">
+        <Image
+          src={iconSrc}
+          alt={`${appName} icon`}
+          width={56}
+          height={56}
+          className="size-14 shrink-0 rounded-2xl border border-white/15 shadow-lg"
+        />
+        <div className="min-w-0">
+          <p className="text-2xl font-extrabold text-white">{appName}</p>
+          <p className="mt-1 text-sm text-white/60">{tagline}</p>
+        </div>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">

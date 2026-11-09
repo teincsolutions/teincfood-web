@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 
 /**
  * Apple universal-link association. Must be served from the link domain
- * (food.teincsolutions.com).
+ * (teincfood.com).
  *
- * - /invite and /reset-password open TF Business when installed.
- * - /business opens TF Business for merchant flows.
- * - /biz and /order open the Teinc Food buyer app.
+ * - `/` opens the Teinc Food buyer app by default when installed.
+ * - /biz and /order open the Teinc Food buyer app, including business QR
+ *   codes (`/biz/<BUSINESS_NUMBER>`).
+ * - /invite, /reset-password and /business open TF Business when installed.
  *
  * Values are env-driven (see .env.example); Apple Team ID and bundle IDs are
  * public by design. The two native apps are:
@@ -31,7 +32,7 @@ export async function GET() {
           },
           {
             appID: `${teamId}.${buyerBundleId}`,
-            paths: ["/biz*", "/order*"],
+            paths: ["/", "/biz*", "/order*", "/restaurant*", "/food*"],
           },
         ],
       },

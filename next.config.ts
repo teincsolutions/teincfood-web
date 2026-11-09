@@ -62,7 +62,11 @@ const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
   images: {
-    localPatterns: [{ pathname: "/logo/*" }, { pathname: "/screens/**" }],
+    localPatterns: [
+      { pathname: "/logo/*" },
+      { pathname: "/screens/**" },
+      { pathname: "/apps/*" },
+    ],
   },
   async headers() {
     return [
