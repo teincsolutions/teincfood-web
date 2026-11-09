@@ -39,17 +39,21 @@ function contentSecurityPolicy(): string {
   connect.push("https://challenges.cloudflare.com");
   connect.push("https://*.challenges.cloudflare.com");
   connect.push("https://cloudflareinsights.com");
+  connect.push("https://accounts.google.com");
+  connect.push("https://appleid.apple.com");
 
   return (
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' " +
     (process.env.NODE_ENV === "production" ? "" : "'unsafe-eval' ") +
     "https://challenges.cloudflare.com " +
-    "https://static.cloudflareinsights.com; " +
-    "style-src 'self' 'unsafe-inline'; " +
+    "https://static.cloudflareinsights.com " +
+    "https://accounts.google.com " +
+    "https://appleid.cdn-apple.com; " +
+    "style-src 'self' 'unsafe-inline' https://accounts.google.com; " +
     "img-src 'self' data: https:; " +
     `connect-src ${connect.join(" ")}; ` +
-    "frame-src https://challenges.cloudflare.com; " +
+    "frame-src https://challenges.cloudflare.com https://accounts.google.com https://appleid.apple.com; " +
     "font-src 'self' data:;"
   );
 }
