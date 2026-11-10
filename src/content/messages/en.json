@@ -139,7 +139,8 @@
     "dialogDescription": "Open the app you already have, or install it directly from the store.",
     "openLabel": "Open",
     "installLabel": "Install",
-    "fallbackNote": "If the app is not installed, you will be taken to the store automatically."
+    "fallbackNote": "If the app is not installed, you will be taken to the store automatically.",
+    "openingApp": "Opening Teinc Food…"
   },
   "home": {
     "hero": {

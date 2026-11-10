@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/Hero";
 import { StepsSection } from "@/components/sections/StepsSection";
 import { FeatureCards } from "@/components/sections/FeatureCards";
 import { RoleDownloadCta } from "@/components/home/RoleDownloadCta";
+import { BuyerAppHandoff } from "@/components/install/BuyerAppHandoff";
 import { ProductShowcase } from "@/components/showcase/ProductShowcase";
 import { Section } from "@/components/ui/Section";
 import { localizeMetadata } from "@/lib/seo";
@@ -50,6 +51,7 @@ export default async function OrderPage({
 
   return (
     <>
+      <BuyerAppHandoff path="/order" />
       <Hero
         eyebrow={t("eyebrow")}
         title={t("title")}

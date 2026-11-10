@@ -5,6 +5,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { BizLanding } from "@/components/business/BizLanding";
+import { BuyerAppHandoff } from "@/components/install/BuyerAppHandoff";
 import { localizeMetadata } from "@/lib/seo";
 import { apiUrl } from "@/lib/api-base";
 
@@ -57,6 +58,9 @@ export default async function BizPage({
 
   return (
     <Section>
+      <BuyerAppHandoff
+        path={`/biz/${encodeURIComponent(business.business_number)}`}
+      />
       <Container className="max-w-2xl">
         <Suspense>
           <BizLanding

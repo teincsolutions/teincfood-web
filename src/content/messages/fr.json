@@ -139,7 +139,8 @@
     "dialogDescription": "Ouvrez l'application que vous avez déjà ou installez-la directement depuis la boutique.",
     "openLabel": "Ouvrir",
     "installLabel": "Installer",
-    "fallbackNote": "Si l'application n'est pas installée, vous serez automatiquement redirigé vers la boutique."
+    "fallbackNote": "Si l'application n'est pas installée, vous serez automatiquement redirigé vers la boutique.",
+    "openingApp": "Ouverture de Teinc Food…"
   },
   "home": {
     "hero": {
