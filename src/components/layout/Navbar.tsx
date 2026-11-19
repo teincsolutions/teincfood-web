@@ -22,6 +22,7 @@ const businessLinks = [
 ] as const;
 
 const resourceLinks = [
+  { href: "/plans", key: "plans" },
   { href: "/about", key: "about" },
   { href: "/faq", key: "faq" },
   { href: "/contact", key: "contact" },

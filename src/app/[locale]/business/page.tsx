@@ -54,6 +54,10 @@ export default async function BusinessPage({
     locale,
     namespace: "business.fleetCta",
   });
+  const tPlans = await getTranslations({
+    locale,
+    namespace: "plans",
+  });
 
   return (
     <>
@@ -71,6 +75,28 @@ export default async function BusinessPage({
         ns="business.features"
         icons={[ClipboardList, TrendingUp, Truck]}
       />
+      <Section className="bg-surface">
+        <div className="flex flex-col gap-6 rounded-2xl border border-navy/10 bg-white p-6 sm:p-10 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-orange-800">
+              {tPlans("eyebrow")}
+            </p>
+            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-navy sm:text-3xl">
+              {tPlans("merchant.title")}
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-navy/65">
+              {tPlans("merchant.intro")}
+            </p>
+          </div>
+          <ButtonLink
+            href="/plans"
+            variant="secondary"
+            className="shrink-0"
+          >
+            {tPlans("compare.compareCta")}
+          </ButtonLink>
+        </div>
+      </Section>
       <Section id="screens" className="bg-white">
         <ProductShowcase screenKeys={sellerScreens} />
       </Section>

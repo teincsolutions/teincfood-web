@@ -72,6 +72,10 @@
     "apps": {
       "title": "Aperçu des apps — Teinc Food",
       "description": "Découvrez Teinc Food sur ordinateur, mobile et tablette, et téléchargez l’app client ou Business pour iOS et Android."
+    },
+    "plans": {
+      "title": "Forfaits et tarifs — Teinc Food Business",
+      "description": "Comparez les forfaits Teinc Food Business : POS, commandes en ligne, limites de menu, sièges d’équipe, terminaux, promotions et analyses."
     }
   },
   "nav": {
@@ -99,7 +103,8 @@
     "fleetManagement": "Gestion de flotte",
     "customers": "Pour les clients",
     "riders": "Livreurs",
-    "apps": "Applications"
+    "apps": "Applications",
+    "plans": "Forfaits et tarifs"
   },
   "footer": {
     "tagline": "Commandez. Participez. Livrez. Teinc Food connecte la nourriture de votre ville.",
@@ -968,6 +973,152 @@
       "macos": "macOS",
       "linux": "Linux",
       "unknown": "votre appareil"
+    }
+  },
+  "plans": {
+    "eyebrow": "Forfaits et tarifs",
+    "title": "Des forfaits qui grandissent avec votre commerce",
+    "intro": "Commencez gratuitement, puis débloquez les commandes en ligne, plus d’articles au menu, des sièges d’équipe, des terminaux, des promotions et des analyses plus poussées. Les prix sont en cedis ghanéens (GHS).",
+    "downloadCta": "Télécharger Teinc Food Business",
+    "contactCta": "Parler à l’équipe",
+    "merchant": {
+      "title": "Pour les restaurants et commerçants",
+      "intro": "Une seule app pour votre comptoir, votre cuisine et vos commandes en ligne."
+    },
+    "fleet": {
+      "title": "Pour les gestionnaires de flotte",
+      "intro": "Assignez les livreurs et gérez les livraisons de votre équipe.",
+      "note": "Les forfaits flotte sont basés sur la commission — aucun abonnement mensuel."
+    },
+    "billing": {
+      "free": "Gratuit",
+      "perMonth": "/mois",
+      "perYear": "/an",
+      "noMonthly": "Aucun frais mensuel",
+      "yearlySave": "2 mois offerts",
+      "commission": "{rate} % de commission par commande",
+      "trial": "Essai gratuit de {days} jours",
+      "popular": "Le plus populaire"
+    },
+    "cards": {
+      "free": {
+        "name": "Gratuit",
+        "tagline": "Testez le POS et commencez à vendre en magasin.",
+        "features": [
+          "Terminal POS et impression de reçus",
+          "Jusqu’à 5 articles au menu",
+          "1 membre d’équipe",
+          "1 terminal lié",
+          "Analyses de ventes de base",
+          "Ventes en magasin uniquement"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "tagline": "Commandes en ligne, promotions et de la place pour grandir.",
+        "features": [
+          "Tout le forfait Gratuit",
+          "Commandes en ligne",
+          "Jusqu’à 15 articles au menu",
+          "3 membres d’équipe",
+          "2 terminaux liés",
+          "3 promotions actives",
+          "Analyses de ventes de base"
+        ]
+      },
+      "standard": {
+        "name": "Standard",
+        "tagline": "Analyses complètes et limites plus élevées pour les restaurants occupés.",
+        "features": [
+          "Tout le forfait Starter",
+          "Jusqu’à 100 articles au menu",
+          "10 membres d’équipe",
+          "5 terminaux liés",
+          "10 promotions actives",
+          "Rapports caissier, paiements et types de commande",
+          "Carte horaire, exports et rapports programmés"
+        ]
+      },
+      "fleetFree": {
+        "name": "Fleet Free",
+        "tagline": "Commencez à gérer vos propres livraisons.",
+        "features": [
+          "1 livreur",
+          "1 véhicule",
+          "1 membre d’équipe",
+          "Facturation à la commission"
+        ]
+      },
+      "fleetStarter": {
+        "name": "Fleet Starter",
+        "tagline": "Répartissez les livraisons d’une équipe de livreurs en croissance.",
+        "features": [
+          "Répartition de la flotte",
+          "Jusqu’à 10 livreurs",
+          "Jusqu’à 5 véhicules",
+          "3 membres d’équipe",
+          "Facturation à la commission"
+        ]
+      }
+    },
+    "compare": {
+      "title": "Comparez ce que chaque forfait inclut",
+      "intro": "Une vue claire des limites et fonctionnalités de chaque forfait.",
+      "compareCta": "Comparer les forfaits",
+      "merchantTitle": "Restaurants et commerçants",
+      "fleetTitle": "Gestionnaires de flotte",
+      "feature": "Fonctionnalité",
+      "monthlyFee": "Frais mensuels",
+      "yearlyFee": "Frais annuels",
+      "included": "Inclus",
+      "notIncluded": "Non inclus",
+      "rows": {
+        "onlineOrders": "Commandes en ligne",
+        "pos": "Terminal POS et impression",
+        "menuItems": "Articles au menu",
+        "members": "Membres d’équipe",
+        "terminals": "Terminaux liés",
+        "promos": "Promotions actives",
+        "analyticsOverview": "Vue d’ensemble des analyses",
+        "salesTrends": "Tendances de ventes et meilleurs articles",
+        "channelSplit": "En ligne vs local",
+        "teller": "Performance des caissiers",
+        "paymentMethods": "Moyens de paiement",
+        "orderTypes": "Types de commande",
+        "hourly": "Carte horaire",
+        "export": "Exporter les rapports",
+        "scheduled": "Rapports programmés",
+        "commission": "Commission par commande",
+        "dispatch": "Répartition de la flotte",
+        "riders": "Livreurs",
+        "vehicles": "Véhicules"
+      }
+    },
+    "how": {
+      "title": "Comment fonctionne la facturation",
+      "intro": "Une tarification claire, sans surprise.",
+      "step1Title": "Abonnement + commission",
+      "step1Body": "Votre forfait comprend des frais mensuels ou annuels et une commission sur les commandes terminées. Les forfaits supérieurs réduisent la commission.",
+      "step2Title": "Commencez par un essai",
+      "step2Body": "Le forfait Starter inclut un essai gratuit de 30 jours pour tester les commandes en ligne avant de payer.",
+      "step3Title": "Changez à tout moment",
+      "step3Body": "Passez à un forfait supérieur ou inférieur dans l’app Business, sous Portefeuille → Forfaits. Les changements s’appliquent au prochain cycle de facturation."
+    },
+    "faq": {
+      "title": "Questions sur les forfaits",
+      "intro": "Les réponses aux questions les plus courantes.",
+      "q1": "Puis-je utiliser Teinc Food Business gratuitement ?",
+      "a1": "Oui. Le forfait Gratuit comprend le terminal POS, l’impression, jusqu’à 5 articles au menu et des analyses de ventes de base. Les commandes en ligne, les promotions et les rapports avancés sont des fonctionnalités payantes.",
+      "q2": "Qu’est-ce que la commission ?",
+      "a2": "La commission est un pourcentage de chaque commande terminée. Elle est distincte des frais d’abonnement mensuels ou annuels.",
+      "q3": "Ai-je besoin d’un forfait payant pour accepter des commandes en ligne ?",
+      "a3": "Oui. Les commandes en ligne sont incluses à partir du forfait Starter. Le forfait Gratuit est destiné aux ventes POS en magasin.",
+      "q4": "Que se passe-t-il si je rétrograde ?",
+      "a4": "Vos données restent en sécurité. Les fonctionnalités et limites supérieures au nouveau forfait s’arrêtent au prochain cycle de facturation, et vous pouvez remonter à tout moment."
+    },
+    "cta": {
+      "title": "Prêt à choisir un forfait ?",
+      "body": "Téléchargez Teinc Food Business et choisissez le forfait adapté à votre cuisine. Vous pourrez le changer plus tard."
     }
   }
 }

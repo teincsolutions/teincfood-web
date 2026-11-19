@@ -16,6 +16,7 @@ export function Footer() {
     { href: "/whatsapp", label: t("apps.whatsapp") },
   ];
   const companyLinks = [
+    { href: "/plans", label: nav("plans") },
     { href: "/about", label: nav("about") },
     { href: "/faq", label: nav("faq") },
     { href: "/contact", label: nav("contact") },

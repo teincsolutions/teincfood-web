@@ -72,6 +72,10 @@
     "apps": {
       "title": "App showcase — Teinc Food",
       "description": "Preview Teinc Food on desktop, mobile and tablet devices, and download the customer or business app for iOS and Android."
+    },
+    "plans": {
+      "title": "Plans & pricing — Teinc Food Business",
+      "description": "Compare Teinc Food Business plans for POS, online ordering, menu limits, team seats, terminals, promos and analytics."
     }
   },
   "nav": {
@@ -99,7 +103,8 @@
     "fleetManagement": "Fleet management",
     "customers": "For customers",
     "riders": "Riders",
-    "apps": "Apps"
+    "apps": "Apps",
+    "plans": "Plans & pricing"
   },
   "footer": {
     "tagline": "Order it. Partner it. Deliver it. Teinc Food connects your city's food.",
@@ -968,6 +973,152 @@
       "macos": "macOS",
       "linux": "Linux",
       "unknown": "your device"
+    }
+  },
+  "plans": {
+    "eyebrow": "Plans & pricing",
+    "title": "Plans that grow with your food business",
+    "intro": "Start free, then unlock online ordering, more menu items, team seats, terminals, promos and deeper analytics as you grow. Prices are in Ghana cedis (GHS).",
+    "downloadCta": "Get Teinc Food Business",
+    "contactCta": "Talk to sales",
+    "merchant": {
+      "title": "For restaurants & merchants",
+      "intro": "One app for your counter, kitchen and online orders."
+    },
+    "fleet": {
+      "title": "For fleet managers",
+      "intro": "Dispatch riders and manage deliveries across your team.",
+      "note": "Fleet plans are commission-based — no monthly subscription fee."
+    },
+    "billing": {
+      "free": "Free",
+      "perMonth": "/month",
+      "perYear": "/year",
+      "noMonthly": "No monthly fee",
+      "yearlySave": "2 months free",
+      "commission": "{rate}% commission per order",
+      "trial": "{days}-day free trial",
+      "popular": "Most popular"
+    },
+    "cards": {
+      "free": {
+        "name": "Free",
+        "tagline": "Test the POS and start selling in-store.",
+        "features": [
+          "POS terminal & receipt printing",
+          "Up to 5 menu items",
+          "1 team member",
+          "1 linked terminal",
+          "Basic sales analytics",
+          "In-store sales only"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "tagline": "Online orders, promos and room to grow.",
+        "features": [
+          "Everything in Free",
+          "Online ordering",
+          "Up to 15 menu items",
+          "3 team members",
+          "2 linked terminals",
+          "3 active promos",
+          "Basic sales analytics"
+        ]
+      },
+      "standard": {
+        "name": "Standard",
+        "tagline": "Full analytics and higher limits for busy restaurants.",
+        "features": [
+          "Everything in Starter",
+          "Up to 100 menu items",
+          "10 team members",
+          "5 linked terminals",
+          "10 active promos",
+          "Teller, payment & order type reports",
+          "Hourly heatmap, exports & scheduled reports"
+        ]
+      },
+      "fleetFree": {
+        "name": "Fleet Free",
+        "tagline": "Start managing your own deliveries.",
+        "features": [
+          "1 rider",
+          "1 vehicle",
+          "1 team member",
+          "Commission-based billing"
+        ]
+      },
+      "fleetStarter": {
+        "name": "Fleet Starter",
+        "tagline": "Dispatch a growing rider team.",
+        "features": [
+          "Fleet dispatch",
+          "Up to 10 riders",
+          "Up to 5 vehicles",
+          "3 team members",
+          "Commission-based billing"
+        ]
+      }
+    },
+    "compare": {
+      "title": "Compare what each plan includes",
+      "intro": "A clear view of the limits and features on every plan.",
+      "compareCta": "Compare plans",
+      "merchantTitle": "Restaurants & merchants",
+      "fleetTitle": "Fleet managers",
+      "feature": "Feature",
+      "monthlyFee": "Monthly fee",
+      "yearlyFee": "Yearly fee",
+      "included": "Included",
+      "notIncluded": "Not included",
+      "rows": {
+        "onlineOrders": "Online ordering",
+        "pos": "POS terminal & printing",
+        "menuItems": "Menu items",
+        "members": "Team members",
+        "terminals": "Linked terminals",
+        "promos": "Active promos",
+        "analyticsOverview": "Analytics overview",
+        "salesTrends": "Sales trends & top items",
+        "channelSplit": "Online vs local",
+        "teller": "Teller performance",
+        "paymentMethods": "Payment methods",
+        "orderTypes": "Order types",
+        "hourly": "Hourly heatmap",
+        "export": "Export reports",
+        "scheduled": "Scheduled reports",
+        "commission": "Commission per order",
+        "dispatch": "Fleet dispatch",
+        "riders": "Riders",
+        "vehicles": "Vehicles"
+      }
+    },
+    "how": {
+      "title": "How billing works",
+      "intro": "Clear pricing, no surprises.",
+      "step1Title": "Subscription + commission",
+      "step1Body": "Your plan has a monthly or yearly fee plus a commission on completed orders. Higher plans lower the commission.",
+      "step2Title": "Start with a trial",
+      "step2Body": "Starter includes a 30-day free trial so you can test online ordering before you pay.",
+      "step3Title": "Change anytime",
+      "step3Body": "Upgrade or downgrade in the Business app under Wallet → Plans. Changes apply from your next billing cycle."
+    },
+    "faq": {
+      "title": "Plan questions",
+      "intro": "Answers to the most common plan questions.",
+      "q1": "Can I use Teinc Food Business for free?",
+      "a1": "Yes. The Free plan includes the POS terminal, printing, up to 5 menu items and basic sales analytics. Online ordering, promos and premium reports are paid features.",
+      "q2": "What is the commission?",
+      "a2": "Commission is a percentage of each completed order. It is separate from the monthly or yearly subscription fee.",
+      "q3": "Do I need a paid plan to take online orders?",
+      "a3": "Yes. Online ordering is included from Starter upward. The Free plan is for in-store POS sales.",
+      "q4": "What happens if I downgrade?",
+      "a4": "Your data stays safe. Features and limits above the new plan stop applying at the next billing cycle, and you can upgrade again anytime."
+    },
+    "cta": {
+      "title": "Ready to choose a plan?",
+      "body": "Download Teinc Food Business and pick the plan that fits your kitchen. You can change it later."
     }
   }
 }
