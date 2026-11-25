@@ -18,15 +18,11 @@ import { localizeMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import {
   FLEET_FEATURE_ROWS,
-  FLEET_PLANS,
   MERCHANT_FEATURE_ROWS,
-  MERCHANT_PLANS,
-  PLAN_CONFIG,
-  PLAN_VALUES,
   formatGhs,
   type FeatureValue,
-  type PlanKey,
 } from "@/config/plans";
+import { fetchSitePlans, type SitePlan } from "@/lib/plans";
 
 export async function generateMetadata({
   params,
@@ -83,14 +79,40 @@ export default async function PlansPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations({ locale, namespace: "plans" });
+  const [t, plans] = await Promise.all([
+    getTranslations({ locale, namespace: "plans" }),
+    fetchSitePlans(),
+  ]);
   const includedLabel = t("compare.included");
   const notIncludedLabel = t("compare.notIncluded");
+  const merchantPlans = plans.filter((plan) => plan.group === "merchant");
+  const fleetPlans = plans.filter((plan) => plan.group === "fleet");
 
-  const renderPlanCard = (key: PlanKey) => {
-    const plan = PLAN_CONFIG[key];
+  // Translated card copy is a nicety for known slugs; new plans created in the
+  // admin portal fall back to the backend name and generated feature bullets.
+  const cardCopy = t.raw("cards") as Record<
+    string,
+    { name?: string; tagline?: string; features?: string[] }
+  >;
+  const generatedFeatures = (plan: SitePlan): string[] => {
+    const rows =
+      plan.group === "fleet" ? FLEET_FEATURE_ROWS : MERCHANT_FEATURE_ROWS;
+    return rows.flatMap((row) => {
+      const value = plan.values[row];
+      if (value === false || value === 0 || value === undefined) return [];
+      const label = t(`compare.rows.${row}`);
+      if (typeof value === "number") {
+        return [`${label}: ${row === "commission" ? `${value}%` : value}`];
+      }
+      return [label];
+    });
+  };
+
+  const renderPlanCard = (plan: SitePlan) => {
+    const key = plan.slug;
+    const copy = cardCopy[key];
     const isFree = plan.monthlyFeeMinor === 0 && plan.yearlyFeeMinor === 0;
-    const features = t.raw(`cards.${key}.features`) as string[];
+    const features = copy?.features ?? generatedFeatures(plan);
 
     return (
       <article
@@ -110,7 +132,7 @@ export default async function PlansPage({
 
         <div className="flex flex-wrap items-start justify-between gap-2">
           <h3 className="text-xl font-extrabold text-navy">
-            {t(`cards.${key}.name`)}
+            {copy?.name ?? plan.name}
           </h3>
           {plan.trialDays > 0 ? (
             <span className="rounded-full bg-orange-100 px-2.5 py-1 text-xs font-bold text-orange-800">
@@ -120,7 +142,7 @@ export default async function PlansPage({
         </div>
 
         <p className="mt-2 min-h-10 text-sm leading-relaxed text-navy/65">
-          {t(`cards.${key}.tagline`)}
+          {copy?.tagline ?? ""}
         </p>
 
         <div className="mt-5">
@@ -177,7 +199,7 @@ export default async function PlansPage({
   };
 
   const renderComparison = (
-    plans: PlanKey[],
+    plans: SitePlan[],
     rows: readonly string[],
     title: string,
   ) => (
@@ -192,13 +214,13 @@ export default async function PlansPage({
               <th scope="col" className="px-4 py-3 font-bold text-navy">
                 {t("compare.feature")}
               </th>
-              {plans.map((key) => (
+              {plans.map((plan) => (
                 <th
-                  key={key}
+                  key={plan.id}
                   scope="col"
                   className="px-4 py-3 text-center font-bold text-navy"
                 >
-                  {t(`cards.${key}.name`)}
+                  {cardCopy[plan.slug]?.name ?? plan.name}
                 </th>
               ))}
             </tr>
@@ -208,9 +230,12 @@ export default async function PlansPage({
               <th scope="row" className="px-4 py-3 font-semibold text-navy/75">
                 {t("compare.monthlyFee")}
               </th>
-              {plans.map((key) => (
-                <td key={key} className="px-4 py-3 text-center font-bold text-navy">
-                  {formatGhs(PLAN_CONFIG[key].monthlyFeeMinor)}
+              {plans.map((plan) => (
+                <td
+                  key={plan.id}
+                  className="px-4 py-3 text-center font-bold text-navy"
+                >
+                  {formatGhs(plan.monthlyFeeMinor)}
                 </td>
               ))}
             </tr>
@@ -218,9 +243,12 @@ export default async function PlansPage({
               <th scope="row" className="px-4 py-3 font-semibold text-navy/75">
                 {t("compare.yearlyFee")}
               </th>
-              {plans.map((key) => (
-                <td key={key} className="px-4 py-3 text-center font-bold text-navy">
-                  {formatGhs(PLAN_CONFIG[key].yearlyFeeMinor)}
+              {plans.map((plan) => (
+                <td
+                  key={plan.id}
+                  className="px-4 py-3 text-center font-bold text-navy"
+                >
+                  {formatGhs(plan.yearlyFeeMinor)}
                 </td>
               ))}
             </tr>
@@ -229,10 +257,10 @@ export default async function PlansPage({
                 <th scope="row" className="px-4 py-3 font-semibold text-navy/75">
                   {t(`compare.rows.${rowKey}`)}
                 </th>
-                {plans.map((key) => (
-                  <td key={key} className="px-4 py-3 text-center">
+                {plans.map((plan) => (
+                  <td key={plan.id} className="px-4 py-3 text-center">
                     <FeatureCell
-                      value={PLAN_VALUES[key][rowKey]}
+                      value={plan.values[rowKey]}
                       includedLabel={includedLabel}
                       notIncludedLabel={notIncludedLabel}
                       percent={rowKey === "commission"}
@@ -284,7 +312,7 @@ export default async function PlansPage({
           subtitle={t("merchant.intro")}
         />
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {MERCHANT_PLANS.map(renderPlanCard)}
+          {merchantPlans.map(renderPlanCard)}
         </div>
       </Section>
 
@@ -297,7 +325,7 @@ export default async function PlansPage({
           {t("fleet.note")}
         </p>
         <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
-          {FLEET_PLANS.map(renderPlanCard)}
+          {fleetPlans.map(renderPlanCard)}
         </div>
       </Section>
 
@@ -308,12 +336,12 @@ export default async function PlansPage({
         />
         <div className="mt-10 space-y-8">
           {renderComparison(
-            MERCHANT_PLANS,
+            merchantPlans,
             MERCHANT_FEATURE_ROWS,
             t("compare.merchantTitle"),
           )}
           {renderComparison(
-            FLEET_PLANS,
+            fleetPlans,
             FLEET_FEATURE_ROWS,
             t("compare.fleetTitle"),
           )}
