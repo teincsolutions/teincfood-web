@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 
-  let body: { name?: string; email?: string; message?: string };
+  let body: { name?: string; email?: string; message?: string; captcha_token?: string };
   try {
     body = await req.json();
   } catch {
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
   const name = body.name?.trim() ?? "";
   const email = body.email?.trim() ?? "";
   const message = body.message?.trim() ?? "";
+  const captchaToken = body.captcha_token?.trim() ?? "";
 
   if (!name || !email || !emailRegex.test(email) || !message) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
     const res = await fetch(apiUrl("/contact"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
+      body: JSON.stringify({ name, email, message, captcha_token: captchaToken }),
     });
 
     if (!res.ok) {

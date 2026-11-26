@@ -633,7 +633,10 @@
     "successTitle": "Message envoyé",
     "errorTitle": "Message non envoyé",
     "supportTitle": "Vous préférez l’e-mail ?",
-    "supportBody": "Écrivez-nous et l’équipe vous répondra pendant les heures d’ouverture."
+    "supportBody": "Écrivez-nous et l’équipe vous répondra pendant les heures d’ouverture.",
+    "captchaLabel": "Vérification de sécurité",
+    "captchaRequired": "Veuillez effectuer la vérification de sécurité avant d’envoyer.",
+    "captchaFailed": "La vérification de sécurité n’a pas pu se charger. Veuillez réessayer."
   },
   "cta": {
     "getStarted": "Commencer",

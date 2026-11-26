@@ -107,7 +107,7 @@ export const siteConfig = {
   description:
     "Order from your favorite local restaurants or grow your own — Teinc Food connects buyers, businesses, and riders on one fast, reliable food delivery platform.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@teincfood.com",
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "noreply@teincsolutions.com",
   analyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "",
   whatsappUrl:
     process.env.NEXT_PUBLIC_WHATSAPP_URL || "https://wa.me/233503981913",

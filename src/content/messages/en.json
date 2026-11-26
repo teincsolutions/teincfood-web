@@ -633,7 +633,10 @@
     "successTitle": "Message sent",
     "errorTitle": "Message not sent",
     "supportTitle": "Prefer email?",
-    "supportBody": "Send us a note and the team will reply during business hours."
+    "supportBody": "Send us a note and the team will reply during business hours.",
+    "captchaLabel": "Security check",
+    "captchaRequired": "Please complete the security check before sending.",
+    "captchaFailed": "The security check could not be loaded. Please try again."
   },
   "cta": {
     "getStarted": "Get started",

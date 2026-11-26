@@ -1,25 +1,103 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Send } from "lucide-react";
 import { FormField, FormStatus, Input, Textarea } from "@/components/forms";
 import { Button } from "@/components/ui/Button";
+import { chatConfig } from "@/config/site";
 import { trackEvent } from "@/utils/observability";
 
 type Status = "idle" | "loading" | "success" | "error";
 type FieldName = "name" | "email" | "message";
 type FieldErrors = Partial<Record<FieldName, string>>;
 
+const TURNSTILE_SITE_KEY = chatConfig.turnstileSiteKey;
+
 export function ContactForm() {
   const t = useTranslations("contact");
   const [status, setStatus] = useState<Status>("idle");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [captchaSolved, setCaptchaSolved] = useState(false);
+  const [captchaNotice, setCaptchaNotice] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetIdRef = useRef<string | null>(null);
+  const captchaTokenRef = useRef<string | null>(null);
+
+  // Same manual Turnstile loading pattern as the support FAB — the widget is
+  // only rendered when a public site key is configured.
+  useEffect(() => {
+    if (typeof window === "undefined" || !TURNSTILE_SITE_KEY) return;
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    const interval = window.setInterval(() => {
+      const turnstile = (window as unknown as {
+        turnstile?: {
+          render: (
+            _element: HTMLElement,
+            _options: Record<string, unknown>,
+          ) => string | undefined;
+          reset: (_widgetId?: string | null) => void;
+        };
+      }).turnstile;
+
+      if (!turnstile || !turnstileRef.current || turnstileRef.current.dataset.rendered) return;
+
+      turnstileRef.current.dataset.rendered = "1";
+      try {
+        const widgetId = turnstile.render(turnstileRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            captchaTokenRef.current = token;
+            setCaptchaSolved(true);
+            setCaptchaNotice(null);
+          },
+          "expired-callback": () => {
+            captchaTokenRef.current = null;
+            setCaptchaSolved(false);
+          },
+          "error-callback": () => {
+            captchaTokenRef.current = null;
+            setCaptchaSolved(false);
+            setCaptchaNotice(t("captchaFailed"));
+          },
+          theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
+        });
+        turnstileWidgetIdRef.current = widgetId ?? null;
+      } catch {
+        // Let the visitor submit again once the script has loaded.
+        if (turnstileRef.current) delete turnstileRef.current.dataset.rendered;
+      }
+    }, 500);
+
+    return () => window.clearInterval(interval);
+  }, [t]);
+
+  const resetCaptcha = () => {
+    captchaTokenRef.current = null;
+    setCaptchaSolved(false);
+    const turnstile = (window as unknown as {
+      turnstile?: { reset: (_widgetId?: string | null) => void };
+    }).turnstile;
+    if (turnstile && turnstileWidgetIdRef.current) {
+      try {
+        turnstile.reset(turnstileWidgetIdRef.current);
+      } catch {
+        /* widget expired — it will re-render itself */
+      }
+    }
+  };
 
   const update =
     (field: FieldName) =>
@@ -64,20 +142,29 @@ export function ContactForm() {
       return;
     }
 
+    if (TURNSTILE_SITE_KEY && !captchaTokenRef.current) {
+      setCaptchaNotice(t("captchaRequired"));
+      return;
+    }
+
     setStatus("loading");
+    setCaptchaNotice(null);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, captcha_token: captchaTokenRef.current }),
       });
       if (!res.ok) throw new Error("failed");
       trackEvent("contact.submitted");
       setForm({ name: "", email: "", message: "" });
       setStatus("success");
+      resetCaptcha();
     } catch {
       trackEvent("contact.failed");
       setStatus("error");
+      // Turnstile tokens are single-use — get a fresh one for the retry.
+      resetCaptcha();
     }
   };
 
@@ -141,6 +228,17 @@ export function ContactForm() {
           disabled={pending}
         />
       </FormField>
+
+      {TURNSTILE_SITE_KEY ? (
+        <div className="space-y-1">
+          <div ref={turnstileRef} aria-label={t("captchaLabel")} />
+          {!captchaSolved && captchaNotice ? (
+            <p className="text-sm text-red-700" role="alert">
+              {captchaNotice}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       {status !== "idle" && (
         <FormStatus

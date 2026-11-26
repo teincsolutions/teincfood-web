@@ -159,7 +159,7 @@ jobs:
             --build-arg NEXT_PUBLIC_BUSINESS_APP_STORE="${{ vars.NEXT_PUBLIC_BUSINESS_APP_STORE }}" \
             --build-arg NEXT_PUBLIC_BUSINESS_PLAY_STORE="${{ vars.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}" \
-            --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}" \
+            --build-arg NEXT_PUBLIC_CONTACT_EMAIL="${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'noreply@teincsolutions.com' }}" \
             --build-arg NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" \
             --build-arg NEXT_PUBLIC_APPLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_APPLE_CLIENT_ID }}" \
             --build-arg NEXT_PUBLIC_TELEMETRY_URL="${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}" \
@@ -213,7 +213,7 @@ jobs:
           NEXT_PUBLIC_BUSINESS_APP_STORE: ${{ vars.NEXT_PUBLIC_BUSINESS_APP_STORE }}
           NEXT_PUBLIC_BUSINESS_PLAY_STORE: ${{ vars.NEXT_PUBLIC_BUSINESS_PLAY_STORE }}
           NEXT_PUBLIC_GOOGLE_ANALYTICS: ${{ vars.NEXT_PUBLIC_GOOGLE_ANALYTICS }}
-          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'hello@teincfood.com' }}
+          NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL || 'noreply@teincsolutions.com' }}
           NEXT_PUBLIC_TELEMETRY_URL: ${{ vars.NEXT_PUBLIC_TELEMETRY_URL }}
           NEXT_PUBLIC_TELEMETRY_KEY: ${{ secrets.NEXT_PUBLIC_TELEMETRY_KEY }}
           NEXT_PUBLIC_TELEMETRY_ENV: ${{ vars.NEXT_PUBLIC_TELEMETRY_ENV || 'production' }}
